@@ -114,6 +114,7 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .bstep:last-child { border-bottom: 0; }
 .bstep .bn { counter-increment: s; flex: 0 0 40px; height: 40px; border-radius: 50%; background: var(--gold-bright); color: var(--ink); font-family: 'Fraunces', serif; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 .bstep .bn::before { content: counter(s); }
+#scope .bstep .bn::before { content: '\2713'; }
 .bstep h4 { font-size: 17px; font-weight: 700; }
 .bstep p { font-size: var(--t-small); color: var(--ink-soft); }
 .effort { background: var(--indigo); color: #f4eee0; border-radius: 18px; padding: 32px; }
@@ -148,10 +149,9 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <nav>
     <a class="brand" href="#">phantom <span>bolt</span></a>
     <div class="links">
-        <a href="#ask">Try the questions</a>
-        <a href="#demos">Demos</a>
-        <a href="#built">How it's built</a>
-        <a href="#faq">FAQ</a>
+        <a href="#ask">What you can ask</a>
+        <a href="#scope">Scope</a>
+        <a href="#demos">See it work</a>
         <a class="present" href="phantombolt/">Presentation →</a>
     </div>
 </nav>
@@ -169,7 +169,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
     <p>Account teams used to file a ticket and wait three days for a campaign answer. We trained Databricks Genie on the questions they actually ask, wired it into Slack, and validated every number against the dashboards the business already trusts.</p>
     <div class="hero-cta">
         <a class="btn btn-gold" href="#ask">See what you can ask</a>
-        <a class="btn btn-ghost" href="phantombolt/">Watch the presentation</a>
+        <a class="btn btn-ghost" href="#scope">See the scope</a>
     </div>
 </header>
 
@@ -229,24 +229,24 @@ footer a { color: var(--gold-bright); text-decoration: none; }
     </div>
 </section>
 
-<section id="built">
+<section id="scope">
     <div class="inner">
-        <h2>How it's built (and what it cost)</h2>
-        <p class="lede">The Genie space is code, not clicks. Everything lives in version-controlled notebooks and redeploys in one run.</p>
+        <h2>What it covers, and what it leaves alone</h2>
+        <p class="lede">Clear boundaries are what make the answers trustworthy.</p>
         <div class="built-grid">
-            <div class="steps">
-                <div class="bstep"><span class="bn"></span><div><h4>Two training notebooks</h4><p>SQL training cells with column metadata, measures, filters, and usage guidance per query. The notebooks are the curriculum.</p></div></div>
-                <div class="bstep"><span class="bn"></span><div><h4>One-command deploy</h4><p>A parser reads the notebooks and pushes the full Genie space configuration. No hand-tuning in a UI.</p></div></div>
-                <div class="bstep"><span class="bn"></span><div><h4>Automated testing</h4><p>A Genie MCP server wired into a code assistant asks the space hundreds of questions and grades the SQL that comes back.</p></div></div>
-                <div class="bstep"><span class="bn"></span><div><h4>Validated against Tableau</h4><p>Every metric cross-checked against the dashboards the business already trusts before anyone sees an answer.</p></div></div>
+            <div>
+                <h3 style="font-family:'Fraunces',serif; font-size:var(--t-h3); color:var(--green); margin-bottom:14px;">In scope</h3>
+                <div class="bstep"><span class="bn"></span><div><h4>Campaign performance</h4><p>Response, appointments, shows, sales, cost and ROI at location, owner, company, or network level, across all four CRMs.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Mailing pressure and waste</h4><p>How often each address gets mailed, where extra touches stop paying, and what gets spent on people who never respond.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Markets and competition</h4><p>Response by distance from the clinic, competitor density, and untapped prospect pools by tier.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Trends and forecasts</h4><p>Year over year comparisons, monthly trends, and projections through the end of the year, with maturity flags on young data.</p></div></div>
             </div>
             <div class="effort">
-                <h3>Where the time went</h3>
-                <div class="erow"><span>Scorecard generation &amp; Slack bot</span><b>45%</b></div>
-                <div class="erow"><span>Training the spaces</span><b>30%</b></div>
-                <div class="erow"><span>Testing &amp; validation</span><b>17%</b></div>
-                <div class="erow"><span>Asking questions</span><b>8%</b></div>
-                <p class="takeaway">Most of the work wasn't asking questions. It was making sure the answers were right. And because that work is now a pipeline, standing this up for the next vertical is weeks, not months.</p>
+                <h3>Out of scope, on purpose</h3>
+                <div class="erow"><span>Patient names and identifying details</span><b>excluded</b></div>
+                <div class="erow"><span>Changing or writing any data</span><b>read only</b></div>
+                <div class="erow"><span>Anything outside campaign data</span><b>not trained</b></div>
+                <p class="takeaway">Every answer is validated against the Tableau dashboards the business already trusts, and metrics that haven't matured carry a flag so nobody acts on half-baked numbers.</p>
             </div>
         </div>
     </div>
@@ -266,27 +266,14 @@ footer a { color: var(--gold-bright); text-decoration: none; }
                 <div class="aarr">→</div>
                 <div class="anode"><h4>Governed answer</h4><p>Streams back to Slack, sourced from Unity Catalog gold tables and metric views</p></div>
             </div>
-            <div class="arch-foot">gold layer → 4 UC metric views → 2 Genie spaces → supervisor → Slack &amp; Databricks One</div>
         </div>
-    </div>
-</section>
-
-<section id="faq">
-    <div class="inner">
-        <h2>FAQ</h2>
-        <details><summary>How do I know the answers are right?</summary><p>Three layers: training queries are written and reviewed by an analyst who knows the data; an automated test harness asks the spaces hundreds of questions through MCP and grades the SQL; and every metric is validated against the Tableau dashboards the business already uses. Metrics that haven't matured carry a flag so nobody acts on half-baked numbers.</p></details>
-        <details><summary>What's in scope, and what isn't?</summary><p>In scope: campaign performance, full funnel, mailing pressure, geography and competition, prospect pools, owner rankings, scorecards, trends and forecasts, across four CRMs. Out of scope on purpose: patient PII (names and identifying columns are excluded at the space level), ad-hoc writes, and anything outside campaign data.</p></details>
-        <details><summary>How were the Genie spaces trained?</summary><p>Two notebooks hold the curriculum: 119 SQL training queries with metadata, measures, filters, and example questions. A parser deploys them to the spaces in one run. Bad answers become new training cells, then redeploy. The loop is the product.</p></details>
-        <details><summary>Could this work for a different industry?</summary><p>Yes, that's the point of building it as code. Point the notebooks at another vertical's gold tables, retrain the question set, rerun the parser. The supervisor, Slack wiring, testing harness, and validation pattern carry over as is.</p></details>
-        <details><summary>Is the data real?</summary><p>The questions, architecture, and workflow are real. Numbers shown on this site come from recorded demo runs and are presented for illustration.</p></details>
-        <details><summary>What's the stack?</summary><p>Databricks end to end: Genie spaces, Unity Catalog metric views, a multi-agent supervisor on model serving, SQL warehouse, plus Slack. This site and the presentation are hand-written HTML, no framework.</p></details>
     </div>
 </section>
 
 <footer>
     <div class="inner">
-        <div>Built by Kyi Moe Tun · Team Phantom Bolt · Databricks Geniethon 2026</div>
-        <div><a href="phantombolt/">Presentation</a> · <a href="https://github.com/vzzw">github.com/vzzw</a></div>
+        <div>Phantom Bolt · Campaign intelligence on Databricks Genie</div>
+        <div><a href="phantombolt/">View the presentation</a></div>
     </div>
 </footer>
 
