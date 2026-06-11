@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hearing Care Campaign Intelligence · Team Phantom Bolt</title>
+
+<!-- Fonts: Fraunces (formal storybook serif) + Work Sans (body) + Caveat (informal hand) + JetBrains Mono (data) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Work+Sans:wght@400;500;600&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+
+<style>
+/* ===========================================
+   THEME — Databricks brand palette (from the official Geniethon deck)
+   Edit these variables to retheme the whole deck.
+   =========================================== */
+:root {
+    /* Arabian night — midnight indigo + lamp gold. Content-first: accents stay quiet. */
+    --bg:        #150d2e;
+    --panel:     #221542;
+    --panel-2:   #1b1038;
+    --line:      #3a2a63;
+    --text:      #f7f1e3;   /* warm parchment */
+    --muted:     #b6abd9;
+    --lava:      #f0b429;   /* lamp gold (var name kept so every reference follows) */
+    --lava-soft: rgba(240, 180, 41, 0.13);
+    --green:     #00A972;
+    --yellow:    #f4845f;   /* sunset coral */
+    --blue:      #7b6fd0;   /* twilight violet */
+
+    --font-display: 'Fraunces', serif;
+    --font-body:    'Work Sans', sans-serif;
+    --font-script:  'Caveat', cursive;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur: 0.7s;
+
+    --stage-bg: #0c071c;
+    --slide-bg: var(--bg);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css)
+   =========================================== */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg, #fff); }
+.slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; background: var(--slide-bg, #fff); }
+.slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+
+/* ===========================================
+   QUANTUM MORPH TRANSITION (vertical)
+   Incoming slide condenses out of blur and drifts up into place;
+   outgoing slide dissolves, scales, and drifts away. Direction-aware.
+   =========================================== */
+/* slide swap itself stays quiet — the content does the morphing */
+.slide.visible.morph-down { animation: morphInDown 0.5s var(--ease) both; }
+.slide.visible.morph-up   { animation: morphInUp   0.5s var(--ease) both; }
+.slide.leaving { visibility: visible; opacity: 1; pointer-events: none; z-index: 2; }
+.slide.leaving.morph-down { animation: morphOutDown 0.45s var(--ease) both; }
+.slide.leaving.morph-up   { animation: morphOutUp   0.45s var(--ease) both; }
+@keyframes morphInDown  { from { opacity: 0; transform: translateY(50px); }  to { opacity: 1; transform: translateY(0); } }
+@keyframes morphInUp    { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes morphOutDown { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
+@keyframes morphOutUp   { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(60px); } }
+
+/* ===========================================
+   QUANTUM TEXT ASSEMBLY
+   Headings are split into chars (JS). Each char condenses in from a
+   random scatter with blur, like dust assembling into the line.
+   --dx/--dy/--rot/--qd are set per char at init.
+   =========================================== */
+.qword { display: inline-block; white-space: nowrap; }
+.qchar {
+    display: inline-block;
+    opacity: 0;
+    filter: blur(10px);
+    transform: translate(var(--dx, 0), var(--dy, 0)) rotate(var(--rot, 0deg)) scale(1.45);
+    transition: opacity 0.8s var(--ease), filter 0.8s var(--ease), transform 0.8s var(--ease);
+    transition-delay: var(--qd, 0s);
+    will-change: transform, filter, opacity;
+}
+.slide.visible .qchar { opacity: 1; filter: blur(0); transform: translate(0,0) rotate(0) scale(1); }
+
+/* ===========================================
+   STEPPED REVEALS (.step)
+   Arrow-right reveals the next .step on the slide before moving on.
+   =========================================== */
+.step { opacity: 0; transform: translateY(34px) scale(0.96); filter: blur(8px); transition: all 0.55s var(--ease); }
+.step.on { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+
+/* ===========================================
+   SLIDE — TEAM INTRO (stepped)
+   =========================================== */
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 64px; position: relative; z-index: 2; }
+.member { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 34px 36px; }
+.member .mname { font-family: var(--font-display); font-size: 34px; font-weight: 700; }
+.member .mrole { font-family: var(--font-mono); font-size: 19px; color: var(--muted); margin-top: 10px; }
+.member.captain { border-color: rgba(240,180,41,0.55); background: linear-gradient(160deg, rgba(240,180,41,0.12), var(--panel)); }
+.member.captain .mrole { color: var(--lava); }
+.team-slam { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 5; pointer-events: none; }
+.team-slam .slam-text { font-family: var(--font-display); font-weight: 900; font-size: 150px; letter-spacing: -0.02em; color: var(--text); text-shadow: 0 0 60px rgba(240,180,41,0.65); white-space: nowrap; }
+.team-slam .slam-text .accent { color: var(--lava); }
+.team-slam.step { transform: scale(2.6); filter: blur(20px); }
+.team-slam.step.on { animation: slamIn 0.55s cubic-bezier(0.22, 1.4, 0.4, 1) both, shake 0.5s linear 0.5s; }
+@keyframes slamIn { from { opacity: 0; transform: scale(2.6); filter: blur(20px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
+@keyframes shake {
+    0%,100% { transform: translate(0,0) scale(1); }
+    15% { transform: translate(-14px, 6px) scale(1); } 30% { transform: translate(12px, -8px); }
+    45% { transform: translate(-9px, -5px); } 60% { transform: translate(8px, 6px); }
+    75% { transform: translate(-5px, 3px); } 90% { transform: translate(3px, -2px); }
+}
+.slide.shaking { animation: shake 0.5s linear; }
+.team-slam .slam-bolts { position: absolute; inset: 0; }
+.team-slam .slam-bolts svg { position: absolute; width: 90px; height: 150px; opacity: 0; }
+.team-slam.on .slam-bolts svg { animation: boltflash 0.7s ease 0.45s; }
+.team-slam .slam-bolts svg path { fill: none; stroke: var(--lava); stroke-width: 6; stroke-linejoin: round; filter: drop-shadow(0 0 18px rgba(240,180,41,0.8)); }
+@keyframes boltflash { 0% { opacity: 0; transform: scale(0.5); } 30% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0; transform: scale(1); } }
+.team-dim { transition: opacity 0.4s, filter 0.4s; }
+.slide .team-dim.dimmed { opacity: 0.25; filter: blur(4px); }
+
+/* ===========================================
+   SLIDE — SUPERVISOR ROUTING (animated diagram)
+   JS cycles .route-N classes on the slide; CSS lights each path.
+   =========================================== */
+.route-stage { position: relative; flex: none; height: 640px; margin-top: 24px; z-index: 2; }
+[data-name="arch"] h2 { font-size: 62px; }
+[data-name="arch"] .slide-inner { padding-top: 64px; padding-bottom: 50px; }
+[data-name="arch"] .arch-note { margin-top: 20px; font-size: 23px; }
+.route-q { position: absolute; left: 0; width: 470px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; font-size: 21px; line-height: 1.4; color: #c9d4d9; transition: all 0.4s var(--ease); opacity: 0.45; }
+.route-q .qfrom { font-family: var(--font-mono); font-size: 16px; color: var(--muted); display: block; margin-bottom: 6px; }
+.route-q.lit { opacity: 1; border-color: var(--lava); transform: translateX(8px); box-shadow: 0 0 30px rgba(240,180,41,0.15); }
+.route-sup { position: absolute; left: 610px; top: 200px; width: 380px; background: var(--panel); border: 1px solid rgba(240,180,41,0.55); border-radius: 16px; padding: 26px 30px; box-shadow: 0 0 34px rgba(240,180,41,0.12); transition: box-shadow 0.4s; }
+.route-sup h5 { font-family: var(--font-display); font-size: 27px; font-weight: 700; }
+.route-sup p { font-size: 18px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+.route-sup .intent { margin-top: 16px; font-family: var(--font-mono); font-size: 18px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 8px; padding: 9px 14px; min-height: 42px; transition: opacity 0.3s; }
+.route-sup.lit { box-shadow: 0 0 50px rgba(240,180,41,0.35); }
+.route-agent { position: absolute; left: 1140px; width: 480px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 16px 22px; transition: all 0.4s var(--ease); opacity: 0.45; }
+.route-agent .aname { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
+.route-agent .arole { font-size: 16px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.route-agent.lit { opacity: 1; border-color: var(--green); box-shadow: 0 0 26px rgba(0,169,114,0.2); transform: translateX(8px); }
+.route-svg { position: absolute; inset: 0; pointer-events: none; }
+.route-svg path { fill: none; stroke: var(--line); stroke-width: 2.5; opacity: 0.5; }
+.route-svg path.wire-lit { stroke: var(--lava); stroke-width: 3.5; opacity: 1; stroke-dasharray: 26 14; animation: wireflow 0.7s linear infinite; filter: drop-shadow(0 0 6px rgba(240,180,41,0.5)); }
+.route-svg path.wire-lit.to-agent { stroke: var(--green); filter: drop-shadow(0 0 6px rgba(0,169,114,0.5)); }
+@keyframes wireflow { to { stroke-dashoffset: -40; } }
+
+/* ===========================================
+   SLIDE — GIF WALL (scattered everyday-usage tiles)
+   =========================================== */
+.wall { position: relative; flex: 1; margin-top: 20px; z-index: 2; }
+.wall-tile { position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); transition: transform 0.35s var(--ease), border-color 0.3s, z-index 0s; }
+.wall-tile:hover { transform: scale(1.06) rotate(0deg) !important; border-color: var(--lava); z-index: 9; }
+.wall-tile video, .wall-tile .tile-ph { width: 100%; border-radius: 9px; display: block; background: #000; }
+.wall-tile .tile-ph { display: flex; align-items: center; justify-content: center; color: var(--muted); font-family: var(--font-mono); font-size: 17px; }
+.wall-tile .tile-cap { font-family: var(--font-script); font-size: 26px; color: var(--yellow); margin-top: 12px; }
+.wall-tile .tile-cap small { color: var(--muted); display: block; font-size: 15px; margin-top: 3px; }
+
+/* ===========================================
+   SLIDE — GENIE LAMP (closer)
+   Real example questions rise out of the lamp in category groups,
+   one group at a time, with smoke. JS cycles the groups in a loop.
+   =========================================== */
+.lamp-stage { position: relative; flex: 1; z-index: 2; }
+.lamp-svg { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 300px; height: 170px; z-index: 3; }
+.lamp-svg path { fill: none; stroke: var(--lava); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 14px rgba(240,180,41,0.45)); }
+.lamp-svg .lamp-body { fill: rgba(240,180,41,0.10); }
+.plume { position: absolute; left: calc(50% + 95px); bottom: 150px; width: 150px; height: 150px; border-radius: 50%; filter: blur(26px); background: radial-gradient(circle, rgba(240,180,41,0.20), transparent 70%); opacity: 0; pointer-events: none; }
+.lamp-wisp { animation: wispFlicker 3.4s ease-in-out infinite; }
+@keyframes wispFlicker { 0%,100% { opacity: 0.25; } 50% { opacity: 0.7; } }
+.slide.visible .plume { animation: plumeRise 6.5s ease-in-out infinite; }
+.plume.p2 { width: 110px; height: 110px; animation-delay: 2.1s !important; background: radial-gradient(circle, rgba(247,241,227,0.13), transparent 70%); }
+.plume.p3 { width: 190px; height: 190px; animation-delay: 4.3s !important; }
+@keyframes plumeRise {
+    0%   { opacity: 0; transform: translate(-50%, 60px) scale(0.45); }
+    30%  { opacity: 0.9; }
+    100% { opacity: 0; transform: translate(-55%, -480px) scale(1.7); }
+}
+.lamp-group { position: absolute; left: 50%; bottom: 230px; transform: translateX(-50%); width: 1280px; text-align: center; }
+.lamp-cat { font-family: var(--font-script); font-size: 56px; font-weight: 700; color: var(--lava); opacity: 0; transform: translateY(130px) scale(0.85); filter: blur(14px); transition: all 0.9s var(--ease); }
+.lamp-q { font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: 33px; line-height: 1.35; color: var(--text); margin-top: 20px; opacity: 0; transform: translateY(150px) scale(0.9); filter: blur(14px); transition: all 0.9s var(--ease); }
+.lamp-group.show .lamp-cat, .lamp-group.show .lamp-q { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+.lamp-group.hide .lamp-cat, .lamp-group.hide .lamp-q { opacity: 0; transform: translateY(-110px) scale(0.96); filter: blur(10px); transition-delay: 0s !important; }
+/* the human moment that prompts each group of questions */
+.lamp-scene { font-family: var(--font-script); font-size: 38px; color: var(--muted); opacity: 0; transform: translateY(40px); filter: blur(8px); transition: all 0.8s var(--ease); }
+.lamp-group.show .lamp-scene { opacity: 1; transform: translateY(0); filter: blur(0); }
+.lamp-group.hide .lamp-scene { opacity: 0; transform: translateY(-80px); filter: blur(8px); transition-delay: 0s !important; }
+/* word-by-word emergence: each word drifts up out of the smoke */
+.lamp-q .lw { display: inline-block; opacity: 0; transform: translate(var(--lwx, 0), 120px) rotate(var(--lwr, 0)) scale(0.8); filter: blur(9px); transition: all 0.85s var(--ease); }
+.lamp-group.show .lamp-q .lw { opacity: 1; transform: translate(0, 0) rotate(0) scale(1); filter: blur(0); }
+.lamp-all { display: flex; justify-content: center; gap: 34px; flex-wrap: wrap; }
+.lamp-all .lamp-cat { font-size: 44px; display: inline-block; }
+.cloud-tag { text-align: center; font-size: 30px; color: #d8d0e8; margin-top: 8px; position: relative; z-index: 4; }
+.cloud-tag b { color: var(--lava); }
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+/* ===========================================
+   GLOBAL SLIDE SCAFFOLD
+   =========================================== */
+.slide { font-family: var(--font-body); color: var(--text); }
+.slide-inner { position: absolute; inset: 0; padding: 90px 110px; display: flex; flex-direction: column; }
+
+/* subtle starfield backdrop — static, content-first, no twinkle */
+.slide::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+        radial-gradient(1.5px 1.5px at 120px 80px,  rgba(247,241,227,0.18), transparent),
+        radial-gradient(1px 1px     at 320px 210px, rgba(247,241,227,0.12), transparent),
+        radial-gradient(1.5px 1.5px at 540px 120px, rgba(240,180,41,0.15),  transparent),
+        radial-gradient(1px 1px     at 470px 320px, rgba(247,241,227,0.09), transparent),
+        radial-gradient(1px 1px     at 150px 400px, rgba(247,241,227,0.13), transparent),
+        radial-gradient(1.5px 1.5px at 600px 430px, rgba(247,241,227,0.08), transparent);
+    background-size: 640px 480px;
+}
+/* warm glow lower-left, used on dark hero slides */
+.glow::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+        radial-gradient(ellipse 900px 600px at 12% 95%, rgba(240,180,41,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 700px 500px at 90% 5%, rgba(123,111,208,0.10) 0%, transparent 60%);
+}
+
+/* kicker = informal handwritten label above formal serif titles */
+.kicker { font-family: var(--font-script); font-size: 36px; font-weight: 500; letter-spacing: 0.02em; text-transform: none; color: var(--lava); margin-bottom: 12px; }
+.slide h2 { font-family: var(--font-display); font-weight: 700; font-size: 76px; line-height: 1.04; letter-spacing: -0.01em; }
+.sub { font-size: 30px; color: var(--muted); line-height: 1.45; margin-top: 24px; max-width: 1280px; }
+
+/* page number chip */
+.pagenum { position: absolute; right: 54px; bottom: 40px; font-family: var(--font-mono); font-size: 20px; color: var(--muted); opacity: 0.7; z-index: 3; }
+
+/* ===========================================
+   REVEAL ANIMATION SYSTEM
+   .reveal children animate in when slide gains .visible
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(30px) scale(0.975); filter: blur(9px); transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease), filter var(--dur) var(--ease); }
+.slide.visible .reveal { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+.d1 { transition-delay: 0.08s; } .d2 { transition-delay: 0.18s; } .d3 { transition-delay: 0.28s; }
+.d4 { transition-delay: 0.38s; } .d5 { transition-delay: 0.48s; } .d6 { transition-delay: 0.58s; }
+.d7 { transition-delay: 0.68s; } .d8 { transition-delay: 0.78s; } .d9 { transition-delay: 0.88s; }
+.d10 { transition-delay: 0.98s; }
+
+/* ===========================================
+   SLIDE 1 — TITLE
+   =========================================== */
+.title-wrap { margin: auto 0; position: relative; z-index: 2; }
+.bolt-svg { position: absolute; right: 130px; top: 120px; width: 460px; height: 760px; opacity: 0.9; z-index: 1; }
+.bolt-svg path { fill: none; stroke: var(--lava); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 2400; stroke-dashoffset: 2400; filter: drop-shadow(0 0 22px rgba(240,180,41,0.45)); }
+.slide.visible .bolt-svg path { animation: boltdraw 1.4s var(--ease) 0.3s forwards; }
+@keyframes boltdraw { to { stroke-dashoffset: 0; } }
+.bolt-fill { fill: rgba(240,180,41,0.07) !important; stroke-dasharray: none !important; stroke-dashoffset: 0 !important; opacity: 0; }
+.slide.visible .bolt-fill { animation: boltfill 0.5s ease 1.5s forwards !important; }
+@keyframes boltfill { to { opacity: 1; } }
+
+.title-team { font-family: var(--font-mono); font-size: 26px; letter-spacing: 0.22em; color: var(--lava); text-transform: uppercase; margin-bottom: 30px; }
+.title-main { font-family: var(--font-display); font-weight: 900; font-size: 128px; line-height: 0.98; letter-spacing: -0.02em; max-width: 1250px; }
+.title-sub { font-size: 32px; color: var(--muted); margin-top: 40px; }
+.title-team-list { position: absolute; left: 110px; bottom: 90px; display: flex; gap: 40px; font-size: 22px; color: var(--muted); z-index: 2; }
+.title-team-list b { color: var(--text); font-weight: 600; display: block; font-size: 23px; }
+
+/* ===========================================
+   SLIDE 2 — THE TICKET
+   =========================================== */
+.ticket-card {
+    margin-top: 60px; width: 1280px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 52px 58px; position: relative; z-index: 2;
+    box-shadow: 0 26px 70px rgba(0,0,0,0.45);
+}
+.ticket-head { display: flex; align-items: center; gap: 22px; margin-bottom: 32px; }
+.ticket-key { font-family: var(--font-mono); font-size: 23px; color: var(--blue); background: rgba(123,111,208,0.15); padding: 8px 18px; border-radius: 8px; }
+.ticket-tag { font-family: var(--font-mono); font-size: 20px; color: var(--yellow); background: rgba(244,132,95,0.12); padding: 8px 18px; border-radius: 8px; }
+.ticket-title { font-family: var(--font-display); font-weight: 700; font-size: 42px; margin-bottom: 24px; }
+.ticket-body { font-size: 28px; line-height: 1.55; color: #c9d4d9; }
+.hl { position: relative; white-space: nowrap; }
+.hl::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 13px; background: var(--lava-soft); border-bottom: 3px solid var(--lava); transform: scaleX(0); transform-origin: left; transition: transform 0.8s var(--ease); }
+.slide.visible .hl::after { transform: scaleX(1); }
+.slide.visible .hl.h2x::after { transition-delay: 1.1s; }
+.slide.visible .hl.h3x::after { transition-delay: 1.7s; }
+.ticket-foot { margin-top: 44px; font-size: 30px; color: var(--muted); }
+.ticket-foot b { color: var(--text); }
+
+/* ===========================================
+   SLIDE 3 — THE PROBLEM (two panels)
+   =========================================== */
+.prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 64px; flex: 1; position: relative; z-index: 2; }
+.prob-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 48px; display: flex; flex-direction: column; }
+.prob-panel h3 { font-family: var(--font-display); font-size: 36px; font-weight: 700; margin-bottom: 14px; }
+.prob-panel .pdesc { font-size: 25px; color: var(--muted); line-height: 1.5; margin-bottom: 36px; }
+.crm-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.crm-box { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 24px 26px; }
+.crm-box .cname { font-family: var(--font-mono); font-size: 21px; color: var(--text); margin-bottom: 8px; }
+.crm-box .cnum { font-family: var(--font-mono); font-size: 30px; color: var(--yellow); font-weight: 600; }
+.neq { text-align: center; font-family: var(--font-display); font-size: 132px; line-height: 1; color: var(--lava); margin-top: 26px; font-weight: 800; opacity: 0; transform: scale(0.6); transition: all 0.5s var(--ease) 1.2s; }
+.slide.visible .neq { opacity: 1; transform: scale(1); }
+
+/* latency timeline */
+.lat-line { position: relative; margin-top: 30px; flex: 1; }
+.lat-steps { display: flex; flex-direction: column; gap: 30px; }
+.lat-step { display: flex; align-items: center; gap: 24px; font-size: 27px; color: #c9d4d9; }
+.lat-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--line); flex: none; transition: background 0.3s, box-shadow 0.3s; }
+.lat-step.lit .lat-dot { background: var(--lava); box-shadow: 0 0 16px rgba(240,180,41,0.6); }
+.day-counter { margin-top: 40px; font-family: var(--font-mono); font-size: 26px; color: var(--muted); display: flex; align-items: baseline; gap: 14px; }
+.day-counter .day-num { font-size: 58px; font-weight: 600; color: var(--lava); line-height: 1; }
+
+/* ===========================================
+   SLIDE 4 — WHAT YOU CAN ASK IT TODAY (8 cards)
+   =========================================== */
+.cap-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; gap: 26px; margin-top: 52px; flex: 1; position: relative; z-index: 2; }
+.cap-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 30px 32px; display: flex; flex-direction: column; transition: border-color 0.3s, transform 0.3s; }
+.cap-card:hover { border-color: var(--lava); transform: translateY(-4px); }
+.cap-card h4 { font-family: var(--font-display); font-size: 29px; font-weight: 700; margin-bottom: 12px; }
+.cap-card .ccover { font-size: 20px; color: var(--muted); line-height: 1.45; flex: 1; }
+.cap-card .cq { font-size: 20px; line-height: 1.4; color: #d8e0e4; font-style: italic; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.cap-card .cq::before { content: '“'; color: var(--lava); font-size: 24px; }
+.cap-card .cq::after { content: '”'; color: var(--lava); font-size: 24px; }
+.cap-foot { margin-top: 30px; margin-bottom: 26px; padding: 20px 30px; border-radius: 14px; background: var(--lava-soft); border: 1px solid rgba(240,180,41,0.35); font-family: var(--font-mono); font-size: 22px; color: var(--text); text-align: center; position: relative; z-index: 2; white-space: nowrap; }
+.cap-foot b { color: var(--lava); }
+
+/* ===========================================
+   DEMO SLIDES (Acts) — shared layout
+   =========================================== */
+.demo-grid { display: grid; grid-template-columns: 620px 1fr; gap: 56px; margin-top: 32px; flex: 1; position: relative; z-index: 2; min-height: 0; }
+.demo-left { display: flex; flex-direction: column; min-height: 0; }
+.demo-cat { display: inline-flex; align-self: flex-start; font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: rgba(0,169,114,0.12); border: 1px solid rgba(0,169,114,0.4); padding: 9px 18px; border-radius: 999px; margin-bottom: 28px; }
+.demo-qs { display: flex; flex-direction: column; gap: 16px; }
+.usecase-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.uc-chip { font-family: var(--font-script); font-size: 24px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 999px; padding: 7px 16px; transition: transform 0.2s, background 0.2s; }
+.uc-chip:hover { transform: translateY(-2px); background: rgba(244,132,95,0.2); }
+.uc-label { font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); width: 100%; margin-bottom: 2px; }
+.demo-q { font-size: 21px; line-height: 1.4; color: #c9d4d9; padding: 13px 20px; background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 10px; transition: transform 0.25s var(--ease), border-color 0.25s, background 0.25s; cursor: default; }
+.demo-q:hover { transform: translateX(10px); border-left-color: var(--lava); background: var(--panel-2); }
+.demo-stat { margin-top: auto; padding-top: 22px; }
+.stat-big { font-family: var(--font-mono); font-size: 72px; font-weight: 600; color: var(--lava); line-height: 1; cursor: pointer; transition: text-shadow 0.3s; }
+.stat-big:hover { text-shadow: 0 0 30px rgba(240,180,41,0.55); }
+.stat-cap { font-size: 23px; color: var(--muted); margin-top: 12px; line-height: 1.45; max-width: 560px; }
+.stat-cap b { color: var(--text); }
+
+/* outcome strip: the "so what" under every demo */
+.outcome-strip { flex: none; margin-top: 24px; display: flex; align-items: center; gap: 24px; background: linear-gradient(90deg, rgba(0,169,114,0.13), rgba(0,169,114,0.03)); border: 1px solid rgba(0,169,114,0.4); border-radius: 14px; padding: 18px 28px; position: relative; z-index: 2; }
+.outcome-strip .olab { font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); flex: none; }
+.outcome-strip .otext { font-size: 21px; line-height: 1.4; color: #d8e0e4; }
+.outcome-strip .otext b { color: var(--text); }
+
+/* demo slides are dense: compact type so nothing collides */
+[data-name^="act"] h2 { font-size: 62px; }
+[data-name^="act"] .slide-inner { padding-top: 70px; padding-bottom: 64px; }
+[data-name^="act"] .kicker { margin-bottom: 14px; }
+[data-name^="act"] .demo-grid { overflow: hidden; }
+[data-name^="act"] .stat-big { font-size: 58px; }
+[data-name^="act"] .stat-cap { font-size: 20px; margin-top: 10px; }
+[data-name^="act"] .demo-q { font-size: 19px; padding: 11px 18px; }
+[data-name^="act"] .video-hint { margin-top: 10px; font-size: 17px; }
+
+.demo-right { display: flex; flex-direction: column; min-height: 0; }
+.video-frame { flex: 1; min-height: 0; background: #000; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 22px 60px rgba(0,0,0,0.5); }
+.video-frame video { width: 100%; height: 100%; object-fit: contain; display: block; }
+.video-hint { margin-top: 16px; font-family: var(--font-mono); font-size: 19px; color: var(--muted); text-align: center; }
+/* placeholder shown when video file missing */
+.video-missing { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--panel-2); color: var(--muted); font-family: var(--font-mono); font-size: 24px; text-align: center; padding: 40px; }
+.video-missing .vm-bolt { font-size: 60px; color: var(--lava); }
+.video-frame.missing video { display: none; }
+.video-frame.missing .video-missing { display: flex; }
+
+/* ===========================================
+   SLIDE 9 — WHERE THE TIME WENT (bars)
+   =========================================== */
+.time-rows { margin-top: 70px; display: flex; flex-direction: column; gap: 52px; max-width: 1450px; position: relative; z-index: 2; }
+.time-row { display: grid; grid-template-columns: 430px 1fr 120px; align-items: center; gap: 36px; }
+.time-label { font-family: var(--font-display); font-size: 33px; font-weight: 700; }
+.time-label small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 21px; color: #a7bac1; margin-top: 6px; }
+.time-track { height: 30px; background: var(--panel-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.time-fill { height: 100%; width: 0; border-radius: 999px; transition: width 1.3s var(--ease) 0.4s; }
+.slide.visible .tf1 { width: 45%; } .tf1 { background: var(--lava); }
+.slide.visible .tf2 { width: 30%; } .tf2 { background: var(--blue); }
+.slide.visible .tf3 { width: 17%; } .tf3 { background: var(--green); }
+.slide.visible .tf4 { width: 8%;  } .tf4 { background: var(--yellow); }
+.time-pct { font-family: var(--font-mono); font-size: 32px; color: var(--text); text-align: right; }
+.time-quote { margin-top: 64px; font-size: 32px; color: #d8e0e4; line-height: 1.5; max-width: 1300px; position: relative; z-index: 2; border-left: 5px solid var(--lava); padding-left: 34px; }
+
+/* ===========================================
+   SLIDE 10 — TRAINING LOOP
+   =========================================== */
+.loop-wrap { display: grid; grid-template-columns: 1120px 1fr; gap: 60px; margin-top: 48px; flex: 1; position: relative; z-index: 2; }
+.loop-diagram { position: relative; width: 1120px; height: 660px; }
+.loop-node {
+    position: absolute; width: 360px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 26px 28px;
+}
+.loop-node { transition: border-color 0.25s, transform 0.25s; }
+.loop-node:hover { border-color: var(--lava); transform: scale(1.03); }
+.arch-box, .arch-agent { transition: border-color 0.25s, transform 0.25s; }
+.arch-box:hover, .arch-agent:hover { border-color: var(--lava); transform: translateY(-3px); }
+.out-panel { transition: transform 0.3s var(--ease); }
+.out-panel:hover { transform: translateY(-6px); }
+.ticket-card { transition: transform 0.3s var(--ease), box-shadow 0.3s; }
+.ticket-card:hover { transform: translateY(-5px) rotate(-0.3deg); box-shadow: 0 36px 90px rgba(0,0,0,0.6); }
+.crm-box { transition: transform 0.25s, border-color 0.25s; }
+.crm-box:hover { transform: translateY(-3px); border-color: var(--yellow); }
+.time-row { transition: transform 0.25s; }
+.time-row:hover { transform: translateX(8px); }
+.loop-node h5 { font-family: var(--font-display); font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+.loop-node p { font-size: 19px; color: var(--muted); line-height: 1.4; }
+.loop-num { position: absolute; top: -18px; left: -18px; width: 44px; height: 44px; border-radius: 50%; background: var(--lava); color: #fff; font-family: var(--font-mono); font-size: 22px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.loop-svg { position: absolute; inset: 0; width: 1120px; height: 660px; }
+.loop-svg .track { fill: none; stroke: var(--line); stroke-width: 3; }
+.loop-svg .arrowhead { fill: var(--muted); }
+.loop-svg .pulse { fill: none; stroke: var(--lava); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 50 2130; stroke-dashoffset: 0; opacity: 0; filter: drop-shadow(0 0 8px rgba(240,180,41,0.6)); }
+.slide.visible .loop-svg .pulse { opacity: 1; animation: looppulse 6s linear 0.8s infinite; }
+@keyframes looppulse { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -2180; } }
+.loop-side { display: flex; flex-direction: column; gap: 26px; justify-content: center; }
+.loop-point { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 28px 30px; font-size: 23px; line-height: 1.5; color: #c9d4d9; }
+.loop-point b { color: var(--text); }
+.loop-point.accent { border-color: rgba(240,180,41,0.5); background: var(--lava-soft); color: var(--text); }
+
+/* ===========================================
+   SLIDE 11 — SUPERVISOR ARCHITECTURE
+   =========================================== */
+.arch-wrap { margin-top: 44px; flex: 1; position: relative; z-index: 2; }
+.arch-col { display: flex; align-items: center; gap: 44px; height: 100%; }
+.arch-stage { display: flex; flex-direction: column; justify-content: center; gap: 18px; flex: 1; }
+.arch-box { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px 26px; position: relative; }
+.arch-box h5 { font-family: var(--font-display); font-size: 25px; font-weight: 700; }
+.arch-box p { font-size: 19px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+.arch-box.hero { border-color: rgba(240,180,41,0.55); box-shadow: 0 0 34px rgba(240,180,41,0.12); }
+.arch-agents { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.arch-agent { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+.arch-agent .aname { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
+.arch-agent .arole { font-size: 17px; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+.arch-arrow { display: flex; align-items: center; font-size: 44px; color: var(--lava); }
+.arch-flow-pulse { animation: archpulse 1.6s ease-in-out infinite; }
+@keyframes archpulse { 0%,100% { opacity: 0.4; transform: translateX(0); } 50% { opacity: 1; transform: translateX(8px); } }
+.arch-note { margin-top: 34px; font-size: 26px; color: #d8e0e4; border-left: 5px solid var(--green); padding-left: 28px; line-height: 1.5; position: relative; z-index: 2; max-width: 1450px; }
+
+/* ===========================================
+   SLIDE 12 — RECEIPTS (best practices)
+   =========================================== */
+.chain { display: flex; align-items: center; gap: 18px; margin-top: 40px; position: relative; z-index: 2; flex-wrap: wrap; }
+.chain-node { font-family: var(--font-mono); font-size: 23px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 12px 26px; transition: border-color 0.25s, transform 0.25s; }
+.chain-node:hover { border-color: var(--lava); transform: translateY(-3px); }
+.chain-node.hot { border-color: rgba(240,180,41,0.6); background: var(--lava-soft); }
+.chain-node .bonus { font-family: var(--font-mono); font-size: 16px; color: var(--lava); margin-left: 10px; }
+.chain-arrow { color: var(--muted); font-size: 26px; }
+.rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; flex: 1; align-content: start; position: relative; z-index: 2; }
+.rec-item { display: flex; gap: 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 26px 30px; align-items: flex-start; transition: border-color 0.25s, transform 0.25s; }
+.rec-item:hover { border-color: var(--green); transform: translateY(-3px); }
+.rec-check { width: 44px; height: 44px; flex: none; border-radius: 50%; background: rgba(0,169,114,0.15); border: 2px solid var(--green); color: var(--green); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; opacity: 0; transform: scale(0.4); transition: all 0.45s var(--ease); }
+.slide.visible .rec-item.d1 .rec-check { opacity: 1; transform: scale(1); transition-delay: 0.25s; }
+.slide.visible .rec-item.d2 .rec-check { opacity: 1; transform: scale(1); transition-delay: 0.4s; }
+.slide.visible .rec-item.d3 .rec-check { opacity: 1; transform: scale(1); transition-delay: 0.55s; }
+.slide.visible .rec-item.d4 .rec-check { opacity: 1; transform: scale(1); transition-delay: 0.7s; }
+.slide.visible .rec-item.d5 .rec-check { opacity: 1; transform: scale(1); transition-delay: 0.85s; }
+.slide.visible .rec-item.d6 .rec-check { opacity: 1; transform: scale(1); transition-delay: 1.0s; }
+.rec-item h4 { font-family: var(--font-display); font-size: 25px; font-weight: 700; }
+.rec-item h4 .bonus { font-family: var(--font-mono); font-size: 17px; color: var(--lava); background: var(--lava-soft); border: 1px solid rgba(240,180,41,0.4); padding: 4px 12px; border-radius: 999px; margin-left: 12px; vertical-align: middle; }
+.rec-item p { font-size: 19px; color: var(--muted); margin-top: 7px; line-height: 1.45; }
+
+/* ===========================================
+   SLIDE 13 — TWO OUTCOMES
+   =========================================== */
+.out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; margin-top: 60px; flex: 1; position: relative; z-index: 2; }
+.out-panel { border-radius: 20px; padding: 52px; display: flex; flex-direction: column; }
+.out-client { background: var(--panel); border: 1px solid var(--line); }
+.out-darwill { background: linear-gradient(160deg, rgba(240,180,41,0.16), rgba(240,180,41,0.04)); border: 1px solid rgba(240,180,41,0.45); }
+.out-panel .olabel { font-family: var(--font-mono); font-size: 21px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 26px; }
+.out-client .olabel { color: var(--blue); }
+.out-darwill .olabel { color: var(--lava); }
+.out-panel h3 { font-family: var(--font-display); font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 30px; }
+.out-li { font-size: 25px; color: #c9d4d9; line-height: 1.5; padding: 16px 0; border-top: 1px solid rgba(249,247,244,0.1); }
+.out-li b { color: var(--text); }
+
+/* ===========================================
+   SLIDE 14 — CLOSE
+   =========================================== */
+.close-wrap { margin: auto; text-align: center; position: relative; z-index: 2; }
+.close-line { font-family: var(--font-display); font-weight: 900; font-size: 104px; line-height: 1.08; letter-spacing: -0.015em; }
+.close-line .accent { color: var(--lava); }
+.close-sub { margin-top: 46px; font-size: 28px; color: var(--muted); }
+.close-bolt { width: 70px; height: 110px; margin: 0 auto 40px; }
+.close-bolt path { fill: none; stroke: var(--lava); stroke-width: 6; stroke-linejoin: round; stroke-dasharray: 600; stroke-dashoffset: 600; filter: drop-shadow(0 0 16px rgba(240,180,41,0.5)); }
+.slide.visible .close-bolt path { animation: boltdraw 1s var(--ease) 0.2s forwards; }
+
+/* ===========================================
+   DECK CHROME — progress dots
+   =========================================== */
+.deck-controls { display: flex; gap: 10px; align-items: center; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(249,247,244,0.25); cursor: pointer; transition: all 0.25s; border: none; padding: 0; }
+.dot.on { background: var(--lava); transform: scale(1.35); }
+.slide-count { display: none; }
+
+/* ===========================================
+   INLINE EDITING
+   =========================================== */
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle { position: fixed; top: 18px; left: 18px; z-index: 10001; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px; font-size: 20px; padding: 10px 14px; cursor: pointer; }
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { border-color: var(--lava); color: var(--lava); }
+body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============ SLIDE 1 · TITLE ============ -->
+<section class="slide glow active" data-name="title">
+    <svg class="bolt-svg" viewBox="0 0 300 520" aria-hidden="true">
+        <path class="bolt-fill" d="M178 18 L60 290 L142 290 L96 502 L252 218 L160 218 L226 18 Z"/>
+        <path d="M178 18 L60 290 L142 290 L96 502 L252 218 L160 218 L226 18 Z"/>
+    </svg>
+    <div class="slide-inner">
+        <div class="title-wrap">
+            <div class="title-team reveal">Team Phantom Bolt · Geniethon 2026</div>
+            <h1 class="title-main reveal d1">Hearing Care<br>Campaign<br>Intelligence</h1>
+            <p class="title-sub reveal d2">The answers were always in our data.<br>We made them one message away.</p>
+        </div>
+    </div>
+    <div class="pagenum">01</div>
+</section>
+
+<!-- ============ SLIDE 1B · TEAM INTRO (stepped: arrow reveals each member, then the slam) ============ -->
+<section class="slide glow" data-name="team">
+    <div class="slide-inner">
+        <div class="kicker reveal team-dim">The people behind it</div>
+        <h2 class="reveal d1 team-dim">Six of us. One question we kept hearing.</h2>
+        <div class="team-grid team-dim">
+            <div class="member captain step"><div class="mname">Kyi Moe Tun</div><div class="mrole">Team Captain · Data Analyst</div></div>
+            <div class="member step"><div class="mname">Sai Bhupathiraju</div><div class="mrole">Data Engineer</div></div>
+            <div class="member step"><div class="mname">Joe Berry</div><div class="mrole">BI Strategist</div></div>
+            <div class="member step"><div class="mname">Nadia Noui-Mehidi</div><div class="mrole">Data Scientist II</div></div>
+            <div class="member step"><div class="mname">Chelsea Perez</div><div class="mrole">Data Scientist</div></div>
+            <div class="member step"><div class="mname">Swathi Sundaravarathan</div><div class="mrole">Data Engineer II</div></div>
+        </div>
+        <div class="team-slam step" data-slam>
+            <div class="slam-bolts">
+                <svg style="left:12%; top:14%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="right:10%; top:20%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="left:20%; bottom:12%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="right:16%; bottom:16%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+            </div>
+            <div class="slam-text">WE ARE <span class="accent">PHANTOM BOLT</span></div>
+        </div>
+    </div>
+    <div class="pagenum">02</div>
+</section>
+
+<!-- ============ SLIDE 2 · THE TICKET ============ -->
+<section class="slide glow" data-name="ticket">
+    <div class="slide-inner">
+        <div class="kicker reveal">A real request, last month</div>
+        <h2 class="reveal d1">It starts with a ticket.</h2>
+        <div class="ticket-card reveal d2">
+            <div class="ticket-head">
+                <span class="ticket-key">DATA-REQ</span>
+                <span class="ticket-tag">Analytics queue</span>
+            </div>
+            <div class="ticket-title">Open house mailers underperforming, need a breakdown</div>
+            <div class="ticket-body">
+                AE needs performance for four dispensers on open house templates, January 2025 to present.
+                Why is one of them so far behind the others? Estimated effort:
+                <span class="hl h2x">3 working days minimum</span>, roughly <span class="hl h3x">3 to 8 analyst hours</span>.
+                With the usual back and forth, often a week or more before it's truly closed.
+            </div>
+            <div class="ticket-foot reveal d4">And it's never just one. <b>Every account team has a version of this ticket.</b></div>
+        </div>
+    </div>
+    <div class="pagenum">02</div>
+</section>
+
+<!-- ============ SLIDE 5 · ACT 0 — THE TICKET, ANSWERED ============ -->
+<section class="slide" data-name="act0">
+    <div class="slide-inner">
+        <div class="kicker reveal">Demo · 1 of 4</div>
+        <h2 class="reveal d1">The ticket, answered.</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-cat">Account intelligence</div>
+                <div class="demo-qs">
+                    <div class="demo-q">Campaign performance at any grain: dispenser, owner, state, network</div>
+                    <div class="demo-q">Market structure: who competes within 3 and 5 miles of every door</div>
+                    <div class="demo-q">Peer benchmarking: any operator against their state and the network</div>
+                </div>
+                <div class="usecase-row">
+                    <span class="uc-label">Use it for</span>
+                    <span class="uc-chip">client call prep</span>
+                    <span class="uc-chip">ticket deflection</span>
+                    <span class="uc-chip">root-cause investigation</span>
+                </div>
+                <div class="demo-stat reveal d4">
+                    <div class="stat-big"><span class="count" data-target="90">0</span>s</div>
+                    <div class="stat-cap">And the answer flipped the question: <b>the dispenser isn't underperforming. Florida is.</b> The owner sits above the state average.</div>
+                </div>
+            </div>
+            <div class="demo-right reveal d3">
+                <div class="video-frame" data-video="act_0.mp4">
+                    <video src="act_0.mp4" controls preload="metadata"></video>
+                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
+                </div>
+                <div class="video-hint">act_0.mp4 · 4 questions, one conversation thread</div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5">
+            <span class="olab">Outcome</span>
+            <span class="otext">The AE answers in the same meeting. The <b>3 to 8 analyst hours</b> never get spent pulling data, they go to QA and judgment instead. Multiply that by every ticket like this one.</span>
+        </div>
+    </div>
+    <div class="pagenum">05</div>
+</section>
+
+<!-- ============ SLIDE 3 · THE PROBLEM ============ -->
+<section class="slide" data-name="problem">
+    <div class="slide-inner">
+        <div class="kicker reveal">The real problem</div>
+        <h2 class="reveal d1">Campaign intelligence is fragmented.<br>We needed it unified.</h2>
+        <div class="prob-grid">
+            <div class="prob-panel reveal d2">
+                <h3>One network, four sources of truth</h3>
+                <p class="pdesc">Thousands of hearing care locations report through different CRMs, at different grains, under different names. Ask "what's our test rate" and the answer depends on which system you opened.</p>
+                <div class="crm-row">
+                    <div class="crm-box"><div class="cname">CounselEAR</div><div class="cnum">0.125%</div></div>
+                    <div class="crm-box"><div class="cname">Sycle</div><div class="cnum">0.141%</div></div>
+                    <div class="crm-box"><div class="cname">Blueprint</div><div class="cnum">0.121%</div></div>
+                    <div class="crm-box"><div class="cname">Beltone</div><div class="cnum">0.160%</div></div>
+                </div>
+                <div class="neq">&ne;</div>
+            </div>
+            <div class="prob-panel reveal d3">
+                <h3>And every answer waits in line</h3>
+                <p class="pdesc">The ticket you just saw wasn't an exception. It's the standard route for every question.</p>
+                <div class="lat-line">
+                    <div class="lat-steps">
+                        <div class="lat-step" data-step="0"><span class="lat-dot"></span>AE has a question</div>
+                        <div class="lat-step" data-step="1"><span class="lat-dot"></span>Ticket lands in analyst queue</div>
+                        <div class="lat-step" data-step="2"><span class="lat-dot"></span>Analyst writes SQL across systems</div>
+                        <div class="lat-step" data-step="3"><span class="lat-dot"></span>Report comes back, maybe stale</div>
+                    </div>
+                    <div class="day-counter"><span>elapsed</span><span class="day-num" data-target="3">0</span><span>days</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">03</div>
+</section>
+
+<!-- ============ SLIDE 4 · WHAT YOU CAN ASK IT TODAY ============ -->
+<section class="slide" data-name="coverage">
+    <div class="slide-inner">
+        <div class="kicker reveal">Two Genie spaces · Beltone + CounselEAR / Sycle / Blueprint</div>
+        <h2 class="reveal d1">What you can ask it today</h2>
+        <div class="cap-grid">
+            <div class="cap-card reveal d2"><h4>Scorecards &amp; rankings</h4><div class="ccover">Location, owner, and company scorecards with network benchmarks and rank.</div><div class="cq">How does a location perform across all CRMs?</div></div>
+            <div class="cap-card reveal d3"><h4>Trends &amp; forecasting</h4><div class="ccover">Year over year, monthly trends, P&amp;L forecast through December.</div><div class="cq">What is the monthly performance trend with AI forecast?</div></div>
+            <div class="cap-card reveal d4"><h4>Full funnel</h4><div class="ccover">Mail to appointment to show to sale to ROI, per CRM, with matchback windows.</div><div class="cq">How does prospect mail compare to patient mail?</div></div>
+            <div class="cap-card reveal d5"><h4>Templates &amp; formats</h4><div class="ccover">Template performance by state and month, format by strategy.</div><div class="cq">Which prospect campaign templates perform best YTD?</div></div>
+            <div class="cap-card reveal d6"><h4>Mailing pressure</h4><div class="ccover">Frequency buckets, touch number, spacing, non-responder waste.</div><div class="cq">How much do we spend on people who never respond?</div></div>
+            <div class="cap-card reveal d7"><h4>Geography &amp; competition</h4><div class="ccover">Distance bands, competitive density, Costco and Miracle-Ear proximity.</div><div class="cq">Does distance from the clinic affect prospect response rate?</div></div>
+            <div class="cap-card reveal d8"><h4>Pool &amp; targeting</h4><div class="ccover">Tier utilization, untapped counts, demographics, propensity models.</div><div class="cq">What percentage of the prospect pool is untapped at each location?</div></div>
+            <div class="cap-card reveal d9"><h4>Operations</h4><div class="ccover">Current month drops, next 30 days, trigger-active locations.</div><div class="cq">What drops in the next 30 days?</div></div>
+        </div>
+        <div class="cap-foot reveal d10"><b>119 trained queries</b> · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · every metric carries its maturity rules</div>
+    </div>
+    <div class="pagenum">04</div>
+</section>
+
+<!-- ============ SLIDE 6 · ACT 1 — ONE STRUGGLING LOCATION ============ -->
+<section class="slide" data-name="act1">
+    <div class="slide-inner">
+        <div class="kicker reveal">Demo · 2 of 4</div>
+        <h2 class="reveal d1">One struggling location, diagnosed.</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-cat">Spend efficiency</div>
+                <div class="demo-qs">
+                    <div class="demo-q">Underperformer triage: rank any slice of the network, mature data only</div>
+                    <div class="demo-q">Wasted spend: addresses mailed again and again that never respond</div>
+                    <div class="demo-q">Mailing pressure: how many touches each address actually gets</div>
+                </div>
+                <div class="usecase-row">
+                    <span class="uc-label">Use it for</span>
+                    <span class="uc-chip">budget reallocation</span>
+                    <span class="uc-chip">list hygiene</span>
+                    <span class="uc-chip">market strategy</span>
+                </div>
+                <div class="demo-stat reveal d4">
+                    <div class="stat-big"><span class="count" data-target="79.7" data-decimals="1">0</span>%</div>
+                    <div class="stat-cap">of Lexington's prospect spend went to <b>19,054 addresses that already told us no</b>. We mailed them 120,241 more times. $68,336.</div>
+                </div>
+            </div>
+            <div class="demo-right reveal d3">
+                <div class="video-frame" data-video="act_1_beltone.mp4">
+                    <video src="act_1_beltone.mp4" controls preload="metadata"></video>
+                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
+                </div>
+                <div class="video-hint">act_1_beltone.mp4 · follow-ups carry context in the same thread</div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5">
+            <span class="olab">Outcome</span>
+            <span class="otext">This isn't a budget ask, it's a <b>reallocation</b>: stop mailing 19k proven-dead addresses and fund the untapped tier 1 pool in the same market. And the competitive profile says part of this is market structure, so the playbook changes, not just the list.</span>
+        </div>
+    </div>
+    <div class="pagenum">06</div>
+</section>
+
+<!-- ============ SLIDE 7 · ACT 1B — CROSS-CRM FUNNEL ============ -->
+<section class="slide" data-name="act1b">
+    <div class="slide-inner">
+        <div class="kicker reveal">Demo · 3 of 4</div>
+        <h2 class="reveal d1">Three CRMs. One conversation.</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-cat">Funnel &amp; journey</div>
+                <div class="demo-qs">
+                    <div class="demo-q">Full funnel per CRM: mailed, appointments, shows, sales, ROI</div>
+                    <div class="demo-q">Journey timing: how long from mailbox to booked to bought</div>
+                    <div class="demo-q">Touch attribution: which mailing actually triggers the response</div>
+                </div>
+                <div class="usecase-row">
+                    <span class="uc-label">Use it for</span>
+                    <span class="uc-chip">cadence planning</span>
+                    <span class="uc-chip">revenue planning</span>
+                    <span class="uc-chip">clinic ops escalation</span>
+                </div>
+                <div class="demo-stat reveal d4">
+                    <div class="stat-big"><span class="count" data-target="69.9" data-decimals="1">0</span>%</div>
+                    <div class="stat-cap">of responders respond to the <b>first mailing</b>. Average journey from mailbox to sale: 33 days. That changes how we think about re-mail cadence.</div>
+                </div>
+            </div>
+            <div class="demo-right reveal d3">
+                <div class="video-frame" data-video="act_1_cbs.mp4">
+                    <video src="act_1_cbs.mp4" controls preload="metadata"></video>
+                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
+                </div>
+                <div class="video-hint">act_1_cbs.mp4 · CounselEAR, Sycle, and Blueprint in one space</div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5">
+            <span class="olab">Outcome</span>
+            <span class="otext">Two decisions fall out: re-mail dollars past the third touch are the <b>first place to trim</b>, and Blueprint's gap lives at the close stage, so it's a <b>clinic conversation, not a mail conversation</b>. That protects the mail program when results dip.</span>
+        </div>
+    </div>
+    <div class="pagenum">07</div>
+</section>
+
+<!-- ============ SLIDE 9 · WHERE THE TIME WENT ============ -->
+<section class="slide" data-name="time">
+    <div class="slide-inner">
+        <div class="kicker reveal">Honest accounting</div>
+        <h2 class="reveal d1">Where the time actually went</h2>
+        <div class="time-rows">
+            <div class="time-row reveal d2">
+                <div class="time-label">Scorecard generation<small>Slack bot, supervisor wiring, Block Kit rendering</small></div>
+                <div class="time-track"><div class="time-fill tf1"></div></div>
+                <div class="time-pct">45%</div>
+            </div>
+            <div class="time-row reveal d3">
+                <div class="time-label">Training the spaces<small>119 SQL queries, metadata, measures, filters</small></div>
+                <div class="time-track"><div class="time-fill tf2"></div></div>
+                <div class="time-pct">30%</div>
+            </div>
+            <div class="time-row reveal d4">
+                <div class="time-label">Testing &amp; validation<small>every metric checked against Tableau</small></div>
+                <div class="time-track"><div class="time-fill tf3"></div></div>
+                <div class="time-pct">17%</div>
+            </div>
+            <div class="time-row reveal d5">
+                <div class="time-label">Asking questions<small>the part you just watched</small></div>
+                <div class="time-track"><div class="time-fill tf4"></div></div>
+                <div class="time-pct">8%</div>
+            </div>
+        </div>
+        <div class="time-quote reveal d6">Most of the work wasn't asking questions. It was making sure the answers were right.</div>
+    </div>
+    <div class="pagenum">09</div>
+</section>
+
+<!-- ============ SLIDE 10 · TRAINING LOOP ============ -->
+<section class="slide" data-name="loop">
+    <div class="slide-inner">
+        <div class="kicker reveal">How it's built · 1 of 2</div>
+        <h2 class="reveal d1">The space is code, not clicks.</h2>
+        <div class="loop-wrap">
+            <div class="loop-diagram reveal d2">
+                <!-- rectangular loop path runs through node centers, behind opaque node cards.
+                     Centers: (220,120) (880,120) (880,540) (220,540). Perimeter = 2160. -->
+                <svg class="loop-svg" viewBox="0 0 1120 660">
+                    <path class="track" d="M 220 120 H 880 V 540 H 220 Z"/>
+                    <polygon class="arrowhead" points="550,110 572,120 550,130"/>
+                    <polygon class="arrowhead" points="870,330 880,352 890,330"/>
+                    <polygon class="arrowhead" points="550,530 528,540 550,550"/>
+                    <polygon class="arrowhead" points="210,330 220,308 230,330"/>
+                    <path class="pulse" d="M 220 120 H 880 V 540 H 220 Z"/>
+                </svg>
+                <div class="loop-node" style="left:40px; top:40px;">
+                    <div class="loop-num">1</div>
+                    <h5>Two notebooks</h5>
+                    <p>SQL training cells with metadata, measures, filters, and usage guidance per query</p>
+                </div>
+                <div class="loop-node" style="left:700px; top:40px;">
+                    <div class="loop-num">2</div>
+                    <h5>space_parser</h5>
+                    <p>Parses the notebooks and deploys the full Genie space config in one run</p>
+                </div>
+                <div class="loop-node" style="left:700px; top:460px;">
+                    <div class="loop-num">3</div>
+                    <h5>Test via MCP</h5>
+                    <p>Genie MCP server wired into the code assistant, driven by a skill file</p>
+                </div>
+                <div class="loop-node" style="left:40px; top:460px;">
+                    <div class="loop-num">4</div>
+                    <h5>Findings go back in</h5>
+                    <p>Wrong answers become new training cells and guardrails. Redeploy.</p>
+                </div>
+            </div>
+            <div class="loop-side">
+                <div class="loop-point reveal d3">Nothing is hand-tuned in a UI. <b>Every instruction, measure, and guardrail lives in version-controlled notebooks.</b></div>
+                <div class="loop-point reveal d4">Testing is automated: the assistant asks the space hundreds of questions through MCP and grades the SQL that comes back.</div>
+                <div class="loop-point accent reveal d5">Same loop, different vertical: point the notebooks at another industry's gold tables and the pipeline builds that space too. <b>This is how it scales across Darwill.</b></div>
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">10</div>
+</section>
+
+<!-- ============ SLIDE 11 · SUPERVISOR ARCHITECTURE ============ -->
+<section class="slide" data-name="arch">
+    <div class="slide-inner">
+        <div class="kicker reveal">How it's built · 2 of 2</div>
+        <h2 class="reveal d1">The supervisor reads intent, then routes.</h2>
+        <div class="route-stage reveal d2">
+            <!-- wires: question → supervisor → agents. JS lights them per route. -->
+            <svg class="route-svg" viewBox="0 0 1700 640" preserveAspectRatio="none" width="100%" height="100%">
+                <path id="wq0" d="M 470 85  C 560 85,  540 280, 610 280"/>
+                <path id="wq1" d="M 470 295 C 540 295, 540 310, 610 310"/>
+                <path id="wq2" d="M 470 505 C 560 505, 540 340, 610 340"/>
+                <path id="wa0" d="M 990 280 C 1080 280, 1060 62,  1140 62"/>
+                <path id="wa1" d="M 990 300 C 1080 300, 1060 192, 1140 192"/>
+                <path id="wa2" d="M 990 320 C 1080 320, 1060 322, 1140 322"/>
+                <path id="wa3" d="M 990 340 C 1080 340, 1060 452, 1140 452"/>
+                <path id="wa4" d="M 990 360 C 1080 360, 1060 578, 1140 578"/>
+            </svg>
+            <div class="route-q" id="rq0" style="top:30px;"><span class="qfrom">#client-team · AE</span>"How is that location in Tulsa doing compared to last year?"</div>
+            <div class="route-q" id="rq1" style="top:240px;"><span class="qfrom">DM · Account Manager</span>"Scorecard for Quality Hearing Aid Center"</div>
+            <div class="route-q" id="rq2" style="top:450px;"><span class="qfrom">#leadership · Exec</span>"Which Florida owners are losing money on prospect mail?"</div>
+            <div class="route-sup" id="rsup">
+                <h5>Multi-Agent Supervisor</h5>
+                <p>Reads the message, decides intent, dispatches agents, streams the combined answer back.</p>
+                <div class="intent" id="rintent">reading intent&hellip;</div>
+            </div>
+            <div class="route-agent" id="ra0" style="top:20px;"><div class="aname">wingman_search</div><div class="arole">Python UC function · resolves "that location in Tulsa" to the exact dispenser</div></div>
+            <div class="route-agent" id="ra1" style="top:150px;"><div class="aname">question_distiller</div><div class="arole">UC function · expands one ask into the full scorecard question set</div></div>
+            <div class="route-agent" id="ra2" style="top:280px;"><div class="aname">beltone_genie</div><div class="arole">Genie space · Beltone network analytics</div></div>
+            <div class="route-agent" id="ra3" style="top:410px;"><div class="aname">cbs_genie</div><div class="arole">Genie space · CounselEAR, Sycle, Blueprint</div></div>
+            <div class="route-agent" id="ra4" style="top:540px;"><div class="aname">python_exec</div><div class="arole">sandboxed compute on returned data</div></div>
+        </div>
+        <div class="arch-note reveal d4">Nobody picks an agent. Nobody spells a location right. The supervisor works out the rest.</div>
+    </div>
+    <div class="pagenum">11</div>
+</section>
+
+<!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
+<section class="slide" data-name="act2">
+    <div class="slide-inner">
+        <div class="kicker reveal">Demo · 4 of 4</div>
+        <h2 class="reveal d1">From workspace to where work happens.</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-cat">Adoption · Slack</div>
+                <div class="demo-qs">
+                    <div class="demo-q">Scorecards on demand: full location health check from one message</div>
+                    <div class="demo-q">Forgiving input: type a location however you remember it, it resolves</div>
+                    <div class="demo-q">Streaming answers: sourced, formatted, in the channel you already use</div>
+                </div>
+                <div class="usecase-row">
+                    <span class="uc-label">Use it for</span>
+                    <span class="uc-chip">pre-call prep</span>
+                    <span class="uc-chip">weekly account reviews</span>
+                    <span class="uc-chip">exec ask-anything</span>
+                </div>
+                <div class="demo-stat reveal d4">
+                    <div class="stat-big">0 logins</div>
+                    <div class="stat-cap">No workspace access, no dashboard, no analyst in the loop. The same governed answers, <b>delivered where the AE already is</b>.</div>
+                </div>
+            </div>
+            <div class="demo-right reveal d3">
+                <div class="video-frame" data-video="act_2_slack.mp4">
+                    <video src="act_2_slack.mp4" controls preload="metadata"></video>
+                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
+                </div>
+                <div class="video-hint">act_2_slack.mp4 · scorecard generation, live in Slack</div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5">
+            <span class="olab">Outcome</span>
+            <span class="otext">Adoption is the whole game: a tool nobody opens answers nothing. Insight in Slack means <b>the people who own the client relationship</b> use it daily, without ever learning Databricks.</span>
+        </div>
+    </div>
+    <div class="pagenum">08</div>
+</section>
+
+<!-- ============ SLIDE 8B · IN THE WILD (scattered gif wall) ============ -->
+<section class="slide" data-name="wall">
+    <div class="slide-inner">
+        <div class="kicker reveal">In the wild</div>
+        <h2 class="reveal d1">A normal day in the channel.</h2>
+        <div class="wall">
+            <div class="wall-tile reveal d2" style="left:30px; top:20px; width:560px; transform: rotate(-2.5deg);">
+                <video src="slack_gif_1.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">just look it up<small>any location, straight from Slack</small></div>
+            </div>
+            <div class="wall-tile reveal d3" style="left:640px; top:90px; width:520px; transform: rotate(1.8deg);">
+                <div class="tile-ph" style="height:292px;">demo clip 2</div>
+                <div class="tile-cap">client prep<small>scorecard before the call starts</small></div>
+            </div>
+            <div class="wall-tile reveal d4" style="left:1210px; top:30px; width:480px; transform: rotate(-1.2deg);">
+                <div class="tile-ph" style="height:270px;">demo clip 3</div>
+                <div class="tile-cap">investigative work<small>follow-ups keep the thread's context</small></div>
+            </div>
+            <div class="wall-tile reveal d5" style="left:900px; top:430px; width:540px; transform: rotate(2.2deg);">
+                <div class="tile-ph" style="height:280px;">demo clip 4</div>
+                <div class="tile-cap">and more<small>exec ask-anything, weekly reviews, wingman lookups</small></div>
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">09</div>
+</section>
+
+<!-- ============ SLIDE 12 · RECEIPTS ============ -->
+<section class="slide" data-name="receipts">
+    <div class="slide-inner">
+        <div class="kicker reveal">Genie best practices</div>
+        <h2 class="reveal d1">Built the way Databricks says to build it.</h2>
+        <div class="chain reveal d2">
+            <span class="chain-node">Gold layer</span><span class="chain-arrow">&rarr;</span>
+            <span class="chain-node hot">4 UC metric views<span class="bonus">bonus</span></span><span class="chain-arrow">&rarr;</span>
+            <span class="chain-node">Genie spaces</span><span class="chain-arrow">&rarr;</span>
+            <span class="chain-node">Supervisor</span><span class="chain-arrow">&rarr;</span>
+            <span class="chain-node">Slack</span><span class="chain-arrow">+</span>
+            <span class="chain-node hot">Databricks One<span class="bonus">bonus</span></span>
+        </div>
+        <div class="rec-grid">
+            <div class="rec-item reveal d2"><div class="rec-check">&#10003;</div><div><h4>Privacy: hidden &amp; excluded columns</h4><p>First name, last name, and other PII are excluded at the space level. They can never appear in an answer, no matter how the question is phrased.</p></div></div>
+            <div class="rec-item reveal d3"><div class="rec-check">&#10003;</div><div><h4>Usage guidance on every query</h4><p>All 119 training queries declare their grain, time window, and when to use them.</p></div></div>
+            <div class="rec-item reveal d4"><div class="rec-check">&#10003;</div><div><h4>Measures &amp; filters</h4><p>Governed measures and parameterized filters, so a rate is computed one way, everywhere.</p></div></div>
+            <div class="rec-item reveal d5"><div class="rec-check">&#10003;</div><div><h4>Consistent aliases &amp; column metadata</h4><p>Every column carries a description and one canonical alias across both spaces.</p></div></div>
+            <div class="rec-item reveal d6"><div class="rec-check">&#10003;</div><div><h4>SQL join specs &amp; guardrails</h4><p>Join paths are declared, fan-out traps are guarded, and Genie flags immature matchback data on its own.</p></div></div>
+            <div class="rec-item reveal d6"><div class="rec-check">&#10003;</div><div><h4>Validated against Tableau</h4><p>Every metric cross-checked against the dashboards the business already trusts.</p></div></div>
+        </div>
+    </div>
+    <div class="pagenum">12</div>
+</section>
+
+<!-- ============ SLIDE 13 · TWO OUTCOMES ============ -->
+<section class="slide" data-name="outcomes">
+    <div class="slide-inner">
+        <div class="kicker reveal">Why this matters</div>
+        <h2 class="reveal d1">Two sides of the same answer.</h2>
+        <div class="out-grid">
+            <div class="out-panel out-client reveal d2">
+                <div class="olabel">For the client</div>
+                <h3>Money stops leaking</h3>
+                <div class="out-li">Reallocate spend from <b>proven dead addresses</b> to untapped tier 1 prospects in the same market.</div>
+                <div class="out-li">Separate list problems from funnel problems from <b>market structure problems</b>, so the fix matches the cause.</div>
+                <div class="out-li">Re-time follow-up drops from journey data instead of habit.</div>
+            </div>
+            <div class="out-panel out-darwill reveal d3">
+                <div class="olabel">For Darwill</div>
+                <h3>Speed becomes the product</h3>
+                <div class="out-li">Answers in seconds means <b>more decisions per quarter</b> on every account.</div>
+                <div class="out-li">AEs walk into calls with the numbers, not a promise to follow up.</div>
+                <div class="out-li">The partner who answers fastest <b>keeps the account</b> and earns the next one.</div>
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">13</div>
+</section>
+
+<!-- ============ SLIDE 13B · QUESTION CLOUD ============ -->
+<section class="slide glow" data-name="lamp">
+    <div class="slide-inner">
+        <div class="kicker reveal">where this goes</div>
+        <h2 class="reveal d1">Every question is a decision waiting.</h2>
+        <div class="lamp-stage">
+            <div class="plume"></div>
+            <div class="plume p2"></div>
+            <div class="plume p3"></div>
+            <div class="lamp-group" id="lampGroup"></div>
+            <!-- genie lamp: classic profile — round body, long spout, lid + finial, handle, base -->
+            <svg class="lamp-svg" viewBox="0 0 360 200" aria-hidden="true">
+                <path class="lamp-body" d="M122 94 C100 94 82 106 80 126 C78 152 104 170 154 174 C214 179 256 162 262 132 C298 124 324 98 332 64 C310 84 286 94 266 94 C254 78 222 68 188 68 C156 68 130 78 122 94 Z"/>
+                <path d="M160 68 C160 54 172 46 188 46 C204 46 214 54 214 66"/>
+                <circle cx="187" cy="37" r="7" fill="rgba(240,180,41,0.18)"/>
+                <path d="M112 102 C86 98 70 112 74 130 C77 144 96 150 108 148"/>
+                <path d="M144 174 L136 188 L228 188 L220 177"/>
+                <path class="lamp-wisp" d="M332 60 C326 44 336 32 330 18 C346 30 342 48 338 58" stroke-width="3" opacity="0.6"/>
+            </svg>
+        </div>
+        <div class="cloud-tag reveal d3">Each of these used to be a ticket. <b>Now it's a message.</b></div>
+    </div>
+    <div class="pagenum">16</div>
+</section>
+
+<!-- ============ SLIDE 14 · CLOSE ============ -->
+<section class="slide glow" data-name="close">
+    <div class="slide-inner">
+        <div class="close-wrap">
+            <svg class="close-bolt reveal" viewBox="0 0 70 110" aria-hidden="true">
+                <path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/>
+            </svg>
+            <div class="close-line reveal d1">The question was always there.<br><span class="accent">Now so is the answer.</span></div>
+            <div class="close-sub reveal d3">Team Phantom Bolt · Powered by Databricks Genie</div>
+        </div>
+    </div>
+    <div class="pagenum">14</div>
+</section>
+
+</main>
+</div>
+
+<!-- deck chrome: progress dots + counter -->
+<nav class="deck-controls" id="dots" aria-label="Slide navigation"></nav>
+<div class="slide-count" id="slideCount"></div>
+
+<!-- inline editing affordance -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">&#9998;</button>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Arrow keys / Space / PageUp-Down / wheel / swipe / dots
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.current = 0;
+        this.stage = document.getElementById('deckStage');
+        this.dots = document.getElementById('dots');
+        this.counter = document.getElementById('slideCount');
+        this.started = false;
+        // page numbers follow document order automatically, so slides can be rearranged freely
+        this.slides.forEach((s, i) => {
+            const pn = s.querySelector('.pagenum');
+            if (pn) pn.textContent = String(i + 1).padStart(2, '0');
+        });
+        this.buildDots();
+        this.setupStageScale();
+        this.setupKeys();
+        this.setupWheel();
+        this.setupTouch();
+        this.show(0);
+    }
+    setupStageScale() {
+        const scale = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+    buildDots() {
+        this.slides.forEach((_, i) => {
+            const b = document.createElement('button');
+            b.className = 'dot';
+            b.setAttribute('aria-label', 'Slide ' + (i + 1));
+            b.addEventListener('click', () => this.show(i));
+            this.dots.appendChild(b);
+        });
+    }
+    /* steps: forward key reveals the next .step on the slide before advancing */
+    advance() {
+        const slide = this.slides[this.current];
+        const pending = slide.querySelector('.step:not(.on)');
+        if (pending) {
+            pending.classList.add('on');
+            if (pending.hasAttribute('data-slam')) {
+                slide.classList.add('shaking');
+                slide.querySelectorAll('.team-dim').forEach(el => el.classList.add('dimmed'));
+                setTimeout(() => slide.classList.remove('shaking'), 1100);
+            }
+            return;
+        }
+        this.show(this.current + 1);
+    }
+    retreat() {
+        const slide = this.slides[this.current];
+        const on = slide.querySelectorAll('.step.on');
+        if (on.length) {
+            const last = on[on.length - 1];
+            last.classList.remove('on');
+            if (last.hasAttribute('data-slam')) slide.querySelectorAll('.team-dim').forEach(el => el.classList.remove('dimmed'));
+            return;
+        }
+        this.show(this.current - 1);
+    }
+    setupKeys() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.getAttribute && e.target.getAttribute('contenteditable')) return;
+            if (['ArrowRight', ' ', 'PageDown', 'ArrowDown'].includes(e.key)) { e.preventDefault(); this.advance(); }
+            if (['ArrowLeft', 'PageUp', 'ArrowUp'].includes(e.key)) { e.preventDefault(); this.retreat(); }
+            if (e.key === 'Home') this.show(0);
+            if (e.key === 'End') this.show(this.slides.length - 1);
+        });
+    }
+    setupWheel() {
+        let lock = false;
+        document.addEventListener('wheel', (e) => {
+            if (lock) return;
+            if (Math.abs(e.deltaY) < 28) return;
+            lock = true;
+            e.deltaY > 0 ? this.advance() : this.retreat();
+            setTimeout(() => lock = false, 650);
+        }, { passive: true });
+    }
+    setupTouch() {
+        let sx = 0;
+        document.addEventListener('touchstart', (e) => sx = e.touches[0].clientX, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 60) this.show(this.current + (dx < 0 ? 1 : -1));
+        }, { passive: true });
+    }
+    show(i) {
+        const next = Math.max(0, Math.min(i, this.slides.length - 1));
+        if (next === this.current && this.started) return;
+        const dirDown = next >= this.current;          // moving forward = content flows upward
+        const prev = this.started ? this.current : -1;
+        this.current = next;
+        this.started = true;
+        this.slides.forEach((s, j) => {
+            const on = j === this.current;
+            s.classList.remove('leaving', 'morph-down', 'morph-up');
+            s.classList.toggle('active', on);
+            s.classList.toggle('visible', on);
+            if (on) s.classList.add(dirDown ? 'morph-down' : 'morph-up');
+            if (!on) s.querySelectorAll('video[controls]').forEach(v => v.pause());
+            // arriving forward at a stepped slide resets it; arriving backward shows it complete
+            if (on) {
+                s.querySelectorAll('.step').forEach(st => st.classList.toggle('on', !dirDown));
+                s.querySelectorAll('.team-dim').forEach(el => el.classList.toggle('dimmed', !dirDown && !!s.querySelector('[data-slam]')));
+            }
+        });
+        // outgoing slide morphs away on top of the incoming one
+        if (prev >= 0 && prev !== this.current) {
+            const out = this.slides[prev];
+            out.classList.add('leaving', dirDown ? 'morph-down' : 'morph-up');
+            setTimeout(() => out.classList.remove('leaving', 'morph-down', 'morph-up'), 720);
+        }
+        Array.from(this.dots.children).forEach((d, j) => d.classList.toggle('on', j === this.current));
+        runSlideEffects(this.slides[this.current]);
+    }
+}
+
+/* ===========================================
+   PER-SLIDE EFFECTS
+   - count-up numbers (.count[data-target])
+   - day counter + queue steps on the problem slide
+   Re-run each time a slide becomes active.
+   =========================================== */
+function animateCount(el, target, decimals, duration) {
+    const start = performance.now();
+    const dec = decimals || 0;
+    function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = (target * eased).toFixed(dec);
+        if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+/* ===========================================
+   SUPERVISOR ROUTING CYCLE
+   Cycles three example messages through intent detection → agent dispatch.
+   Active only while the routing slide is visible.
+   =========================================== */
+const ROUTES = [
+    { q: 0, intent: 'location lookup → resolve entity, then analytics', agents: [0, 2], wires: ['wq0', 'wa0', 'wa2'] },
+    { q: 1, intent: 'scorecard request → distill question set', agents: [1, 3], wires: ['wq1', 'wa1', 'wa3'] },
+    { q: 2, intent: 'network analytics → Beltone, compute follow-up', agents: [2, 4], wires: ['wq2', 'wa2', 'wa4'] },
+];
+let routeTimer = null, routeIdx = 0;
+function routeTick(slide) {
+    const r = ROUTES[routeIdx % ROUTES.length];
+    routeIdx++;
+    slide.querySelectorAll('.route-q, .route-agent').forEach(el => el.classList.remove('lit'));
+    slide.querySelectorAll('.route-svg path').forEach(p => p.classList.remove('wire-lit', 'to-agent'));
+    const sup = slide.querySelector('#rsup');
+    const intent = slide.querySelector('#rintent');
+    sup.classList.remove('lit');
+    intent.textContent = 'reading intent…';
+    slide.querySelector('#rq' + r.q).classList.add('lit');
+    const qw = slide.querySelector('#' + r.wires[0]);
+    setTimeout(() => qw && qw.classList.add('wire-lit'), 250);
+    setTimeout(() => { sup.classList.add('lit'); intent.textContent = r.intent; }, 900);
+    setTimeout(() => {
+        r.wires.slice(1).forEach(id => { const w = slide.querySelector('#' + id); if (w) w.classList.add('wire-lit', 'to-agent'); });
+        r.agents.forEach(i => slide.querySelector('#ra' + i).classList.add('lit'));
+    }, 1500);
+}
+function startRouting(slide) {
+    stopRouting();
+    routeIdx = 0;
+    routeTick(slide);
+    routeTimer = setInterval(() => routeTick(slide), 4200);
+}
+function stopRouting() { if (routeTimer) { clearInterval(routeTimer); routeTimer = null; } }
+
+function runSlideEffects(slide) {
+    stopRouting();
+    stopLamp();
+    if (slide.dataset.name === 'arch') startRouting(slide);
+    if (slide.dataset.name === 'lamp') startLamp(slide);
+    // generic counters
+    slide.querySelectorAll('.count').forEach(el => {
+        animateCount(el, parseFloat(el.dataset.target), parseInt(el.dataset.decimals || '0', 10), 1400);
+    });
+    // problem slide: light queue steps then roll day counter
+    if (slide.dataset.name === 'problem') {
+        const steps = slide.querySelectorAll('.lat-step');
+        steps.forEach(s => s.classList.remove('lit'));
+        steps.forEach((s, i) => setTimeout(() => s.classList.add('lit'), 700 + i * 550));
+        const dn = slide.querySelector('.day-num');
+        if (dn) setTimeout(() => animateCount(dn, parseFloat(dn.dataset.target), 0, 1600), 1200);
+    }
+}
+
+/* ===========================================
+   VIDEO PRESENCE CHECK
+   If a video file 404s, show the styled placeholder instead.
+   Drop the mp4 into this folder and reload: it wires itself.
+   =========================================== */
+document.querySelectorAll('.video-frame').forEach(frame => {
+    const vid = frame.querySelector('video');
+    vid.addEventListener('error', () => frame.classList.add('missing'), true);
+    vid.addEventListener('loadedmetadata', () => frame.classList.remove('missing'));
+    // the error event may have fired before this script ran — check current state too
+    if (vid.error || (vid.networkState === HTMLMediaElement.NETWORK_NO_SOURCE)) frame.classList.add('missing');
+    setTimeout(() => { if (vid.readyState === 0) frame.classList.add('missing'); }, 1500);
+});
+
+/* ===========================================
+   INLINE EDITING
+   Hover top-left corner or press E. Click text to edit.
+   Ctrl/Cmd+S downloads the edited HTML.
+   =========================================== */
+const editor = {
+    isActive: false,
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        editToggle.classList.toggle('active', this.isActive);
+        editToggle.classList.toggle('show', this.isActive);
+        document.querySelectorAll('.slide h1, .slide h2, .slide h3, .slide h4, .slide h5, .slide p, .slide div.cq, .slide div.ccover, .slide .demo-q, .slide .stat-cap, .slide .out-li, .slide .loop-point, .slide .ticket-body, .slide .ticket-title, .slide .sub, .slide .time-label, .slide .arch-note')
+            .forEach(el => el.setAttribute('contenteditable', this.isActive ? 'true' : 'false'));
+    }
+};
+const editToggle = document.getElementById('editToggle');
+const hotzone = document.getElementById('editHotzone');
+let hideTimeout = null;
+editToggle.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+hotzone.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+editToggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+hotzone.addEventListener('click', () => editor.toggleEditMode());
+document.addEventListener('keydown', (e) => {
+    if ((e.key === 'e' || e.key === 'E') && !(e.target.getAttribute && e.target.getAttribute('contenteditable') === 'true')) editor.toggleEditMode();
+    if ((e.metaKey || e.ctrlKey) && e.key === 's' && editor.isActive) {
+        e.preventDefault();
+        const blob = new Blob(['<!DOCTYPE html>\n' + document.documentElement.outerHTML], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'index.html';
+        a.click();
+    }
+});
+
+/* ===========================================
+   QUANTUM TEXT ASSEMBLY (init)
+   Split slide titles into per-char spans with random scatter vectors.
+   Runs once; CSS handles the condense-in whenever the slide shows.
+   =========================================== */
+function quantize(el) {
+    const walk = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            const frag = document.createDocumentFragment();
+            const words = node.textContent.split(/(\s+)/);
+            words.forEach(w => {
+                if (!w) return;
+                if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+                const word = document.createElement('span');
+                word.className = 'qword';
+                for (const ch of w) {
+                    const s = document.createElement('span');
+                    s.className = 'qchar';
+                    s.textContent = ch;
+                    s.style.setProperty('--dx', (Math.random() * 140 - 70).toFixed(0) + 'px');
+                    s.style.setProperty('--dy', (Math.random() * 90 - 45).toFixed(0) + 'px');
+                    s.style.setProperty('--rot', (Math.random() * 40 - 20).toFixed(0) + 'deg');
+                    s.style.setProperty('--qd', (0.05 + Math.random() * 0.55).toFixed(2) + 's');
+                    word.appendChild(s);
+                }
+                frag.appendChild(word);
+            });
+            node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'BR') {
+            Array.from(node.childNodes).forEach(walk);
+        }
+    };
+    Array.from(el.childNodes).forEach(walk);
+}
+document.querySelectorAll('.slide h2, .title-main, .close-line').forEach(quantize);
+
+/* ===========================================
+   GENIE LAMP CYCLE
+   Real EXAMPLE_QUESTIONS from the two training notebooks, grouped by
+   category. One group rises out of the lamp at a time; after the last,
+   all category names appear together; then it loops.
+   =========================================== */
+const LAMP_GROUPS = [
+    { cat: 'performance & trends',
+      scene: 'A client calls before their review. “How are we actually doing this year?”', qs: [
+        'How does this year compare to last year, same period?',
+        'What does the monthly trend look like, and where is it headed?' ] },
+    { cat: 'pool & opportunity',
+      scene: 'Sales needs a number for the renewal pitch. How much room is left in this market?', qs: [
+        'Which locations still have the biggest untapped prospect pools?',
+        'What revenue could we expect if we mailed the full pool?' ] },
+    { cat: 'frequency & waste',
+      scene: 'Finance flags the mail budget. Where is the money going?', qs: [
+        'Am I over-mailing the same addresses?',
+        'How much do we spend on people who never respond?' ] },
+    { cat: 'geography & competition',
+      scene: 'A competitor just opened down the street. Does it actually matter?', qs: [
+        'What does the competitive landscape around Naples look like?',
+        'Should I mail further out, or stay close to the clinic?' ] },
+    { cat: 'owners & funnel',
+      scene: 'Leadership wants to know which owners deserve more budget next quarter.', qs: [
+        'Who are the top franchise owners by prospect ROI this year?',
+        'Which owners book appointments but never convert them to sales?' ] },
+];
+function lampWords(q, base) {
+    return q.split(' ').map((w, k) =>
+        '<span class="lw" style="transition-delay:' + (base + k * 0.09).toFixed(2) + 's; --lwx:' + (Math.random() * 40 - 20).toFixed(0) + 'px; --lwr:' + (Math.random() * 14 - 7).toFixed(1) + 'deg">' + w + '</span>').join(' ');
+}
+let lampTimer = null, lampIdx = 0;
+function lampTick(slide) {
+    const box = slide.querySelector('#lampGroup');
+    const i = lampIdx % (LAMP_GROUPS.length + 1);
+    lampIdx++;
+    box.classList.remove('show');
+    box.classList.add('hide');
+    setTimeout(() => {
+        box.classList.remove('hide');
+        if (i < LAMP_GROUPS.length) {
+            const g = LAMP_GROUPS[i];
+            box.innerHTML = '<div class="lamp-scene">' + g.scene + '</div>' +
+                '<div class="lamp-cat" style="transition-delay:0.5s">' + g.cat + '</div>' +
+                g.qs.map((q, j) => '<div class="lamp-q">&ldquo;' + lampWords(q, 0.9 + j * 1.1) + '&rdquo;</div>').join('');
+        } else {
+            box.innerHTML = '<div class="lamp-all">' + LAMP_GROUPS.map((g, j) =>
+                '<span class="lamp-cat" style="transition-delay:' + (0.2 + j * 0.22) + 's">' + g.cat + '</span>').join('') + '</div>' +
+                '<div class="lamp-q" style="transition-delay:1.6s">119 trained questions behind these. Ask the way you would ask a colleague.</div>';
+        }
+        requestAnimationFrame(() => requestAnimationFrame(() => box.classList.add('show')));
+    }, 650);
+}
+function startLamp(slide) {
+    stopLamp();
+    lampIdx = 0;
+    const box = slide.querySelector('#lampGroup');
+    if (!box) return;
+    box.classList.remove('show', 'hide');
+    box.innerHTML = '';
+    setTimeout(() => lampTick(slide), 600);
+    lampTimer = setInterval(() => lampTick(slide), 7600);
+}
+function stopLamp() { if (lampTimer) { clearInterval(lampTimer); lampTimer = null; } }
+
+/* ===========================================
+   EDITABLE GIF WALL
+   Drag a tile to move it. Scroll over a tile to resize.
+   Double-click resets the tile. Layout persists in localStorage.
+   =========================================== */
+(function initWall() {
+    const KEY = 'wallLayout.v1';
+    const tiles = Array.from(document.querySelectorAll('.wall-tile'));
+    if (!tiles.length) return;
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+    const persist = () => {
+        const out = {};
+        tiles.forEach((t, i) => out[i] = { left: t.style.left, top: t.style.top, width: t.style.width });
+        localStorage.setItem(KEY, JSON.stringify(out));
+    };
+    const stageScale = () => Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    tiles.forEach((tile, i) => {
+        tile.dataset.home = JSON.stringify({ left: tile.style.left, top: tile.style.top, width: tile.style.width });
+        if (saved[i]) { tile.style.left = saved[i].left; tile.style.top = saved[i].top; tile.style.width = saved[i].width; }
+        tile.style.cursor = 'grab';
+        tile.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            tile.setPointerCapture(e.pointerId);
+            tile.style.cursor = 'grabbing';
+            const f = stageScale();
+            const sx = e.clientX, sy = e.clientY;
+            const ox = parseFloat(tile.style.left) || 0, oy = parseFloat(tile.style.top) || 0;
+            const move = (ev) => {
+                tile.style.left = (ox + (ev.clientX - sx) / f) + 'px';
+                tile.style.top = (oy + (ev.clientY - sy) / f) + 'px';
+            };
+            const up = () => {
+                tile.style.cursor = 'grab';
+                tile.removeEventListener('pointermove', move);
+                tile.removeEventListener('pointerup', up);
+                persist();
+            };
+            tile.addEventListener('pointermove', move);
+            tile.addEventListener('pointerup', up);
+        });
+        tile.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            e.stopPropagation();   // keep the deck from changing slides
+            const w = parseFloat(tile.style.width) || 500;
+            tile.style.width = Math.max(220, Math.min(1100, w * (e.deltaY > 0 ? 0.95 : 1.05))) + 'px';
+            persist();
+        }, { passive: false });
+        tile.addEventListener('dblclick', () => {
+            const home = JSON.parse(tile.dataset.home);
+            tile.style.left = home.left; tile.style.top = home.top; tile.style.width = home.width;
+            persist();
+        });
+    });
+})();
+
+/* click a big stat (or the slide's kicker) to replay the slide's numbers */
+document.addEventListener('click', (e) => {
+    const stat = e.target.closest('.stat-big, .day-counter, .cap-foot');
+    if (stat) {
+        const slide = stat.closest('.slide');
+        if (slide) runSlideEffects(slide);
+    }
+});
+
+new SlidePresentation();
+</script>
+</body>
+</html>

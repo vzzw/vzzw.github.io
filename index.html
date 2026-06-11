@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyi Moe Tun · Data &amp; AI Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;0,900;1,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #150d2e; --panel: #221542; --line: #3a2a63;
+    --text: #f7f1e3; --muted: #b6abd9; --gold: #f0b429; --green: #00A972;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Work Sans', sans-serif; line-height: 1.6; }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: 0.5;
+    background-image: radial-gradient(1.5px 1.5px at 40px 60px, rgba(247,241,227,0.4), transparent),
+        radial-gradient(1px 1px at 180px 200px, rgba(240,180,41,0.35), transparent),
+        radial-gradient(1.5px 1.5px at 420px 120px, rgba(247,241,227,0.3), transparent),
+        radial-gradient(1px 1px at 560px 380px, rgba(247,241,227,0.35), transparent);
+    background-size: 640px 480px; }
+nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 6vw; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(21,13,46,0.92); backdrop-filter: blur(8px); z-index: 10; }
+nav .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; }
+nav .brand span { color: var(--gold); }
+nav .links a { color: var(--muted); text-decoration: none; margin-left: 28px; font-size: 15px; transition: color 0.2s; }
+nav .links a:hover { color: var(--gold); }
+header { padding: 110px 6vw 70px; max-width: 1100px; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+h1 { font-family: 'Fraunces', serif; font-weight: 900; font-size: clamp(40px, 6vw, 76px); line-height: 1.05; }
+h1 em { color: var(--gold); font-style: italic; font-weight: 500; }
+header p { color: var(--muted); font-size: 19px; max-width: 640px; margin-top: 24px; }
+section { padding: 60px 6vw; max-width: 1180px; }
+h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 32px; margin-bottom: 28px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 28px; text-decoration: none; color: var(--text); display: block; transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s; }
+.card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 16px 44px rgba(0,0,0,0.4); }
+.card .tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.1em; text-transform: uppercase; }
+.card h3 { font-family: 'Fraunces', serif; font-size: 23px; margin: 10px 0 8px; }
+.card p { color: var(--muted); font-size: 15px; }
+.card .go { display: inline-block; margin-top: 16px; color: var(--gold); font-weight: 600; font-size: 14px; }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; margin-bottom: 12px; }
+details summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+details summary::after { content: '+'; color: var(--gold); font-family: 'Fraunces', serif; font-size: 24px; transition: transform 0.25s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { color: var(--muted); margin-top: 12px; font-size: 15.5px; }
+footer { padding: 50px 6vw; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+<nav>
+    <div class="brand">kyi moe <span>tun</span></div>
+    <div class="links">
+        <a href="#work">Work</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/vzzw">GitHub</a>
+    </div>
+</nav>
+
+<header>
+    <div class="kicker">data · analytics · ai on databricks</div>
+    <h1>I turn campaign data into <em>answers people can ask for.</em></h1>
+    <p>Data professional at Darwill. I build natural-language analytics on Databricks: Genie spaces trained on real business questions, multi-agent Slack assistants, and the validation pipelines that keep the answers honest.</p>
+</header>
+
+<section id="work">
+    <h2>Work</h2>
+    <div class="cards">
+        <a class="card" href="geniethon/">
+            <div class="tag">Databricks Geniethon 2026</div>
+            <h3>Hearing Care Campaign Intelligence</h3>
+            <p>An interactive presentation: two Genie spaces trained on 119 real questions, a supervisor agent that routes plain-English asks in Slack, and the training loop behind it. Built with Team Phantom Bolt.</p>
+            <span class="go">Open the deck →</span>
+        </a>
+        <a class="card" href="https://github.com/vzzw">
+            <div class="tag">More projects</div>
+            <h3>On GitHub</h3>
+            <p>Pipelines, agents, and tooling. More write-ups coming here as I clean them up for public eyes.</p>
+            <span class="go">Browse →</span>
+        </a>
+    </div>
+</section>
+
+<section id="faq">
+    <h2>FAQ</h2>
+    <details>
+        <summary>What is the Geniethon deck, exactly?</summary>
+        <p>A self-contained HTML presentation (arrow keys to navigate) built for the Databricks Geniethon. It walks through a real support ticket, shows live Genie conversations answering it in seconds, and ends with the architecture: two Genie spaces, a supervisor agent, and a Slack bot.</p>
+    </details>
+    <details>
+        <summary>How were the Genie spaces trained?</summary>
+        <p>Two notebooks hold the full curriculum: SQL training queries, column metadata, measures, filters, and example questions. A parser deploys them to the Genie spaces, and a Genie MCP server plus a testing skill file handles regression testing. The same loop can be pointed at other industries.</p>
+    </details>
+    <details>
+        <summary>Is the data real?</summary>
+        <p>The questions and workflow are real. Figures shown in the deck come from demo runs and are presented for illustration.</p>
+    </details>
+    <details>
+        <summary>What's the stack?</summary>
+        <p>Databricks (Genie, Unity Catalog metric views, model serving, SQL warehouse), Python, and Slack. The deck itself is one hand-written HTML file, no framework.</p>
+    </details>
+</section>
+
+<footer>
+    Built by Kyi Moe Tun · <a href="https://github.com/vzzw">github.com/vzzw</a>
+</footer>
+</body>
+</html>
