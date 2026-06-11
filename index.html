@@ -3,106 +3,377 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kyi Moe Tun · Data &amp; AI Portfolio</title>
+<title>Phantom Bolt · Campaign Intelligence on Databricks Genie</title>
+<meta name="description" content="Natural-language campaign analytics for hearing care: two Genie spaces, a supervisor agent, and a Slack bot. Built by Kyi Moe Tun.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;0,900;1,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,700;0,900;1,500;1,700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* ============ warm desert-dawn theme ============ */
 :root {
-    --bg: #150d2e; --panel: #221542; --line: #3a2a63;
-    --text: #f7f1e3; --muted: #b6abd9; --gold: #f0b429; --green: #00A972;
+    --paper: #faf4e8;
+    --sand: #f1e5cc;
+    --card: #fffdf7;
+    --ink: #2a1f3d;
+    --ink-soft: #5d5273;
+    --gold: #c9880e;
+    --gold-bright: #f0b429;
+    --indigo: #3b2a63;
+    --green: #00795c;
+    --line: #e4d5b5;
+    /* type scale */
+    --t-hero: clamp(42px, 6.2vw, 82px);
+    --t-h2: clamp(30px, 3.6vw, 46px);
+    --t-h3: 22px;
+    --t-body: 18px;
+    --t-small: 15px;
+    --t-mono: 14px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: 'Work Sans', sans-serif; line-height: 1.6; }
-body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: 0.5;
-    background-image: radial-gradient(1.5px 1.5px at 40px 60px, rgba(247,241,227,0.4), transparent),
-        radial-gradient(1px 1px at 180px 200px, rgba(240,180,41,0.35), transparent),
-        radial-gradient(1.5px 1.5px at 420px 120px, rgba(247,241,227,0.3), transparent),
-        radial-gradient(1px 1px at 560px 380px, rgba(247,241,227,0.35), transparent);
-    background-size: 640px 480px; }
-nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 6vw; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: rgba(21,13,46,0.92); backdrop-filter: blur(8px); z-index: 10; }
-nav .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; }
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'Work Sans', sans-serif; font-size: var(--t-body); line-height: 1.65; }
+
+/* ============ nav ============ */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 6vw; position: sticky; top: 0; z-index: 50; background: rgba(250,244,232,0.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+nav .brand { font-family: 'Fraunces', serif; font-weight: 900; font-size: 21px; color: var(--ink); text-decoration: none; }
 nav .brand span { color: var(--gold); }
-nav .links a { color: var(--muted); text-decoration: none; margin-left: 28px; font-size: 15px; transition: color 0.2s; }
+nav .links { display: flex; align-items: center; gap: 26px; }
+nav .links a { color: var(--ink-soft); text-decoration: none; font-size: var(--t-small); font-weight: 500; }
 nav .links a:hover { color: var(--gold); }
-header { padding: 110px 6vw 70px; max-width: 1100px; }
-.kicker { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
-h1 { font-family: 'Fraunces', serif; font-weight: 900; font-size: clamp(40px, 6vw, 76px); line-height: 1.05; }
-h1 em { color: var(--gold); font-style: italic; font-weight: 500; }
-header p { color: var(--muted); font-size: 19px; max-width: 640px; margin-top: 24px; }
-section { padding: 60px 6vw; max-width: 1180px; }
-h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 32px; margin-bottom: 28px; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 28px; text-decoration: none; color: var(--text); display: block; transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s; }
-.card:hover { transform: translateY(-4px); border-color: var(--gold); box-shadow: 0 16px 44px rgba(0,0,0,0.4); }
-.card .tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--green); letter-spacing: 0.1em; text-transform: uppercase; }
-.card h3 { font-family: 'Fraunces', serif; font-size: 23px; margin: 10px 0 8px; }
-.card p { color: var(--muted); font-size: 15px; }
-.card .go { display: inline-block; margin-top: 16px; color: var(--gold); font-weight: 600; font-size: 14px; }
-details { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; margin-bottom: 12px; }
-details summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-details summary::after { content: '+'; color: var(--gold); font-family: 'Fraunces', serif; font-size: 24px; transition: transform 0.25s; }
+nav .present { background: var(--indigo); color: #fff; padding: 9px 20px; border-radius: 999px; font-weight: 600; }
+nav .present:hover { background: var(--gold); color: var(--ink); }
+
+/* ============ hero ============ */
+.hero { padding: clamp(70px, 11vh, 130px) 6vw 80px; max-width: 1200px; margin: 0 auto; position: relative; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+h1 { font-family: 'Fraunces', serif; font-weight: 900; font-size: var(--t-hero); line-height: 1.04; letter-spacing: -0.01em; max-width: 13ch; }
+h1 em { font-style: italic; font-weight: 700; color: var(--gold); }
+.hero p { color: var(--ink-soft); max-width: 56ch; margin-top: 26px; }
+.hero-cta { margin-top: 36px; display: flex; gap: 16px; flex-wrap: wrap; }
+.btn { display: inline-block; text-decoration: none; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(42,31,61,0.16); }
+.btn-gold { background: var(--gold-bright); color: var(--ink); }
+.btn-ghost { border: 1.5px solid var(--indigo); color: var(--indigo); }
+.hero-lamp { position: absolute; right: 5vw; top: 90px; width: clamp(120px, 16vw, 230px); opacity: 0.9; }
+.hero-lamp path { fill: none; stroke: var(--gold); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.hero-lamp .body { fill: rgba(240,180,41,0.12); }
+@media (max-width: 760px) { .hero-lamp { display: none; } }
+
+/* ============ sections ============ */
+section { padding: 76px 6vw; }
+.inner { max-width: 1200px; margin: 0 auto; }
+h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); line-height: 1.15; margin-bottom: 14px; }
+.lede { color: var(--ink-soft); max-width: 64ch; margin-bottom: 40px; }
+.band { background: var(--sand); }
+
+/* what it is */
+.three { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 22px; }
+.what { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 30px; }
+.what .num { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: var(--t-mono); }
+.what h3 { font-family: 'Fraunces', serif; font-size: var(--t-h3); margin: 10px 0 8px; }
+.what p { color: var(--ink-soft); font-size: var(--t-small); line-height: 1.6; }
+
+/* ============ ask: category browser + answer replay ============ */
+.ask-wrap { display: grid; grid-template-columns: 290px 1fr; gap: 28px; align-items: start; }
+@media (max-width: 880px) { .ask-wrap { grid-template-columns: 1fr; } }
+.cat-list { display: flex; flex-direction: column; gap: 10px; }
+.cat { text-align: left; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 16px 20px; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 600; color: var(--ink); cursor: pointer; transition: all 0.2s; }
+.cat small { display: block; font-weight: 400; color: var(--ink-soft); font-size: 13.5px; margin-top: 3px; }
+.cat:hover { border-color: var(--gold); }
+.cat.on { border-color: var(--gold); background: #fdf3da; box-shadow: 0 6px 18px rgba(201,136,14,0.13); }
+.ask-panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 30px; min-height: 420px; }
+.ask-panel .hint { font-size: 13.5px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; margin-bottom: 16px; }
+.qbtn { display: block; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; font-size: 16px; font-family: 'Fraunces', serif; font-style: italic; color: var(--indigo); cursor: pointer; transition: all 0.18s; }
+.qbtn:hover { border-color: var(--gold); transform: translateX(4px); }
+.qbtn.on { border-color: var(--gold); background: #fdf3da; }
+.answer { margin-top: 20px; border-top: 1.5px dashed var(--line); padding-top: 20px; display: none; }
+.answer.show { display: block; animation: rise 0.45s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+.answer .alab { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+.answer .atext { font-size: 17px; line-height: 1.7; min-height: 60px; }
+.answer .atext b { color: var(--gold); }
+.answer .anote { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
+.cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--gold); vertical-align: text-bottom; animation: blink 0.8s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ============ demos ============ */
+.demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 26px; }
+@media (max-width: 520px) { .demo-grid { grid-template-columns: 1fr; } }
+.demo { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.demo video { width: 100%; display: block; background: #14102a; aspect-ratio: 16/9; object-fit: contain; }
+.demo .dbody { padding: 22px 26px 26px; }
+.demo h3 { font-family: 'Fraunces', serif; font-size: var(--t-h3); }
+.demo .dabout { color: var(--ink-soft); font-size: var(--t-small); margin-top: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.chip { font-size: 13px; font-weight: 600; color: var(--indigo); background: #ece5f5; border-radius: 999px; padding: 5px 13px; }
+
+/* ============ built / effort ============ */
+.built-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px; align-items: start; }
+@media (max-width: 880px) { .built-grid { grid-template-columns: 1fr; } }
+.steps { counter-reset: s; }
+.bstep { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px dashed var(--line); }
+.bstep:last-child { border-bottom: 0; }
+.bstep .bn { counter-increment: s; flex: 0 0 40px; height: 40px; border-radius: 50%; background: var(--gold-bright); color: var(--ink); font-family: 'Fraunces', serif; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.bstep .bn::before { content: counter(s); }
+.bstep h4 { font-size: 17px; font-weight: 700; }
+.bstep p { font-size: var(--t-small); color: var(--ink-soft); }
+.effort { background: var(--indigo); color: #f4eee0; border-radius: 18px; padding: 32px; }
+.effort h3 { font-family: 'Fraunces', serif; font-size: var(--t-h3); color: var(--gold-bright); margin-bottom: 16px; }
+.erow { display: flex; justify-content: space-between; gap: 14px; padding: 10px 0; border-bottom: 1px solid rgba(244,238,224,0.15); font-size: var(--t-small); }
+.erow b { font-family: 'JetBrains Mono', monospace; color: var(--gold-bright); white-space: nowrap; }
+.effort .takeaway { margin-top: 18px; font-size: var(--t-small); font-style: italic; color: #cfc4e6; }
+
+/* ============ architecture ============ */
+.arch { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 34px; overflow-x: auto; }
+.arch-flow { display: flex; align-items: stretch; gap: 0; min-width: 760px; }
+.anode { flex: 1; background: var(--paper); border: 1.5px solid var(--line); border-radius: 12px; padding: 18px; text-align: center; position: relative; }
+.anode h4 { font-size: 15.5px; }
+.anode p { font-size: 13px; color: var(--ink-soft); margin-top: 5px; line-height: 1.45; }
+.aarr { flex: 0 0 44px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 26px; font-family: 'Fraunces', serif; }
+.arch-foot { margin-top: 18px; font-size: 13.5px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; }
+
+/* ============ faq ============ */
+details { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 26px; margin-bottom: 12px; }
+summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+summary::after { content: '+'; color: var(--gold); font-family: 'Fraunces', serif; font-size: 26px; line-height: 1; transition: transform 0.25s; }
 details[open] summary::after { transform: rotate(45deg); }
-details p { color: var(--muted); margin-top: 12px; font-size: 15.5px; }
-footer { padding: 50px 6vw; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
-footer a { color: var(--gold); text-decoration: none; }
+details p { color: var(--ink-soft); margin-top: 12px; font-size: var(--t-small); }
+
+footer { padding: 54px 6vw; background: var(--ink); color: #b9aed3; font-size: var(--t-small); }
+footer .inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+footer a { color: var(--gold-bright); text-decoration: none; }
 </style>
 </head>
 <body>
+
 <nav>
-    <div class="brand">kyi moe <span>tun</span></div>
+    <a class="brand" href="#">phantom <span>bolt</span></a>
     <div class="links">
-        <a href="#work">Work</a>
+        <a href="#ask">Try the questions</a>
+        <a href="#demos">Demos</a>
+        <a href="#built">How it's built</a>
         <a href="#faq">FAQ</a>
-        <a href="https://github.com/vzzw">GitHub</a>
+        <a class="present" href="phantombolt/">Presentation →</a>
     </div>
 </nav>
 
-<header>
-    <div class="kicker">data · analytics · ai on databricks</div>
-    <h1>I turn campaign data into <em>answers people can ask for.</em></h1>
-    <p>Data professional at Darwill. I build natural-language analytics on Databricks: Genie spaces trained on real business questions, multi-agent Slack assistants, and the validation pipelines that keep the answers honest.</p>
+<header class="hero">
+    <svg class="hero-lamp" viewBox="0 0 360 200" aria-hidden="true">
+        <path class="body" d="M122 94 C100 94 82 106 80 126 C78 152 104 170 154 174 C214 179 256 162 262 132 C298 124 324 98 332 64 C310 84 286 94 266 94 C254 78 222 68 188 68 C156 68 130 78 122 94 Z"/>
+        <path d="M160 68 C160 54 172 46 188 46 C204 46 214 54 214 66"/>
+        <circle cx="187" cy="37" r="7" fill="rgba(240,180,41,0.2)"/>
+        <path d="M112 102 C86 98 70 112 74 130 C77 144 96 150 108 148"/>
+        <path d="M144 174 L136 188 L228 188 L220 177"/>
+    </svg>
+    <div class="kicker">team phantom bolt · databricks geniethon 2026</div>
+    <h1>Campaign questions, <em>answered in the time it takes to ask.</em></h1>
+    <p>Account teams used to file a ticket and wait three days for a campaign answer. We trained Databricks Genie on the questions they actually ask, wired it into Slack, and validated every number against the dashboards the business already trusts.</p>
+    <div class="hero-cta">
+        <a class="btn btn-gold" href="#ask">See what you can ask</a>
+        <a class="btn btn-ghost" href="phantombolt/">Watch the presentation</a>
+    </div>
 </header>
 
-<section id="work">
-    <h2>Work</h2>
-    <div class="cards">
-        <a class="card" href="geniethon/">
-            <div class="tag">Databricks Geniethon 2026</div>
-            <h3>Hearing Care Campaign Intelligence</h3>
-            <p>An interactive presentation: two Genie spaces trained on 119 real questions, a supervisor agent that routes plain-English asks in Slack, and the training loop behind it. Built with Team Phantom Bolt.</p>
-            <span class="go">Open the deck →</span>
-        </a>
-        <a class="card" href="https://github.com/vzzw">
-            <div class="tag">More projects</div>
-            <h3>On GitHub</h3>
-            <p>Pipelines, agents, and tooling. More write-ups coming here as I clean them up for public eyes.</p>
-            <span class="go">Browse →</span>
-        </a>
+<section class="band" id="what">
+    <div class="inner">
+        <h2>Three pieces, one answer</h2>
+        <p class="lede">It looks like a chat message. Underneath, three systems make sure the answer is right, fast, and where people already work.</p>
+        <div class="three">
+            <div class="what"><div class="num">01</div><h3>Two trained Genie spaces</h3><p>119 curated SQL training queries across two spaces: one for Beltone, one covering CounselEAR, Sycle, and Blueprint. Each query ships with metadata, measures, filters, and usage guidance so Genie answers like an analyst who knows the business.</p></div>
+            <div class="what"><div class="num">02</div><h3>A supervisor agent</h3><p>Reads each question, resolves location names however people type them, picks the right Genie space, and can generate a full scorecard on demand. Five agents working as one.</p></div>
+            <div class="what"><div class="num">03</div><h3>Slack delivery</h3><p>No logins, no dashboards. Account executives ask in the channel they already live in, and answers stream back formatted and sourced.</p></div>
+        </div>
+    </div>
+</section>
+
+<section id="ask">
+    <div class="inner">
+        <h2>What can you ask it?</h2>
+        <p class="lede">Pick a topic, then click a question. Answers below come from real demo runs (numbers shown for illustration).</p>
+        <div class="ask-wrap">
+            <div class="cat-list" id="catList"></div>
+            <div class="ask-panel">
+                <div class="hint" id="askHint">// pick a question</div>
+                <div id="qList"></div>
+                <div class="answer" id="answer">
+                    <div class="alab">Genie answers</div>
+                    <div class="atext" id="atext"></div>
+                    <div class="anote">Sample response from a recorded demo run. Live answers carry the full table and the SQL behind it.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="band" id="demos">
+    <div class="inner">
+        <h2>Watch it work</h2>
+        <p class="lede">Each demo is one continuous conversation. What matters isn't the specific numbers; it's that every follow-up keeps context, and every answer used to be a ticket.</p>
+        <div class="demo-grid">
+            <div class="demo">
+                <video src="phantombolt/act_0_web.mp4" controls preload="metadata"></video>
+                <div class="dbody">
+                    <h3>The ticket, answered</h3>
+                    <p class="dabout">A real support ticket about dispenser performance, answered live in one Genie thread: performance, market structure, peer benchmarks.</p>
+                    <div class="chips"><span class="chip">client call prep</span><span class="chip">ticket deflection</span><span class="chip">root-cause investigation</span></div>
+                </div>
+            </div>
+            <div class="demo">
+                <video src="phantombolt/act_1_cbs_web.mp4" controls preload="metadata"></video>
+                <div class="dbody">
+                    <h3>Three CRMs, one conversation</h3>
+                    <p class="dabout">Funnel and journey questions across CounselEAR, Sycle, and Blueprint without switching systems: response timing, touch attribution, conversion gaps.</p>
+                    <div class="chips"><span class="chip">cadence planning</span><span class="chip">revenue planning</span><span class="chip">clinic ops escalation</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="built">
+    <div class="inner">
+        <h2>How it's built (and what it cost)</h2>
+        <p class="lede">The Genie space is code, not clicks. Everything lives in version-controlled notebooks and redeploys in one run.</p>
+        <div class="built-grid">
+            <div class="steps">
+                <div class="bstep"><span class="bn"></span><div><h4>Two training notebooks</h4><p>SQL training cells with column metadata, measures, filters, and usage guidance per query. The notebooks are the curriculum.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>One-command deploy</h4><p>A parser reads the notebooks and pushes the full Genie space configuration. No hand-tuning in a UI.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Automated testing</h4><p>A Genie MCP server wired into a code assistant asks the space hundreds of questions and grades the SQL that comes back.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Validated against Tableau</h4><p>Every metric cross-checked against the dashboards the business already trusts before anyone sees an answer.</p></div></div>
+            </div>
+            <div class="effort">
+                <h3>Where the time went</h3>
+                <div class="erow"><span>Scorecard generation &amp; Slack bot</span><b>45%</b></div>
+                <div class="erow"><span>Training the spaces</span><b>30%</b></div>
+                <div class="erow"><span>Testing &amp; validation</span><b>17%</b></div>
+                <div class="erow"><span>Asking questions</span><b>8%</b></div>
+                <p class="takeaway">Most of the work wasn't asking questions. It was making sure the answers were right. And because that work is now a pipeline, standing this up for the next vertical is weeks, not months.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="band" id="architecture">
+    <div class="inner">
+        <h2>Under the hood</h2>
+        <p class="lede">A question's path from Slack to answer.</p>
+        <div class="arch">
+            <div class="arch-flow">
+                <div class="anode"><h4>Slack message</h4><p>"How's that location in Tulsa doing?"</p></div>
+                <div class="aarr">→</div>
+                <div class="anode"><h4>Supervisor agent</h4><p>Reads intent, resolves the location name, routes</p></div>
+                <div class="aarr">→</div>
+                <div class="anode"><h4>The right specialist</h4><p>Beltone Genie · multi-CRM Genie · scorecard builder · location resolver · python exec</p></div>
+                <div class="aarr">→</div>
+                <div class="anode"><h4>Governed answer</h4><p>Streams back to Slack, sourced from Unity Catalog gold tables and metric views</p></div>
+            </div>
+            <div class="arch-foot">gold layer → 4 UC metric views → 2 Genie spaces → supervisor → Slack &amp; Databricks One</div>
+        </div>
     </div>
 </section>
 
 <section id="faq">
-    <h2>FAQ</h2>
-    <details>
-        <summary>What is the Geniethon deck, exactly?</summary>
-        <p>A self-contained HTML presentation (arrow keys to navigate) built for the Databricks Geniethon. It walks through a real support ticket, shows live Genie conversations answering it in seconds, and ends with the architecture: two Genie spaces, a supervisor agent, and a Slack bot.</p>
-    </details>
-    <details>
-        <summary>How were the Genie spaces trained?</summary>
-        <p>Two notebooks hold the full curriculum: SQL training queries, column metadata, measures, filters, and example questions. A parser deploys them to the Genie spaces, and a Genie MCP server plus a testing skill file handles regression testing. The same loop can be pointed at other industries.</p>
-    </details>
-    <details>
-        <summary>Is the data real?</summary>
-        <p>The questions and workflow are real. Figures shown in the deck come from demo runs and are presented for illustration.</p>
-    </details>
-    <details>
-        <summary>What's the stack?</summary>
-        <p>Databricks (Genie, Unity Catalog metric views, model serving, SQL warehouse), Python, and Slack. The deck itself is one hand-written HTML file, no framework.</p>
-    </details>
+    <div class="inner">
+        <h2>FAQ</h2>
+        <details><summary>How do I know the answers are right?</summary><p>Three layers: training queries are written and reviewed by an analyst who knows the data; an automated test harness asks the spaces hundreds of questions through MCP and grades the SQL; and every metric is validated against the Tableau dashboards the business already uses. Metrics that haven't matured carry a flag so nobody acts on half-baked numbers.</p></details>
+        <details><summary>What's in scope, and what isn't?</summary><p>In scope: campaign performance, full funnel, mailing pressure, geography and competition, prospect pools, owner rankings, scorecards, trends and forecasts, across four CRMs. Out of scope on purpose: patient PII (names and identifying columns are excluded at the space level), ad-hoc writes, and anything outside campaign data.</p></details>
+        <details><summary>How were the Genie spaces trained?</summary><p>Two notebooks hold the curriculum: 119 SQL training queries with metadata, measures, filters, and example questions. A parser deploys them to the spaces in one run. Bad answers become new training cells, then redeploy. The loop is the product.</p></details>
+        <details><summary>Could this work for a different industry?</summary><p>Yes, that's the point of building it as code. Point the notebooks at another vertical's gold tables, retrain the question set, rerun the parser. The supervisor, Slack wiring, testing harness, and validation pattern carry over as is.</p></details>
+        <details><summary>Is the data real?</summary><p>The questions, architecture, and workflow are real. Numbers shown on this site come from recorded demo runs and are presented for illustration.</p></details>
+        <details><summary>What's the stack?</summary><p>Databricks end to end: Genie spaces, Unity Catalog metric views, a multi-agent supervisor on model serving, SQL warehouse, plus Slack. This site and the presentation are hand-written HTML, no framework.</p></details>
+    </div>
 </section>
 
 <footer>
-    Built by Kyi Moe Tun · <a href="https://github.com/vzzw">github.com/vzzw</a>
+    <div class="inner">
+        <div>Built by Kyi Moe Tun · Team Phantom Bolt · Databricks Geniethon 2026</div>
+        <div><a href="phantombolt/">Presentation</a> · <a href="https://github.com/vzzw">github.com/vzzw</a></div>
+    </div>
 </footer>
+
+<script>
+/* ============ question browser + typed answer replay ============ */
+const ASK = [
+    { cat: 'Performance & trends', sub: 'scorecards, YoY, forecasts', qs: [
+        { q: 'How does this year compare to last year, same period?',
+          a: 'Year to date the network is ahead of last year on response, with appointment cost trending down. The answer comes back as a month-by-month table per CRM, with <b>maturity flags</b> on months still inside the matchback window.' },
+        { q: 'What is the monthly performance trend with a forecast?',
+          a: 'Genie returns the monthly trend and projects the rest of the year. In demo runs, the projection flagged a soft Q4 early enough to adjust drop schedules.' },
+        { q: 'How is one location performing across all CRMs?',
+          a: 'One scorecard: response rate, cost per appointment, rank against the network, and whether its data is mature enough to judge. The same question used to mean stitching four systems by hand.' } ] },
+    { cat: 'Pool & opportunity', sub: 'untapped prospects, projected revenue', qs: [
+        { q: 'What percentage of the prospect pool is untapped at this location?',
+          a: 'In one demo market: <b>8,137 untapped tier 1–3 households, 40.9% of the pool</b>. Genie lists them by tier so the next campaign funds the best prospects first.' },
+        { q: 'What revenue could we expect if we mailed the full pool?',
+          a: 'Genie projects expected appointments and revenue from the untapped pool using the location’s own historical response and close rates, not a generic benchmark.' } ] },
+    { cat: 'Frequency & waste', sub: 'over-mailing, non-responder spend', qs: [
+        { q: 'How much do we spend on people who never respond?',
+          a: 'The demo answer that changed a budget conversation: one location had sent <b>120,241 additional mailings to 19,054 addresses that had never once responded — $68,336, or 79.7% of its prospect spend</b>.' },
+        { q: 'Am I over-mailing the same addresses?',
+          a: 'Genie buckets every address by touch count and shows response by bucket, so you can see exactly where extra touches stop paying for themselves.' } ] },
+    { cat: 'Geography & competition', sub: 'distance bands, competitor density', qs: [
+        { q: 'What does the competitive landscape around a clinic look like?',
+          a: 'For one demo location: <b>27 competitors within 5 miles, a Costco hearing center 3 miles out, Miracle-Ear at 2.4</b>. Saturated market — which reframes a "bad location" as a different playbook, not a failing one.' },
+        { q: 'Should I mail further out, or stay close to the clinic?',
+          a: 'Response by distance band, per location. Some markets pay for the wider radius; others waste it. The answer is specific, not a rule of thumb.' } ] },
+    { cat: 'Owners & funnel', sub: 'rankings, conversion gaps, journey timing', qs: [
+        { q: 'Which owners book appointments but never convert them to sales?',
+          a: 'Genie separates the funnel: mail → appointment → show → sale. Owners weak at the close stage get a clinic conversation, not a mail conversation. That distinction protects the campaign budget.' },
+        { q: 'How long does the journey from mailbox to sale take?',
+          a: 'In the multi-CRM demo: <b>69.9% of responders act on the first mailing, and the average mailbox-to-sale journey is 33 days</b>. Both numbers feed directly into re-mail cadence planning.' } ] },
+];
+
+const catList = document.getElementById('catList');
+const qList = document.getElementById('qList');
+const answer = document.getElementById('answer');
+const atext = document.getElementById('atext');
+const hint = document.getElementById('askHint');
+let typeTimer = null;
+
+function typeAnswer(html) {
+    clearInterval(typeTimer);
+    answer.classList.add('show');
+    // type plain text, then swap in formatted html
+    const plain = html.replace(/<[^>]+>/g, '');
+    let i = 0;
+    atext.innerHTML = '<span class="cursor"></span>';
+    typeTimer = setInterval(() => {
+        i += 3;
+        if (i >= plain.length) {
+            clearInterval(typeTimer);
+            atext.innerHTML = html;
+        } else {
+            atext.innerHTML = plain.slice(0, i) + '<span class="cursor"></span>';
+        }
+    }, 18);
+}
+
+function showCat(idx) {
+    [...catList.children].forEach((c, j) => c.classList.toggle('on', j === idx));
+    const g = ASK[idx];
+    hint.textContent = '// ' + g.cat.toLowerCase() + ' — click a question';
+    answer.classList.remove('show');
+    qList.innerHTML = '';
+    g.qs.forEach((item) => {
+        const b = document.createElement('button');
+        b.className = 'qbtn';
+        b.textContent = '“' + item.q + '”';
+        b.onclick = () => {
+            [...qList.children].forEach(x => x.classList.remove('on'));
+            b.classList.add('on');
+            typeAnswer(item.a);
+        };
+        qList.appendChild(b);
+    });
+}
+
+ASK.forEach((g, i) => {
+    const b = document.createElement('button');
+    b.className = 'cat';
+    b.innerHTML = g.cat + '<small>' + g.sub + '</small>';
+    b.onclick = () => showCat(i);
+    catList.appendChild(b);
+});
+showCat(0);
+</script>
 </body>
 </html>

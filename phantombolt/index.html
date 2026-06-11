@@ -326,6 +326,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 .cap-card .cq { font-size: 20px; line-height: 1.4; color: #d8e0e4; font-style: italic; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
 .cap-card .cq::before { content: '“'; color: var(--lava); font-size: 24px; }
 .cap-card .cq::after { content: '”'; color: var(--lava); font-size: 24px; }
+.scope-out { color: var(--muted); }
 .cap-foot { margin-top: 30px; margin-bottom: 26px; padding: 20px 30px; border-radius: 14px; background: var(--lava-soft); border: 1px solid rgba(240,180,41,0.35); font-family: var(--font-mono); font-size: 22px; color: var(--text); text-align: center; position: relative; z-index: 2; white-space: nowrap; }
 .cap-foot b { color: var(--lava); }
 
@@ -336,6 +337,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 .demo-left { display: flex; flex-direction: column; min-height: 0; }
 .demo-cat { display: inline-flex; align-self: flex-start; font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: rgba(0,169,114,0.12); border: 1px solid rgba(0,169,114,0.4); padding: 9px 18px; border-radius: 999px; margin-bottom: 28px; }
 .demo-qs { display: flex; flex-direction: column; gap: 16px; }
+.demo-about { font-size: 22px; color: var(--text); margin: 14px 0 6px; line-height: 1.4; }
 .usecase-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .uc-chip { font-family: var(--font-script); font-size: 24px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 999px; padding: 7px 16px; transition: transform 0.2s, background 0.2s; }
 .uc-chip:hover { transform: translateY(-2px); background: rgba(244,132,95,0.2); }
@@ -588,6 +590,8 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="demo-grid">
             <div class="demo-left reveal d2">
                 <div class="demo-cat">Account intelligence</div>
+                <div class="demo-about">What this is: the same support ticket from the last slide, answered live in one Genie conversation.</div>
+                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
                 <div class="demo-qs">
                     <div class="demo-q">Campaign performance at any grain: dispenser, owner, state, network</div>
                     <div class="demo-q">Market structure: who competes within 3 and 5 miles of every door</div>
@@ -599,17 +603,13 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                     <span class="uc-chip">ticket deflection</span>
                     <span class="uc-chip">root-cause investigation</span>
                 </div>
-                <div class="demo-stat reveal d4">
-                    <div class="stat-big"><span class="count" data-target="90">0</span>s</div>
-                    <div class="stat-cap">And the answer flipped the question: <b>the dispenser isn't underperforming. Florida is.</b> The owner sits above the state average.</div>
-                </div>
             </div>
             <div class="demo-right reveal d3">
-                <div class="video-frame" data-video="act_0.mp4">
-                    <video src="act_0.mp4" controls preload="metadata"></video>
+                <div class="video-frame" data-video="act_0_web.mp4">
+                    <video src="act_0_web.mp4" controls preload="metadata"></video>
                     <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
                 </div>
-                <div class="video-hint">act_0.mp4 · 4 questions, one conversation thread</div>
+                <div class="video-hint">act_0_web.mp4 · 4 questions, one conversation thread</div>
             </div>
         </div>
         <div class="outcome-strip reveal d5">
@@ -670,7 +670,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="cap-card reveal d8"><h4>Pool &amp; targeting</h4><div class="ccover">Tier utilization, untapped counts, demographics, propensity models.</div><div class="cq">What percentage of the prospect pool is untapped at each location?</div></div>
             <div class="cap-card reveal d9"><h4>Operations</h4><div class="ccover">Current month drops, next 30 days, trigger-active locations.</div><div class="cq">What drops in the next 30 days?</div></div>
         </div>
-        <div class="cap-foot reveal d10"><b>119 trained queries</b> · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · every metric carries its maturity rules</div>
+        <div class="cap-foot reveal d10"><b>In scope:</b> 119 trained queries · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · maturity rules on every metric&nbsp;&nbsp;<span class="scope-out"><b>Out of scope, on purpose:</b> patient PII, ad-hoc writes, anything outside campaign data</span></div>
     </div>
     <div class="pagenum">04</div>
 </section>
@@ -683,6 +683,8 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="demo-grid">
             <div class="demo-left reveal d2">
                 <div class="demo-cat">Spend efficiency</div>
+                <div class="demo-about">What this is: a health check on one location, from symptom to root cause, in a single thread.</div>
+                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
                 <div class="demo-qs">
                     <div class="demo-q">Underperformer triage: rank any slice of the network, mature data only</div>
                     <div class="demo-q">Wasted spend: addresses mailed again and again that never respond</div>
@@ -693,10 +695,6 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                     <span class="uc-chip">budget reallocation</span>
                     <span class="uc-chip">list hygiene</span>
                     <span class="uc-chip">market strategy</span>
-                </div>
-                <div class="demo-stat reveal d4">
-                    <div class="stat-big"><span class="count" data-target="79.7" data-decimals="1">0</span>%</div>
-                    <div class="stat-cap">of Lexington's prospect spend went to <b>19,054 addresses that already told us no</b>. We mailed them 120,241 more times. $68,336.</div>
                 </div>
             </div>
             <div class="demo-right reveal d3">
@@ -723,6 +721,8 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="demo-grid">
             <div class="demo-left reveal d2">
                 <div class="demo-cat">Funnel &amp; journey</div>
+                <div class="demo-about">What this is: funnel and journey questions across CounselEAR, Sycle, and Blueprint without switching systems.</div>
+                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
                 <div class="demo-qs">
                     <div class="demo-q">Full funnel per CRM: mailed, appointments, shows, sales, ROI</div>
                     <div class="demo-q">Journey timing: how long from mailbox to booked to bought</div>
@@ -734,17 +734,13 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                     <span class="uc-chip">revenue planning</span>
                     <span class="uc-chip">clinic ops escalation</span>
                 </div>
-                <div class="demo-stat reveal d4">
-                    <div class="stat-big"><span class="count" data-target="69.9" data-decimals="1">0</span>%</div>
-                    <div class="stat-cap">of responders respond to the <b>first mailing</b>. Average journey from mailbox to sale: 33 days. That changes how we think about re-mail cadence.</div>
-                </div>
             </div>
             <div class="demo-right reveal d3">
-                <div class="video-frame" data-video="act_1_cbs.mp4">
-                    <video src="act_1_cbs.mp4" controls preload="metadata"></video>
+                <div class="video-frame" data-video="act_1_cbs_web.mp4">
+                    <video src="act_1_cbs_web.mp4" controls preload="metadata"></video>
                     <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
                 </div>
-                <div class="video-hint">act_1_cbs.mp4 · CounselEAR, Sycle, and Blueprint in one space</div>
+                <div class="video-hint">act_1_cbs_web.mp4 · CounselEAR, Sycle, and Blueprint in one space</div>
             </div>
         </div>
         <div class="outcome-strip reveal d5">
@@ -783,6 +779,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
         <div class="time-quote reveal d6">Most of the work wasn't asking questions. It was making sure the answers were right.</div>
+        <div class="time-quote reveal d7" style="margin-top:14px;">The good news: that work is now a pipeline. Standing this up for the next Darwill vertical is <b>weeks, not the months this one took.</b></div>
     </div>
     <div class="pagenum">09</div>
 </section>
@@ -879,6 +876,8 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="demo-grid">
             <div class="demo-left reveal d2">
                 <div class="demo-cat">Adoption · Slack</div>
+                <div class="demo-about">What this is: the same governed answers, delivered in Slack with no Databricks login.</div>
+                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
                 <div class="demo-qs">
                     <div class="demo-q">Scorecards on demand: full location health check from one message</div>
                     <div class="demo-q">Forgiving input: type a location however you remember it, it resolves</div>
@@ -889,10 +888,6 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                     <span class="uc-chip">pre-call prep</span>
                     <span class="uc-chip">weekly account reviews</span>
                     <span class="uc-chip">exec ask-anything</span>
-                </div>
-                <div class="demo-stat reveal d4">
-                    <div class="stat-big">0 logins</div>
-                    <div class="stat-cap">No workspace access, no dashboard, no analyst in the loop. The same governed answers, <b>delivered where the AE already is</b>.</div>
                 </div>
             </div>
             <div class="demo-right reveal d3">
