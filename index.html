@@ -213,7 +213,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
             <div class="cat-list" id="catList"></div>
             <div>
                 <div class="slackwin">
-                    <video id="askVid" muted playsinline preload="auto"></video>
+                    <video id="askVid" autoplay muted playsinline preload="auto"></video>
                 </div>
                 <p class="ask-note">Recordings are sped up for viewing. A live answer takes a little longer: Genie is writing and running real SQL, not playing back a script.</p>
             </div>
@@ -226,7 +226,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         <h2>The scorecard, on demand</h2>
         <p class="lede">Ask for a scorecard and the supervisor builds the whole thing: performance, benchmarks, and trend for any location, assembled in one pass instead of a week of analyst time.</p>
         <div class="slackwin" style="max-width:1120px; margin:0 auto;">
-            <video src="scorecard.mp4?v=2" id="scoreVid" muted playsinline loop preload="metadata"></video>
+            <video src="scorecard.mp4?v=2" id="scoreVid" autoplay muted playsinline loop preload="auto"></video>
         </div>
         <p class="ask-note" style="text-align:center;">Recording sped up for viewing. The real run takes a few minutes, which still beats the week it used to take.</p>
     </div>
@@ -363,14 +363,13 @@ ASK.forEach((g, i) => {
     catList.appendChild(b);
 });
 
-// start only when section scrolls into view; pause when it leaves
-let started = false;
+// autoplay first topic immediately; pause/resume as the section scrolls in and out
+showCat(0);
 new IntersectionObserver((es) => {
-    if (es[0].isIntersecting) { started ? vid.play().catch(() => {}) : showCat(0); started = true; }
-    else if (started) vid.pause();
+    es[0].isIntersecting ? vid.play().catch(() => {}) : vid.pause();
 }, { threshold: 0.25 }).observe(document.getElementById('ask'));
 
-// scorecard video: play in view, pause out of view
+// scorecard video: autoplays on load, pause/resume with visibility
 const scoreVid = document.getElementById('scoreVid');
 new IntersectionObserver((es) => {
     es[0].isIntersecting ? scoreVid.play().catch(() => {}) : scoreVid.pause();
