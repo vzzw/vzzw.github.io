@@ -45,8 +45,9 @@ nav .brand span { color: var(--gold); }
 nav .links { display: flex; align-items: center; gap: 26px; }
 nav .links a { color: var(--ink-soft); text-decoration: none; font-size: var(--t-small); font-weight: 500; }
 nav .links a:hover { color: var(--gold); }
-nav .present { background: var(--indigo); color: #fff; padding: 9px 20px; border-radius: 999px; font-weight: 600; }
-nav .present:hover { background: var(--gold); color: var(--ink); }
+nav .present { background: var(--gold-bright); color: var(--ink) !important; padding: 10px 22px; border-radius: 999px; font-weight: 700; box-shadow: 0 4px 14px rgba(240,180,41,0.45); animation: presentPulse 2.6s ease-in-out infinite; }
+nav .present:hover { background: var(--ink); color: var(--gold-bright) !important; transform: translateY(-1px); animation: none; }
+@keyframes presentPulse { 0%, 100% { box-shadow: 0 4px 14px rgba(240,180,41,0.45); } 50% { box-shadow: 0 4px 24px rgba(240,180,41,0.85); } }
 
 /* ============ hero ============ */
 .hero { padding: clamp(70px, 11vh, 130px) 6vw 80px; max-width: 1200px; margin: 0 auto; position: relative; }
@@ -178,7 +179,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         <a href="#ask">What you can ask</a>
         <a href="#scope">Scope</a>
         <a href="#demos">See it work</a>
-        <a class="present" href="phantombolt/">Presentation →</a>
+        <a class="present" href="phantombolt/">&#9889; Watch the presentation &rarr;</a>
     </div>
 </nav>
 
