@@ -80,20 +80,38 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .cat small { display: block; font-weight: 400; color: var(--ink-soft); font-size: 13.5px; margin-top: 3px; }
 .cat:hover { border-color: var(--gold); }
 .cat.on { border-color: var(--gold); background: #fdf3da; box-shadow: 0 6px 18px rgba(201,136,14,0.13); }
-.ask-panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 30px; min-height: 420px; }
-.ask-panel .hint { font-size: 13.5px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; margin-bottom: 16px; }
-.qbtn { display: block; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 13px 18px; margin-bottom: 10px; font-size: 16px; font-family: 'Fraunces', serif; font-style: italic; color: var(--indigo); cursor: pointer; transition: all 0.18s; }
-.qbtn:hover { border-color: var(--gold); transform: translateX(4px); }
-.qbtn.on { border-color: var(--gold); background: #fdf3da; }
-.answer { margin-top: 20px; border-top: 1.5px dashed var(--line); padding-top: 20px; display: none; }
-.answer.show { display: block; animation: rise 0.45s ease; }
-@keyframes rise { from { opacity: 0; transform: translateY(12px); } }
-.answer .alab { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
-.answer .atext { font-size: 17px; line-height: 1.7; min-height: 60px; }
-.answer .atext b { color: var(--gold); }
-.answer .anote { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
-.cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--gold); vertical-align: text-bottom; animation: blink 0.8s step-end infinite; }
+/* slack window mock — auto-playing replay */
+.slackwin { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 18px 50px rgba(42,31,61,0.14); font-family: 'Work Sans', sans-serif; }
+.sw-top { display: flex; align-items: center; gap: 8px; background: #f6f3f0; border-bottom: 1px solid #e8e2da; padding: 11px 16px; }
+.sw-dot { width: 12px; height: 12px; border-radius: 50%; }
+.sw-dot:nth-child(1) { background: #ff5f57; } .sw-dot:nth-child(2) { background: #febc2e; } .sw-dot:nth-child(3) { background: #28c840; }
+.sw-title { margin-left: 10px; font-size: 13px; color: #8a8378; font-family: 'JetBrains Mono', monospace; }
+.sw-head { display: flex; align-items: baseline; gap: 12px; padding: 13px 22px; border-bottom: 1px solid #eee7dd; }
+.sw-head b { font-size: 16.5px; color: #1d1c1d; }
+.sw-head span { font-size: 13px; color: #616061; }
+.sw-msgs { height: 470px; padding: 18px 22px; display: flex; flex-direction: column; justify-content: flex-end; gap: 18px; overflow: hidden; }
+.msg { display: flex; gap: 12px; opacity: 0; transform: translateY(16px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+.msg.in { opacity: 1; transform: translateY(0); }
+.msg.fade { opacity: 0; transform: translateY(-10px); }
+.av { flex: 0 0 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; }
+.av-ae { background: linear-gradient(135deg, var(--indigo), #6b4fa8); }
+.av-genie { background: linear-gradient(135deg, var(--gold), var(--gold-bright)); color: var(--ink); }
+.mbody { min-width: 0; }
+.mname { font-size: 15px; font-weight: 700; color: #1d1c1d; }
+.mname .app { font-size: 10px; font-weight: 600; color: #616061; background: #ebe7e2; border-radius: 3px; padding: 1px 4px; margin-left: 6px; vertical-align: 1px; letter-spacing: 0.03em; }
+.mname .ts { font-size: 12px; font-weight: 400; color: #616061; margin-left: 7px; }
+.mtext { font-size: 15.5px; line-height: 1.55; color: #1d1c1d; margin-top: 2px; }
+.mtext b { color: var(--gold); }
+.typing { display: inline-flex; gap: 5px; padding: 6px 2px; }
+.typing i { width: 8px; height: 8px; border-radius: 50%; background: #b9b2a7; animation: tdot 1.1s infinite cubic-bezier(0.34,1.56,0.64,1); }
+.typing i:nth-child(2) { animation-delay: 0.15s; } .typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes tdot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-6px); opacity: 1; } }
+.sw-input { margin: 0 22px 18px; border: 1.5px solid #d9d2c7; border-radius: 10px; padding: 11px 15px; display: flex; align-items: center; gap: 10px; color: #9a948a; font-size: 14.5px; }
+.sw-input .plus { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #b9b2a7; display: flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1; }
+.ask-note { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
+.cursor { display: inline-block; width: 8px; height: 1.05em; background: var(--gold); vertical-align: text-bottom; animation: blink 0.8s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .msg { transition: none; } .typing i { animation: none; } }
 
 /* ============ demos ============ */
 .demo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 26px; }
@@ -188,17 +206,17 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <section id="ask">
     <div class="inner">
         <h2>What can you ask it?</h2>
-        <p class="lede">Pick a topic, then click a question. Answers below come from real demo runs (numbers shown for illustration).</p>
+        <p class="lede">Watch the conversation replay, exactly how it looks in Slack. Pick a topic to jump ahead. Answers come from real demo runs.</p>
         <div class="ask-wrap">
             <div class="cat-list" id="catList"></div>
-            <div class="ask-panel">
-                <div class="hint" id="askHint">// pick a question</div>
-                <div id="qList"></div>
-                <div class="answer" id="answer">
-                    <div class="alab">Genie answers</div>
-                    <div class="atext" id="atext"></div>
-                    <div class="anote">Sample response from a recorded demo run. Live answers carry the full table and the SQL behind it.</div>
+            <div>
+                <div class="slackwin">
+                    <div class="sw-top"><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-title">Slack — Darwill</span></div>
+                    <div class="sw-head"><b># campaign-intel</b><span>12 members · Genie is in this channel</span></div>
+                    <div class="sw-msgs" id="swMsgs"></div>
+                    <div class="sw-input"><span class="plus">+</span> Message #campaign-intel</div>
                 </div>
+                <p class="ask-note">Replay of recorded demo answers. Live answers carry the full table and the SQL behind it.</p>
             </div>
         </div>
     </div>
@@ -310,57 +328,78 @@ const ASK = [
 ];
 
 const catList = document.getElementById('catList');
-const qList = document.getElementById('qList');
-const answer = document.getElementById('answer');
-const atext = document.getElementById('atext');
-const hint = document.getElementById('askHint');
-let typeTimer = null;
+const msgs = document.getElementById('swMsgs');
+let cat = 0, qi = 0, timers = [], typeTimer = null;
 
-function typeAnswer(html) {
-    clearInterval(typeTimer);
-    answer.classList.add('show');
-    // type plain text, then swap in formatted html
-    const plain = html.replace(/<[^>]+>/g, '');
-    let i = 0;
-    atext.innerHTML = '<span class="cursor"></span>';
-    typeTimer = setInterval(() => {
-        i += 3;
-        if (i >= plain.length) {
-            clearInterval(typeTimer);
-            atext.innerHTML = html;
-        } else {
-            atext.innerHTML = plain.slice(0, i) + '<span class="cursor"></span>';
-        }
-    }, 18);
+function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+function stopAll() { timers.forEach(clearTimeout); timers = []; clearInterval(typeTimer); }
+
+function addMsg(who, html) {
+    // keep window to one exchange + incoming: fade out anything beyond 3 nodes
+    while (msgs.children.length >= 4) msgs.removeChild(msgs.firstChild);
+    const m = document.createElement('div');
+    m.className = 'msg';
+    const isBot = who === 'genie';
+    m.innerHTML =
+        '<div class="av ' + (isBot ? 'av-genie' : 'av-ae') + '">' + (isBot ? '🪔' : 'AE') + '</div>' +
+        '<div class="mbody"><div class="mname">' + (isBot ? 'Genie <span class="app">APP</span>' : 'Account Executive') +
+        '<span class="ts">' + new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) + '</span></div>' +
+        '<div class="mtext">' + html + '</div></div>';
+    msgs.appendChild(m);
+    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('in')));
+    return m;
 }
 
-function showCat(idx) {
-    [...catList.children].forEach((c, j) => c.classList.toggle('on', j === idx));
-    const g = ASK[idx];
-    hint.textContent = '// ' + g.cat.toLowerCase() + ' — click a question';
-    answer.classList.remove('show');
-    qList.innerHTML = '';
-    g.qs.forEach((item) => {
-        const b = document.createElement('button');
-        b.className = 'qbtn';
-        b.textContent = '“' + item.q + '”';
-        b.onclick = () => {
-            [...qList.children].forEach(x => x.classList.remove('on'));
-            b.classList.add('on');
-            typeAnswer(item.a);
-        };
-        qList.appendChild(b);
-    });
+function typeInto(el, html, done) {
+    const plain = html.replace(/<[^>]+>/g, '');
+    let i = 0;
+    clearInterval(typeTimer);
+    typeTimer = setInterval(() => {
+        i += 3;
+        if (i >= plain.length) { clearInterval(typeTimer); el.innerHTML = html; done && done(); }
+        else el.innerHTML = plain.slice(0, i) + '<span class="cursor"></span>';
+    }, 16);
+}
+
+function playNext() {
+    const g = ASK[cat];
+    const item = g.qs[qi];
+    [...catList.children].forEach((c, j) => c.classList.toggle('on', j === cat));
+    addMsg('ae', item.q);
+    later(() => {
+        const dots = addMsg('genie', '<span class="typing"><i></i><i></i><i></i></span>');
+        later(() => {
+            typeInto(dots.querySelector('.mtext'), item.a, () => {
+                later(() => {
+                    qi++;
+                    if (qi >= g.qs.length) { qi = 0; cat = (cat + 1) % ASK.length; }
+                    playNext();
+                }, 5200);
+            });
+        }, 1300);
+    }, 900);
+}
+
+function jumpTo(idx) {
+    stopAll();
+    cat = idx; qi = 0;
+    msgs.innerHTML = '';
+    playNext();
 }
 
 ASK.forEach((g, i) => {
     const b = document.createElement('button');
     b.className = 'cat';
     b.innerHTML = g.cat + '<small>' + g.sub + '</small>';
-    b.onclick = () => showCat(i);
+    b.onclick = () => jumpTo(i);
     catList.appendChild(b);
 });
-showCat(0);
+
+// start replay only when section scrolls into view
+let started = false;
+new IntersectionObserver((es) => {
+    if (es[0].isIntersecting && !started) { started = true; playNext(); }
+}, { threshold: 0.25 }).observe(document.getElementById('ask'));
 </script>
 </body>
 </html>
