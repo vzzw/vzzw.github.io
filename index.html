@@ -34,8 +34,9 @@ body { background: var(--paper); color: var(--ink); font-family: 'Work Sans', sa
 
 
 /* ============ topo contour background (hero) ============ */
-#topo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-.hero > *:not(#topo) { position: relative; z-index: 1; }
+#topo { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100vw; height: 100%; z-index: 0; pointer-events: none; }
+.hero .kicker, .hero h1, .hero p, .hero .hero-cta { position: relative; z-index: 1; }
+.hero-lamp { z-index: 1; }
 
 /* ============ nav ============ */
 nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 6vw; position: sticky; top: 0; z-index: 50; background: rgba(250,244,232,0.93); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
@@ -58,7 +59,7 @@ h1 em { font-style: italic; font-weight: 700; color: var(--gold); }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(42,31,61,0.16); }
 .btn-gold { background: var(--gold-bright); color: var(--ink); }
 .btn-ghost { border: 1.5px solid var(--indigo); color: var(--indigo); }
-.hero-lamp { position: absolute; right: 5vw; top: 90px; width: clamp(120px, 16vw, 230px); opacity: 0.9; }
+.hero-lamp { position: absolute; right: 5vw; top: 170px; width: clamp(120px, 16vw, 230px); opacity: 0.9; }
 .hero-lamp path { fill: none; stroke: var(--gold); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
 .hero-lamp .body { fill: rgba(240,180,41,0.12); }
 @media (max-width: 760px) { .hero-lamp { display: none; } }
@@ -437,7 +438,7 @@ applyZoom();
     let z = 0, raf = null, visible = true;
 
     function resize() {
-        W = hero.offsetWidth; H = hero.offsetHeight;
+        W = document.documentElement.clientWidth; H = hero.offsetHeight;
         cv.width = W; cv.height = H;
         cols = Math.ceil(W / CELL) + 1; rows = Math.ceil(H / CELL) + 1;
         field = new Float32Array(cols * rows);
@@ -500,28 +501,25 @@ applyZoom();
 
     function tick() {
         raf = null;
-        z += 0.0016;                                   /* slow idle drift */
         mEase.x += (mx - mEase.x) * 0.12;              /* cursor easing */
         mEase.y += (my - mEase.y) * 0.12;
         draw();
-        if (visible && !reduced) raf = requestAnimationFrame(tick);
+        /* keep animating only while the bump is still settling */
+        const settling = Math.abs(mx - mEase.x) > 0.5 || Math.abs(my - mEase.y) > 0.5;
+        if (visible && settling) raf = requestAnimationFrame(tick);
     }
 
     hero.addEventListener('mousemove', (e) => {
-        const r = hero.getBoundingClientRect();
+        const r = cv.getBoundingClientRect();
         mx = e.clientX - r.left; my = e.clientY - r.top;
-        if (reduced && !raf) raf = requestAnimationFrame(tick); /* still respond to hover, one frame at a time */
+        if (!raf) raf = requestAnimationFrame(tick);
     });
-    hero.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+    hero.addEventListener('mouseleave', () => { mx = -9999; my = -9999; mEase.x = -9999; mEase.y = -9999; draw(); });
 
-    new IntersectionObserver((es) => {
-        visible = es[0].isIntersecting;
-        if (visible && !raf && !reduced) raf = requestAnimationFrame(tick);
-    }).observe(hero);
+    new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(hero);
 
     addEventListener('resize', resize);
     resize();
-    if (!reduced) raf = requestAnimationFrame(tick);
 })();
 </script>
 <script data-goatcounter="https://phantombolt.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
