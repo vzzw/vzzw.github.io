@@ -127,7 +127,7 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
    =========================================== */
 .arch2 { position: relative; height: 800px; margin-top: 20px; }
 [data-name="arch"] h2 { font-size: 58px; }
-[data-name="arch"] .slide-inner { padding-top: 56px; padding-bottom: 30px; }
+[data-name="arch"] .slide-inner { padding-top: 40px; padding-bottom: 60px; }
 .aq-col { position: absolute; left: 0; top: 0; width: 372px; display: flex; flex-direction: column; gap: 14px; }
 .aq-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 18px; font-size: 17.5px; line-height: 1.35; color: #c9d4d9; opacity: 0.45; transition: all 0.4s var(--ease); }
 .aq-card .qfrom { font-family: var(--font-mono); font-size: 13px; color: var(--muted); display: block; margin-bottom: 3px; }
@@ -165,8 +165,11 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
    SLIDE — GIF WALL (scattered everyday-usage tiles)
    =========================================== */
 .wall { position: relative; flex: 1; margin-top: 20px; z-index: 2; }
-.wall-tile { position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); transition: transform 0.35s var(--ease), border-color 0.3s, z-index 0s; }
-.wall-tile:hover { transform: scale(1.06) rotate(0deg) !important; border-color: var(--lava); z-index: 9; }
+.wall-tile { position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 18px; box-shadow: 0 24px 60px rgba(0,0,0,0.5); transform: rotate(var(--rot, 0deg)); transition: border-color 0.3s; cursor: grab; }
+.wall-tile:hover { transform: rotate(0deg); border-color: var(--lava); z-index: 9; }
+.wall-tile.dragging { cursor: grabbing; transform: rotate(0deg); z-index: 10; transition: none; }
+.tile-resize { position: absolute; right: 2px; bottom: 2px; width: 22px; height: 22px; cursor: nwse-resize; border-right: 3px solid var(--muted); border-bottom: 3px solid var(--muted); border-radius: 0 0 8px 0; opacity: 0; transition: opacity 0.25s; }
+.wall-tile:hover .tile-resize { opacity: 0.9; }
 .wall-tile video, .wall-tile .tile-ph { width: 100%; border-radius: 9px; display: block; background: #000; }
 .wall-tile .tile-ph { display: flex; align-items: center; justify-content: center; color: var(--muted); font-family: var(--font-mono); font-size: 17px; }
 .wall-tile .tile-cap { font-family: var(--font-script); font-size: 26px; color: var(--yellow); margin-top: 12px; }
@@ -226,7 +229,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
    GLOBAL SLIDE SCAFFOLD
    =========================================== */
 .slide { font-family: var(--font-body); color: var(--text); }
-.slide-inner { position: absolute; inset: 0; padding: 90px 110px; display: flex; flex-direction: column; }
+.slide-inner { position: absolute; inset: 0; padding: 90px 110px 120px; display: flex; flex-direction: column; }
 
 /* subtle starfield backdrop — static, content-first, no twinkle */
 .slide::before {
@@ -374,7 +377,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 
 /* demo slides are dense: compact type so nothing collides */
 [data-name^="act"] h2 { font-size: 62px; }
-[data-name^="act"] .slide-inner { padding-top: 70px; padding-bottom: 64px; }
+[data-name^="act"] .slide-inner { padding-top: 70px; padding-bottom: 90px; }
 [data-name^="act"] .kicker { margin-bottom: 14px; }
 [data-name^="act"] .demo-grid { overflow: hidden; }
 [data-name^="act"] .stat-big { font-size: 58px; }
@@ -712,8 +715,10 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                 </div>
                 <div class="usecase-row">
                     <span class="uc-label">What knowing the journey unlocks</span>
-                    <span class="uc-chip">time the next mailing to real behavior</span>
+                    <span class="uc-chip">how long mailbox to sale really takes</span>
+                    <span class="uc-chip">which touch people actually respond to</span>
                     <span class="uc-chip">see which stage loses people</span>
+                    <span class="uc-chip">plan cadence and budget on real behavior, not gut feel</span>
                 </div>
             </div>
             <div class="demo-right reveal d3">
@@ -732,38 +737,69 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
     <div class="pagenum">07</div>
 </section>
 
-<!-- ============ SLIDE 9 · WHERE THE TIME WENT ============ -->
-<section class="slide" data-name="time">
+<!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
+<section class="slide" data-name="scorecard">
     <div class="slide-inner">
-        <div class="kicker reveal">Honest accounting</div>
-        <h2 class="reveal d1">Where the time actually went</h2>
-        <div class="time-rows">
-            <div class="time-row reveal d2">
-                <div class="time-label">Scorecard generation<small>Slack bot, supervisor wiring, Block Kit rendering</small></div>
-                <div class="time-track"><div class="time-fill tf1"></div></div>
-                <div class="time-pct">45%</div>
+        <div class="kicker reveal">The flow, for real</div>
+        <h2 class="reveal d1">"Generate a scorecard for 16858"</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-about">One Slack message. Here is what the pipeline does with it.</div>
+                <div class="demo-qs">
+                    <div class="demo-q"><b>wingman_search</b> resolves 16858 &rarr; Jonesboro &middot; Beltone</div>
+                    <div class="demo-q"><b>question_distiller</b> expands it into the full scorecard question set</div>
+                    <div class="demo-q"><b>Genie</b> runs every question against the governed layer</div>
+                    <div class="demo-q"><b>Supervisor</b> assembles one scorecard: performance, benchmarks, pool capacity, journey, distance and age bands</div>
+                </div>
+                <div class="demo-stat"><div class="stat-big">~90s</div><div class="stat-cap">from message to full scorecard. The manual version took an analyst most of a week.</div></div>
             </div>
-            <div class="time-row reveal d3">
-                <div class="time-label">Training the spaces<small>119 SQL queries, metadata, measures, filters</small></div>
-                <div class="time-track"><div class="time-fill tf2"></div></div>
-                <div class="time-pct">30%</div>
-            </div>
-            <div class="time-row reveal d4">
-                <div class="time-label">Testing &amp; validation<small>metric views as the single definition of every metric</small></div>
-                <div class="time-track"><div class="time-fill tf3"></div></div>
-                <div class="time-pct">17%</div>
-            </div>
-            <div class="time-row reveal d5">
-                <div class="time-label">Asking questions<small>the part you just watched</small></div>
-                <div class="time-track"><div class="time-fill tf4"></div></div>
-                <div class="time-pct">8%</div>
+            <div class="reveal d3">
+                <video src="scorecard.mp4" autoplay muted loop playsinline style="width:100%; border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 64px rgba(0,0,0,0.5);"></video>
             </div>
         </div>
-        <div class="time-quote reveal d6">Most of the work wasn't asking questions. It was making sure the answers were right.</div>
-        <div class="time-quote reveal d7" style="margin-top:14px;">The good news: that work is now a pipeline. Standing this up for the next Darwill vertical is <b>weeks, not the months this one took.</b></div>
     </div>
     <div class="pagenum">08</div>
 </section>
+
+<!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
+<section class="slide" data-name="act2">
+    <div class="slide-inner">
+        <div class="kicker reveal">Demo · 3 of 3</div>
+        <h2 class="reveal d1">It lives in Slack.</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-cat">Adoption · Slack</div>
+                <div class="demo-about">What this is: the same governed answers, delivered in Slack with no Databricks login.</div>
+                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
+                <div class="demo-qs">
+                    <div class="demo-q">Scorecards on demand: full location health check from one message</div>
+                    <div class="demo-q">Forgiving input: type a location however you remember it, it resolves</div>
+                    <div class="demo-q">Streaming answers: sourced, formatted, in the channel you already use</div>
+                </div>
+                <div class="usecase-row">
+                    <span class="uc-label">Use it for</span>
+                    <span class="uc-chip">pre-call prep</span>
+                    <span class="uc-chip">weekly account reviews</span>
+                    <span class="uc-chip">exec ask-anything</span>
+                </div>
+            </div>
+            <div class="demo-right reveal d3">
+                <div class="video-frame" data-video="act_2_slack.mp4">
+                    <video src="act_2_slack.mp4" controls preload="metadata"></video>
+                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
+                </div>
+                <div class="video-hint">act_2_slack.mp4 · scorecard generation, live in Slack</div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5">
+            <span class="olab">Outcome</span>
+            <span class="otext">Adoption is the whole game: a tool nobody opens answers nothing. Insight in Slack means <b>the people who own the client relationship</b> use it daily, without ever learning Databricks.</span>
+        </div>
+    </div>
+    <div class="pagenum">09</div>
+</section>
+
+
 
 <!-- ============ SLIDE 10 · TRAINING LOOP ============ -->
 <section class="slide" data-name="arch">
@@ -805,7 +841,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="an" id="nuc" style="left:640px; top:612px; width:870px;"><h5>Unity Catalog &middot; governed data</h5><p style="margin-top:8px;"><span class="fpill">UC metric views</span><span class="fpill">gold layer tables</span><span class="fpill">matchback</span><span class="fpill">prospect pool</span><span class="fpill">competitors</span></p></div>
         </div>
     </div>
-    <div class="pagenum">09</div>
+    <div class="pagenum">10</div>
 </section>
 
 <!-- ============ SLIDE 11 · SUPERVISOR ARCHITECTURE ============ -->
@@ -838,70 +874,12 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
     </div>
-    <div class="pagenum">10</div>
-</section>
-
-<!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
-<section class="slide" data-name="scorecard">
-    <div class="slide-inner">
-        <div class="kicker reveal">The flow, for real</div>
-        <h2 class="reveal d1">"Generate a scorecard for 16858"</h2>
-        <div class="demo-grid">
-            <div class="demo-left reveal d2">
-                <div class="demo-about">One Slack message. Here is what the pipeline does with it.</div>
-                <div class="demo-qs">
-                    <div class="demo-q"><b>wingman_search</b> resolves 16858 &rarr; Jonesboro &middot; Beltone</div>
-                    <div class="demo-q"><b>question_distiller</b> expands it into the full scorecard question set</div>
-                    <div class="demo-q"><b>Genie</b> runs every question against the governed layer</div>
-                    <div class="demo-q"><b>Supervisor</b> assembles one scorecard: performance, benchmarks, pool capacity, journey, distance and age bands</div>
-                </div>
-                <div class="demo-stat"><div class="stat-big">~90s</div><div class="stat-cap">from message to full scorecard. The manual version took an analyst most of a week.</div></div>
-            </div>
-            <div class="reveal d3">
-                <img src="scorecard_frame.png" alt="Scorecard answer in Slack" style="width:100%; border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 64px rgba(0,0,0,0.5);">
-            </div>
-        </div>
-    </div>
     <div class="pagenum">11</div>
 </section>
 
-<!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
-<section class="slide" data-name="act2">
-    <div class="slide-inner">
-        <div class="kicker reveal">Demo · 3 of 3</div>
-        <h2 class="reveal d1">It lives in Slack.</h2>
-        <div class="demo-grid">
-            <div class="demo-left reveal d2">
-                <div class="demo-cat">Adoption · Slack</div>
-                <div class="demo-about">What this is: the same governed answers, delivered in Slack with no Databricks login.</div>
-                <div class="uc-label" style="margin-bottom:8px;">What you can pull out</div>
-                <div class="demo-qs">
-                    <div class="demo-q">Scorecards on demand: full location health check from one message</div>
-                    <div class="demo-q">Forgiving input: type a location however you remember it, it resolves</div>
-                    <div class="demo-q">Streaming answers: sourced, formatted, in the channel you already use</div>
-                </div>
-                <div class="usecase-row">
-                    <span class="uc-label">Use it for</span>
-                    <span class="uc-chip">pre-call prep</span>
-                    <span class="uc-chip">weekly account reviews</span>
-                    <span class="uc-chip">exec ask-anything</span>
-                </div>
-            </div>
-            <div class="demo-right reveal d3">
-                <div class="video-frame" data-video="act_2_slack.mp4">
-                    <video src="act_2_slack.mp4" controls preload="metadata"></video>
-                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
-                </div>
-                <div class="video-hint">act_2_slack.mp4 · scorecard generation, live in Slack</div>
-            </div>
-        </div>
-        <div class="outcome-strip reveal d5">
-            <span class="olab">Outcome</span>
-            <span class="otext">Adoption is the whole game: a tool nobody opens answers nothing. Insight in Slack means <b>the people who own the client relationship</b> use it daily, without ever learning Databricks.</span>
-        </div>
-    </div>
-    <div class="pagenum">12</div>
-</section>
+
+
+
 
 <!-- ============ SLIDE 8B · IN THE WILD (scattered gif wall) ============ -->
 <section class="slide" data-name="wall">
@@ -909,25 +887,33 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="kicker reveal">In the wild</div>
         <h2 class="reveal d1">A normal day in the channel.</h2>
         <div class="wall">
-            <div class="wall-tile reveal d2" style="left:30px; top:20px; width:560px; transform: rotate(-2.5deg);">
-                <video src="slack_gif_1.mp4" autoplay muted loop playsinline></video>
-                <div class="tile-cap">just look it up<small>any location, straight from Slack</small></div>
+            <div class="wall-tile reveal d2" data-tile="t1" style="left:20px; top:0px; width:470px; --rot:-2deg;">
+                <video src="ask_performance_yoy.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Performance &amp; trends<small>YoY, monthly performance</small></div>
             </div>
-            <div class="wall-tile reveal d3" style="left:640px; top:90px; width:520px; transform: rotate(1.8deg);">
-                <div class="tile-ph" style="height:292px;">demo clip 2</div>
-                <div class="tile-cap">client prep<small>scorecard before the call starts</small></div>
+            <div class="wall-tile reveal d3" data-tile="t2" style="left:530px; top:46px; width:450px; --rot:1.6deg;">
+                <video src="ask_untapped_prospect_pool.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Pool &amp; opportunity<small>untapped prospects</small></div>
             </div>
-            <div class="wall-tile reveal d4" style="left:1210px; top:30px; width:480px; transform: rotate(-1.2deg);">
-                <div class="tile-ph" style="height:270px;">demo clip 3</div>
-                <div class="tile-cap">investigative work<small>follow-ups keep the thread's context</small></div>
+            <div class="wall-tile reveal d4" data-tile="t3" style="left:1020px; top:6px; width:470px; --rot:-1.2deg;">
+                <video src="ask_frequency_waste.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Frequency &amp; waste<small>high volume, low response</small></div>
             </div>
-            <div class="wall-tile reveal d5" style="left:900px; top:430px; width:540px; transform: rotate(2.2deg);">
-                <div class="tile-ph" style="height:280px;">demo clip 4</div>
-                <div class="tile-cap">and more<small>exec ask-anything, weekly reviews, wingman lookups</small></div>
+            <div class="wall-tile reveal d5" data-tile="t4" style="left:70px; top:330px; width:450px; --rot:1.8deg;">
+                <video src="ask_competitor.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Geography &amp; competition<small>competitor density</small></div>
+            </div>
+            <div class="wall-tile reveal d6" data-tile="t5" style="left:570px; top:360px; width:470px; --rot:-1.6deg;">
+                <video src="ask_customer_journey.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Funnel &amp; customer journey<small>mail &rarr; response &rarr; appointment &rarr; sale</small></div>
+            </div>
+            <div class="wall-tile reveal d7" data-tile="t6" style="left:1430px; top:330px; width:300px; --rot:1.4deg;">
+                <video src="ask_client_prep.mp4" autoplay muted loop playsinline></video>
+                <div class="tile-cap">Client call prep<small>walk in with the numbers</small></div>
             </div>
         </div>
     </div>
-    <div class="pagenum">13</div>
+    <div class="pagenum">12</div>
 </section>
 
 <!-- ============ SLIDE 12 · RECEIPTS ============ -->
@@ -952,7 +938,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="rec-item reveal d6"><div class="rec-check">&#10003;</div><div><h4>One definition per metric</h4><p>Metric views in Unity Catalog mean everyone in the organization asks the same data and gets the same answer.</p></div></div>
         </div>
     </div>
-    <div class="pagenum">14</div>
+    <div class="pagenum">13</div>
 </section>
 
 <!-- ============ SLIDE 13 · TWO OUTCOMES ============ -->
@@ -977,7 +963,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
     </div>
-    <div class="pagenum">15</div>
+    <div class="pagenum">14</div>
 </section>
 
 <!-- ============ SLIDE 13B · QUESTION CLOUD ============ -->
@@ -1002,7 +988,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         </div>
         <div class="cloud-tag reveal d3">Each of these used to be a ticket. <b>Now it's a message.</b></div>
     </div>
-    <div class="pagenum">16</div>
+    <div class="pagenum">15</div>
 </section>
 
 <!-- ============ SLIDE 14 · CLOSE ============ -->
@@ -1016,7 +1002,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="close-sub reveal d3">Team Phantom Bolt · Powered by Databricks Genie</div>
         </div>
     </div>
-    <div class="pagenum">17</div>
+    <div class="pagenum">16</div>
 </section>
 
 </main>
@@ -1455,7 +1441,7 @@ function stopLamp() { if (lampTimer) { clearInterval(lampTimer); lampTimer = nul
    Double-click resets the tile. Layout persists in localStorage.
    =========================================== */
 (function initWall() {
-    const KEY = 'wallLayout.v1';
+    const KEY = 'wallLayout.v2';
     const tiles = Array.from(document.querySelectorAll('.wall-tile'));
     if (!tiles.length) return;
     let saved = {};
