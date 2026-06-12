@@ -1229,23 +1229,38 @@ function startRouting(slide) {
 }
 function stopRouting() { if (routeTimer) { clearInterval(routeTimer); routeTimer = null; } }
 
+let latTimer = null, latTouts = [];
+function latCycle(slide) {
+    latTouts.forEach(clearTimeout); latTouts = [];
+    const steps = slide.querySelectorAll('.lat-step');
+    steps.forEach(s => s.classList.remove('lit'));
+    const dn = slide.querySelector('.day-num');
+    if (dn) dn.textContent = '0';
+    steps.forEach((s, i) => latTouts.push(setTimeout(() => s.classList.add('lit'), 700 + i * 550)));
+    if (dn) latTouts.push(setTimeout(() => animateCount(dn, parseFloat(dn.dataset.target), 0, 1600), 1200));
+}
+function startLatLoop(slide) {
+    stopLatLoop();
+    latCycle(slide);
+    latTimer = setInterval(() => latCycle(slide), 5200);
+}
+function stopLatLoop() {
+    if (latTimer) { clearInterval(latTimer); latTimer = null; }
+    latTouts.forEach(clearTimeout); latTouts = [];
+}
+
 function runSlideEffects(slide) {
     stopRouting();
     stopLamp();
+    stopLatLoop();
     if (slide.dataset.name === 'arch') startRouting(slide);
     if (slide.dataset.name === 'lamp') startLamp(slide);
     // generic counters
     slide.querySelectorAll('.count').forEach(el => {
         animateCount(el, parseFloat(el.dataset.target), parseInt(el.dataset.decimals || '0', 10), 1400);
     });
-    // problem slide: light queue steps then roll day counter
-    if (slide.dataset.name === 'problem') {
-        const steps = slide.querySelectorAll('.lat-step');
-        steps.forEach(s => s.classList.remove('lit'));
-        steps.forEach((s, i) => setTimeout(() => s.classList.add('lit'), 700 + i * 550));
-        const dn = slide.querySelector('.day-num');
-        if (dn) setTimeout(() => animateCount(dn, parseFloat(dn.dataset.target), 0, 1600), 1200);
-    }
+    // problem slide: queue steps + day counter loop while slide is visible
+    if (slide.dataset.name === 'problem') startLatLoop(slide);
 }
 
 /* ===========================================
