@@ -125,29 +125,28 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
    SLIDE — SUPERVISOR ROUTING (animated diagram)
    JS cycles .route-N classes on the slide; CSS lights each path.
    =========================================== */
-.flow-stage { margin-top: 28px; }
-.flow-msg { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 26px; font-size: 24px; line-height: 1.4; color: #c9d4d9; width: 760px; transition: all 0.4s var(--ease); }
-.flow-msg .qfrom { font-family: var(--font-mono); font-size: 16px; color: var(--muted); display: block; margin-bottom: 5px; }
-.flow-msg.lit { border-color: var(--lava); box-shadow: 0 0 30px rgba(240,180,41,0.15); }
-.flow-row { display: flex; align-items: stretch; margin-top: 38px; }
-.fnode { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 16px 16px; opacity: 0.38; transition: all 0.4s var(--ease); }
-.fnode h5 { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
-.fnode p { font-size: 14.5px; color: var(--muted); margin-top: 6px; line-height: 1.35; }
-.fnode.lit { opacity: 1; border-color: var(--green); box-shadow: 0 0 26px rgba(0,169,114,0.2); }
-.fnode.fsup { border-color: rgba(240,180,41,0.5); }
-.fnode.fsup h5 { color: var(--yellow); }
-.fnode.fsup.lit { border-color: var(--lava); box-shadow: 0 0 36px rgba(240,180,41,0.3); }
-.fpill { display: block; font-family: var(--font-mono); font-size: 15px; color: var(--muted); border: 1px solid var(--line); border-radius: 7px; padding: 5px 9px; margin-top: 7px; transition: all 0.3s; }
-.fpill.lit { color: var(--green); border-color: var(--green); background: rgba(0,169,114,0.1); }
-.farrow { width: 46px; flex: none; position: relative; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 24px; opacity: 0.5; transition: all 0.3s; }
-.farrow.lit { color: var(--lava); opacity: 1; text-shadow: 0 0 10px rgba(240,180,41,0.6); }
-.farrow .albl { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: 14px; color: var(--muted); }
-.farrow.lit .albl { color: var(--yellow); }
-.flow-return { margin-top: 30px; display: flex; align-items: center; gap: 16px; opacity: 0.35; transition: all 0.45s var(--ease); font-family: var(--font-mono); font-size: 17px; color: var(--muted); }
-.flow-return .rline { flex: 1; border-top: 2px dashed var(--line); }
-.flow-return.lit { opacity: 1; color: var(--yellow); }
-.flow-return.lit .rline { border-color: var(--lava); }
-.flow-intent { margin-top: 16px; font-family: var(--font-mono); font-size: 18px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 8px; padding: 9px 14px; display: inline-block; min-height: 42px; min-width: 560px; transition: opacity 0.3s; }
+.arch2 { position: relative; height: 800px; margin-top: 20px; }
+[data-name="arch"] h2 { font-size: 58px; }
+[data-name="arch"] .slide-inner { padding-top: 56px; padding-bottom: 30px; }
+.aq-col { position: absolute; left: 0; top: 0; width: 372px; display: flex; flex-direction: column; gap: 14px; }
+.aq-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 18px; font-size: 17.5px; line-height: 1.35; color: #c9d4d9; opacity: 0.45; transition: all 0.4s var(--ease); }
+.aq-card .qfrom { font-family: var(--font-mono); font-size: 13px; color: var(--muted); display: block; margin-bottom: 3px; }
+.aq-card.lit { opacity: 1; border-color: var(--lava); box-shadow: 0 0 24px rgba(240,180,41,0.18); transform: translateX(6px); }
+.aq-intent { font-family: var(--font-mono); font-size: 15px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 8px; padding: 8px 12px; min-height: 56px; line-height: 1.4; transition: opacity 0.3s; }
+.an { position: absolute; background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 12px 18px; opacity: 0.38; transition: all 0.45s var(--ease); }
+.an h5 { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
+.an p { font-size: 14px; color: var(--muted); margin-top: 4px; line-height: 1.3; }
+.an.lit { opacity: 1; border-color: var(--green); box-shadow: 0 0 26px rgba(0,169,114,0.25); }
+.an.asup { border-color: rgba(240,180,41,0.5); }
+.an.asup h5 { color: var(--yellow); }
+.an.asup.lit { border-color: var(--lava); box-shadow: 0 0 36px rgba(240,180,41,0.35); }
+.an .fpill { display: inline-block; margin-right: 8px; }
+.arch2 svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.arch2 svg.wires path { fill: none; stroke: var(--line); stroke-width: 3; opacity: 0.22; }
+.arch2 svg.wires path.flow { stroke: var(--lava); opacity: 1; filter: drop-shadow(0 0 6px rgba(240,180,41,0.55)); }
+.arch2 svg.wires path.flow.ret { stroke: var(--green); filter: drop-shadow(0 0 6px rgba(0,169,114,0.55)); }
+.wlbl { position: absolute; font-family: var(--font-mono); font-size: 14px; color: var(--muted); transition: color 0.3s; }
+.wlbl.lit { color: var(--yellow); }
 
 /* SLIDE — TRAINING COMPARISON */
 .vs-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
@@ -627,13 +626,13 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="ticket-foot reveal d4">Figuring this out is a back and forth: pull the numbers, look, ask the next question. Today every round trip goes through whoever can write the SQL. <b>Genie becomes that person.</b> And to be clear about the boundary: <b>Genie is a librarian, not a professor.</b> It pulls exactly the data you ask for. The analysis, and the decision, are still yours.</div>
         </div>
     </div>
-    <div class="pagenum">02</div>
+    <div class="pagenum">04</div>
 </section>
 
 <!-- ============ SLIDE 5 · ACT 0 — THE TICKET, ANSWERED ============ -->
 <section class="slide" data-name="act0">
     <div class="slide-inner">
-        <div class="kicker reveal">Demo · 1 of 4</div>
+        <div class="kicker reveal">Demo · 1 of 3</div>
         <h2 class="reveal d1">The ticket, answered.</h2>
         <div class="demo-grid">
             <div class="demo-left reveal d2">
@@ -682,55 +681,20 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="cap-card reveal d6"><h4>Mailing pressure</h4><div class="ccover">Frequency buckets, touch number, spacing, non-responder waste.</div><div class="cq">How much do we spend on people who never respond?</div></div>
             <div class="cap-card reveal d7"><h4>Geography &amp; competition</h4><div class="ccover">Distance bands, competitive density, Costco and Miracle-Ear proximity.</div><div class="cq">Does distance from the clinic affect prospect response rate?</div></div>
             <div class="cap-card reveal d8"><h4>Pool &amp; targeting</h4><div class="ccover">Tier utilization, untapped counts, demographics, propensity models.</div><div class="cq">What percentage of the prospect pool is untapped at each location?</div></div>
-            <div class="cap-card reveal d9"><h4>Operations</h4><div class="ccover">Current month drops, next 30 days, trigger-active locations.</div><div class="cq">What drops in the next 30 days?</div></div>
+            <div class="cap-card reveal d9"><h4>Operations</h4><div class="ccover">Current month drops, next 30 days, trigger-active locations.</div><div class="cq">What is the concurrence rate for the next 30 days?</div></div>
         </div>
-        <div class="cap-foot reveal d10"><b>In scope:</b> 119 trained queries · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · maturity rules on every metric&nbsp;&nbsp;<span class="scope-out"><b>Out of scope, on purpose:</b> patient PII, ad-hoc writes, anything outside campaign data</span></div>
-    </div>
-    <div class="pagenum">04</div>
-</section>
-
-<!-- ============ SLIDE 6 · ACT 1 — WHERE IS THE MONEY GOING ============ -->
-<section class="slide" data-name="act1">
-    <div class="slide-inner">
-        <div class="kicker reveal">Demo · 2 of 4</div>
-        <h2 class="reveal d1">"Something feels off in this market. Can you show me why?"</h2>
-        <div class="demo-grid">
-            <div class="demo-left reveal d2">
-                <div class="demo-cat">An investigation, not a report</div>
-                <div class="demo-about">A user starts with a hunch and keeps asking. Each answer opens the next question, in the same thread, the way a real investigation works.</div>
-                <div class="uc-label" style="margin-bottom:8px;">How the conversation unfolds</div>
-                <div class="demo-qs">
-                    <div class="demo-q">"How is this location actually doing?" Then: compared to who?</div>
-                    <div class="demo-q">"Where is the money going?" Which addresses get mailed, how often, and what comes back</div>
-                    <div class="demo-q">"What would I do differently?" The data points at the move, the user makes the call</div>
-                </div>
-                <div class="usecase-row">
-                    <span class="uc-label">What this unlocks</span>
-                    <span class="uc-chip">spend you can defend</span>
-                    <span class="uc-chip">questions answered in minutes</span>
-                    <span class="uc-chip">no analyst queue</span>
-                </div>
-            </div>
-            <div class="demo-right reveal d3">
-                <div class="video-frame" data-video="act_1_beltone.mp4">
-                    <video src="act_1_beltone.mp4" controls preload="metadata"></video>
-                    <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
-                </div>
-                <div class="video-hint">act_1_beltone.mp4 · follow-ups carry context in the same thread</div>
-            </div>
-        </div>
-        <div class="outcome-strip reveal d5">
-            <span class="olab">Why it matters</span>
-            <span class="otext">Once you can see where the spend goes and what comes back, the budget conversation changes. Instead of <b>"we need more,"</b> it becomes <b>"here's what we'd move, and why."</b> That is a conversation a business user can have without waiting on an analyst.</span>
-        </div>
+        <div class="cap-foot reveal d10"><b>In scope:</b> 118 trained queries · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · maturity rules on every metric&nbsp;&nbsp;<span class="scope-out"><b>Out of scope, on purpose:</b> patient PII, ad-hoc writes, anything outside campaign data</span></div>
     </div>
     <div class="pagenum">06</div>
 </section>
 
+<!-- ============ SLIDE 6 · ACT 1 — WHERE IS THE MONEY GOING ============ -->
+
+
 <!-- ============ SLIDE 7 · ACT 1B — CUSTOMER JOURNEY ============ -->
 <section class="slide" data-name="act1b">
     <div class="slide-inner">
-        <div class="kicker reveal">Demo · 3 of 4</div>
+        <div class="kicker reveal">Demo · 2 of 3</div>
         <h2 class="reveal d1">"Can it follow one customer, all the way through?"</h2>
         <div class="demo-grid">
             <div class="demo-left reveal d2">
@@ -794,13 +758,55 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="time-quote reveal d6">Most of the work wasn't asking questions. It was making sure the answers were right.</div>
         <div class="time-quote reveal d7" style="margin-top:14px;">The good news: that work is now a pipeline. Standing this up for the next Darwill vertical is <b>weeks, not the months this one took.</b></div>
     </div>
-    <div class="pagenum">09</div>
+    <div class="pagenum">08</div>
 </section>
 
 <!-- ============ SLIDE 10 · TRAINING LOOP ============ -->
-<section class="slide" data-name="loop">
+<section class="slide" data-name="arch">
     <div class="slide-inner">
         <div class="kicker reveal">How it's built · 1 of 2</div>
+        <h2 class="reveal d1">Supervisor Orchestration Architecture</h2>
+        <div class="arch2 reveal d2">
+            <svg class="wires" viewBox="0 0 1700 800" preserveAspectRatio="none">
+                <path id="a1" d="M 1065 70 V 128"/>
+                <path id="a2" d="M 930 212 C 880 250, 830 250, 800 290"/>
+                <path id="a3" d="M 950 332 H 1180"/>
+                <path id="a4b" d="M 1240 374 C 1120 420, 900 415, 820 458"/>
+                <path id="a4c" d="M 1345 374 C 1350 405, 1345 425, 1345 458"/>
+                <path id="a5b" d="M 900 212 C 660 260, 640 380, 760 458"/>
+                <path id="a5c" d="M 1230 212 C 1470 260, 1490 380, 1390 458"/>
+                <path id="a8b" d="M 790 374 C 790 405, 790 425, 790 458"/>
+                <path id="a8c" d="M 920 374 C 1080 410, 1220 420, 1290 458"/>
+                <path id="a6b" d="M 790 548 C 790 580, 800 590, 830 612"/>
+                <path id="a6c" d="M 1345 548 C 1345 580, 1335 590, 1310 612"/>
+                <path id="a7" d="M 1500 660 C 1680 590, 1680 140, 1260 38"/>
+            </svg>
+            <span class="wlbl" id="lblslack" style="left:945px; top:90px;">Slack API</span>
+            <span class="wlbl" id="lblret" style="left:1600px; top:330px; writing-mode:vertical-rl;">answer streams back</span>
+            <div class="aq-col">
+                <div class="aq-card" id="aq0"><span class="qfrom">DM · Account Manager</span>"Generate a scorecard for 16858"</div>
+                <div class="aq-card" id="aq1"><span class="qfrom">#client-team · AE</span>"Which locations have the biggest untapped prospect pools?"</div>
+                <div class="aq-card" id="aq2"><span class="qfrom">#client-team · AE</span>"How does this year compare to last year for Quality Hearing Aid Center?"</div>
+                <div class="aq-card" id="aq3"><span class="qfrom">DM · Analyst</span>"What is the competitive profile for Independence, MO?"</div>
+                <div class="aq-card" id="aq4"><span class="qfrom">#leadership · Exec</span>"How are east coast states performing on prospect mail?"</div>
+                <div class="aq-intent" id="aintent">reading intent&hellip;</div>
+            </div>
+            <div class="an" id="nu" style="left:880px; top:6px; width:370px;"><h5>User asks in Slack</h5><p>Plain English, in the channel they already work in</p></div>
+            <div class="an asup" id="ns" style="left:800px; top:128px; width:530px;"><h5>Supervisor agent</h5><p>Reads intent &middot; routes &middot; dispatches tools and Genie &middot; combines the answer</p></div>
+            <div class="an" id="nw" style="left:640px; top:290px; width:310px;"><h5>wingman_search</h5><p>Resolves any location or company name to the exact entity and CRM</p></div>
+            <div class="an" id="nd" style="left:1180px; top:290px; width:330px;"><h5>question_distiller</h5><p>Expands a scorecard ask into the full question set</p></div>
+            <div class="an" id="nb" style="left:640px; top:458px; width:300px;"><h5>beltone_genie</h5><p>NL &rarr; SQL &middot; Beltone network</p></div>
+            <div class="an" id="nc" style="left:1195px; top:458px; width:300px;"><h5>cbs_genie</h5><p>NL &rarr; SQL &middot; CounselEAR / Sycle / Blueprint</p></div>
+            <div class="an" id="nuc" style="left:640px; top:612px; width:870px;"><h5>Unity Catalog &middot; governed data</h5><p style="margin-top:8px;"><span class="fpill">UC metric views</span><span class="fpill">gold layer tables</span><span class="fpill">matchback</span><span class="fpill">prospect pool</span><span class="fpill">competitors</span></p></div>
+        </div>
+    </div>
+    <div class="pagenum">09</div>
+</section>
+
+<!-- ============ SLIDE 11 · SUPERVISOR ARCHITECTURE ============ -->
+<section class="slide" data-name="loop">
+    <div class="slide-inner">
+        <div class="kicker reveal">How it's built · 2 of 2</div>
         <h2 class="reveal d1">Training Genie: the usual way vs ours.</h2>
         <div class="prob-grid" style="margin-top:30px;">
             <div class="prob-panel reveal d2">
@@ -830,34 +836,6 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
     <div class="pagenum">10</div>
 </section>
 
-<!-- ============ SLIDE 11 · SUPERVISOR ARCHITECTURE ============ -->
-<section class="slide" data-name="arch">
-    <div class="slide-inner">
-        <div class="kicker reveal">How it's built · 2 of 2</div>
-        <h2 class="reveal d1">One message, end to end.</h2>
-        <div class="flow-stage reveal d2">
-            <div class="flow-msg" id="fmsg"><span class="qfrom" id="fmsgFrom">DM · Account Manager</span><span id="fmsgText">"Scorecard for 81273"</span></div>
-            <div class="flow-intent" id="fintent">reading intent&hellip;</div>
-            <div class="flow-row">
-                <div class="fnode" id="fn0"><h5>User</h5><p>Asks in the Slack channel they already work in</p></div>
-                <div class="farrow" id="fa0"><span class="albl">Slack API</span>&rarr;</div>
-                <div class="fnode fsup" id="fn1"><h5>Supervisor</h5><p>Reads intent and orchestrates every step</p></div>
-                <div class="farrow" id="fa1">&rarr;</div>
-                <div class="fnode" id="fn2"><h5>wingman_search</h5><p>Resolves the location, decides which Genie space owns it</p></div>
-                <div class="farrow" id="fa2">&rarr;</div>
-                <div class="fnode" id="fn3"><h5>question_distiller</h5><p>Expands the ask into the exact question set</p></div>
-                <div class="farrow" id="fa3">&rarr;</div>
-                <div class="fnode" id="fn4"><h5>Genie space</h5><p>Writes and runs governed SQL</p><span class="fpill" id="fp-beltone">beltone_genie</span><span class="fpill" id="fp-cbs">cbs_genie &middot; CounselEAR / Sycle / Blueprint</span></div>
-                <div class="farrow" id="fa4">&rarr;</div>
-                <div class="fnode" id="fn5"><h5>Governed data</h5><p>Every answer reads the same layer</p><span class="fpill" id="fp-uc">UC metric views</span><span class="fpill" id="fp-gold">gold layer tables</span></div>
-            </div>
-            <div class="flow-return" id="fret"><span>answer streams back</span><div class="rline"></div><span>supervisor formats it &rarr; Slack thread &rarr; user</span></div>
-        </div>
-        <div class="arch-note reveal d4">Nobody picks an agent. Nobody spells a location right. The supervisor works out the rest.</div>
-    </div>
-    <div class="pagenum">11</div>
-</section>
-
 <!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
 <section class="slide" data-name="scorecard">
     <div class="slide-inner">
@@ -879,13 +857,13 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
     </div>
-    <div class="pagenum">12</div>
+    <div class="pagenum">11</div>
 </section>
 
 <!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
 <section class="slide" data-name="act2">
     <div class="slide-inner">
-        <div class="kicker reveal">Demo · 4 of 4</div>
+        <div class="kicker reveal">Demo · 3 of 3</div>
         <h2 class="reveal d1">It lives in Slack.</h2>
         <div class="demo-grid">
             <div class="demo-left reveal d2">
@@ -917,7 +895,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <span class="otext">Adoption is the whole game: a tool nobody opens answers nothing. Insight in Slack means <b>the people who own the client relationship</b> use it daily, without ever learning Databricks.</span>
         </div>
     </div>
-    <div class="pagenum">08</div>
+    <div class="pagenum">12</div>
 </section>
 
 <!-- ============ SLIDE 8B · IN THE WILD (scattered gif wall) ============ -->
@@ -944,7 +922,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
     </div>
-    <div class="pagenum">09</div>
+    <div class="pagenum">13</div>
 </section>
 
 <!-- ============ SLIDE 12 · RECEIPTS ============ -->
@@ -969,7 +947,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="rec-item reveal d6"><div class="rec-check">&#10003;</div><div><h4>One definition per metric</h4><p>Metric views in Unity Catalog mean everyone in the organization asks the same data and gets the same answer.</p></div></div>
         </div>
     </div>
-    <div class="pagenum">12</div>
+    <div class="pagenum">14</div>
 </section>
 
 <!-- ============ SLIDE 13 · TWO OUTCOMES ============ -->
@@ -994,7 +972,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             </div>
         </div>
     </div>
-    <div class="pagenum">13</div>
+    <div class="pagenum">15</div>
 </section>
 
 <!-- ============ SLIDE 13B · QUESTION CLOUD ============ -->
@@ -1033,7 +1011,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <div class="close-sub reveal d3">Team Phantom Bolt · Powered by Databricks Genie</div>
         </div>
     </div>
-    <div class="pagenum">14</div>
+    <div class="pagenum">17</div>
 </section>
 
 </main>
@@ -1198,36 +1176,76 @@ function animateCount(el, target, decimals, duration) {
    Cycles three example messages through intent detection → agent dispatch.
    Active only while the routing slide is visible.
    =========================================== */
-const ROUTES = [
-    { from: 'DM · Account Manager', text: '"Scorecard for 81273"',
-      intent: 'scorecard request → 81273 = Sycle account → distill full question set', genie: 'fp-cbs' },
-    { from: '#client-team · AE', text: '"How is that location in Tulsa doing compared to last year?"',
-      intent: 'location lookup → resolves to Beltone dispenser → YoY analytics', genie: 'fp-beltone' },
+const ARCH_ROUTES = [
+    { q: 'aq0', intent: 'scorecard → wingman resolves 16858 → Jonesboro · Beltone → distill → beltone_genie',
+      seq: ['nu','a1','ns','a2','nw','a3','nd','a4b','nb','a6b','nuc','a7'] },
+    { q: 'aq1', intent: 'network-wide ranking → no entity to resolve → cbs_genie direct',
+      seq: ['nu','a1','ns','a5c','nc','a6c','nuc','a7'] },
+    { q: 'aq2', intent: 'YoY for a named company → wingman resolves it → Sycle → cbs_genie',
+      seq: ['nu','a1','ns','a2','nw','a8c','nc','a6c','nuc','a7'] },
+    { q: 'aq3', intent: 'competitive profile → wingman resolves Independence, MO → Beltone → beltone_genie',
+      seq: ['nu','a1','ns','a2','nw','a8b','nb','a6b','nuc','a7'] },
+    { q: 'aq4', intent: 'state-level Beltone analytics → beltone_genie direct',
+      seq: ['nu','a1','ns','a5b','nb','a6b','nuc','a7'] },
 ];
-let routeTimer = null, routeIdx = 0, routeTouts = [];
+const ARROW_MS = 620, NODE_MS = 300;
+let routeTimer = null, routeIdx = 0, routeTouts = [], wiresInit = false;
+function initWires(slide) {
+    slide.querySelectorAll('.wires path').forEach(p => {
+        const len = p.getTotalLength();
+        p.dataset.len = len;
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+    });
+    wiresInit = true;
+}
 function routeTick(slide) {
-    const r = ROUTES[routeIdx % ROUTES.length];
+    const r = ARCH_ROUTES[routeIdx % ARCH_ROUTES.length];
     routeIdx++;
     routeTouts.forEach(clearTimeout); routeTouts = [];
-    slide.querySelectorAll('.fnode, .farrow, .fpill, .flow-msg, .flow-return').forEach(el => el.classList.remove('lit'));
-    const intent = slide.querySelector('#fintent');
+    slide.querySelectorAll('.an, .aq-card, .wlbl').forEach(el => el.classList.remove('lit'));
+    slide.querySelectorAll('.wires path').forEach(p => {
+        p.style.transition = 'none';
+        p.classList.remove('flow', 'ret');
+        p.style.strokeDashoffset = p.dataset.len;
+        void p.getBoundingClientRect();
+    });
+    const intent = slide.querySelector('#aintent');
     intent.textContent = 'reading intent…';
-    slide.querySelector('#fmsgFrom').textContent = r.from;
-    slide.querySelector('#fmsgText').textContent = r.text;
-    const seq = ['#fmsg', '#fn0', '#fa0', '#fn1', '#fa1', '#fn2', '#fa2', '#fn3', '#fa3', '#fn4', '#' + r.genie, '#fa4', '#fn5', '#fp-uc', '#fp-gold', '#fret'];
-    seq.forEach((sel, i) => routeTouts.push(setTimeout(() => {
-        const el = slide.querySelector(sel);
-        if (el) el.classList.add('lit');
-    }, 200 + i * 300)));
-    routeTouts.push(setTimeout(() => { intent.textContent = r.intent; }, 1100));
+    slide.querySelector('#' + r.q).classList.add('lit');
+    let t = 350;
+    r.seq.forEach(id => {
+        const isArrow = /^a\d/.test(id);
+        if (isArrow) {
+            routeTouts.push(setTimeout(() => {
+                const w = slide.querySelector('#' + id);
+                if (!w) return;
+                w.classList.add('flow');
+                if (id === 'a7') { w.classList.add('ret'); slide.querySelector('#lblret').classList.add('lit'); }
+                if (id === 'a1') slide.querySelector('#lblslack').classList.add('lit');
+                w.style.transition = 'stroke-dashoffset ' + (ARROW_MS / 1000) + 's linear';
+                w.style.strokeDashoffset = '0';
+            }, t));
+            t += ARROW_MS;
+        } else {
+            routeTouts.push(setTimeout(() => {
+                const n = slide.querySelector('#' + id);
+                if (n) n.classList.add('lit');
+                if (id === 'ns') intent.textContent = r.intent;
+            }, t));
+            t += NODE_MS;
+        }
+    });
+    routeTouts.push(setTimeout(() => slide.querySelector('#nu').classList.add('lit'), t));
 }
 function startRouting(slide) {
     stopRouting();
+    if (!wiresInit) initWires(slide);
     routeIdx = 0;
     routeTick(slide);
-    routeTimer = setInterval(() => routeTick(slide), 7600);
+    routeTimer = setInterval(() => routeTick(slide), 9800);
 }
-function stopRouting() { if (routeTimer) { clearInterval(routeTimer); routeTimer = null; } }
+function stopRouting() { if (routeTimer) { clearInterval(routeTimer); routeTimer = null; } routeTouts.forEach(clearTimeout); routeTouts = []; }
 
 let latTimer = null, latTouts = [];
 function latCycle(slide) {
