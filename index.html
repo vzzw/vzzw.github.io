@@ -86,6 +86,8 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .sw-dot { width: 12px; height: 12px; border-radius: 50%; }
 .sw-dot:nth-child(1) { background: #ff5f57; } .sw-dot:nth-child(2) { background: #febc2e; } .sw-dot:nth-child(3) { background: #28c840; }
 .sw-title { margin-left: 10px; font-size: 13px; color: #8a8378; font-family: 'JetBrains Mono', monospace; }
+.sw-vid { background: #000; }
+.sw-vid video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #000; }
 .sw-head { display: flex; align-items: baseline; gap: 12px; padding: 13px 22px; border-bottom: 1px solid #eee7dd; }
 .sw-head b { font-size: 16.5px; color: #1d1c1d; }
 .sw-head span { font-size: 13px; color: #616061; }
@@ -206,17 +208,15 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <section id="ask">
     <div class="inner">
         <h2>What can you ask it?</h2>
-        <p class="lede">Watch the conversation replay, exactly how it looks in Slack. Pick a topic to jump ahead. Answers come from real demo runs.</p>
+        <p class="lede">Real recordings, exactly how it looks in Slack. Pick a topic to watch that conversation.</p>
         <div class="ask-wrap">
             <div class="cat-list" id="catList"></div>
             <div>
                 <div class="slackwin">
                     <div class="sw-top"><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-title">Slack — Darwill</span></div>
-                    <div class="sw-head"><b># campaign-intel</b><span>12 members · Genie is in this channel</span></div>
-                    <div class="sw-msgs" id="swMsgs"></div>
-                    <div class="sw-input"><span class="plus">+</span> Message #campaign-intel</div>
+                    <div class="sw-vid"><video id="askVid" muted playsinline preload="auto"></video></div>
                 </div>
-                <p class="ask-note">Replay of recorded demo answers. Live answers carry the full table and the SQL behind it.</p>
+                <p class="ask-note">Recorded demo runs, unedited. Live answers carry the full table and the SQL behind it.</p>
             </div>
         </div>
     </div>
@@ -298,23 +298,23 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <script>
 /* ============ question browser + typed answer replay ============ */
 const ASK = [
-    { cat: 'Performance & trends', sub: 'YoY, monthly performance', qs: [
+    { cat: 'Performance & trends', vid: 'ask_performance_yoy.mp4', sub: 'YoY, monthly performance', qs: [
         { q: 'How does this year compare to last year, same period?',
           a: 'A month-by-month comparison against the same period last year: response, appointments, cost. Months still inside the matchback window carry a <b>maturity flag</b> so nobody judges a campaign before its results are in.' },
         { q: 'What does the monthly performance trend look like?',
           a: 'The monthly trend in one view, so you can see whether things are climbing, sliding, or seasonal, and ask the follow-up in the same thread.' } ] },
-    { cat: 'Pool & opportunity', sub: 'untapped prospects', qs: [
+    { cat: 'Pool & opportunity', vid: 'ask_untapped_prospect_pool.mp4', sub: 'untapped prospects', qs: [
         { q: 'How much of the prospect pool at this location is still untapped?',
           a: 'Genie sizes the households the location has never mailed, broken out by tier, so the next campaign funds the best prospects first instead of re-mailing the same list.' } ] },
-    { cat: 'Frequency & waste', sub: 'high volume, low response', qs: [
+    { cat: 'Frequency & waste', vid: 'ask_frequency_waste.mp4', sub: 'high volume, low response', qs: [
         { q: 'Which locations are mailing a ton of prospects but sitting below the network average on response? I want to find the biggest waste.',
           a: 'Genie ranks locations by volume against response, surfacing the <b>high-volume, low-response</b> offenders first. That list is where the budget conversation starts.' },
         { q: 'For Springfield, how many times are we hitting the same address? Break it out: mailed 1, 2, 3, 4+ times. And how much money went to people who never responded?',
           a: 'Every address bucketed by touch count, with response per bucket, plus the dollar total spent on addresses that never once responded. You can see exactly where extra touches stop paying for themselves.' } ] },
-    { cat: 'Geography & competition', sub: 'competitor density', qs: [
+    { cat: 'Geography & competition', vid: 'ask_competitor.mp4', sub: 'competitor density', qs: [
         { q: 'What does the competitive landscape around a clinic look like?',
           a: 'Competitors mapped around the clinic by distance, including big-box hearing centers. A saturated market reframes a "bad location" as a different playbook, not a failing one.' } ] },
-    { cat: 'Funnel & customer journey', sub: 'mail → response → appointment → sale', qs: [
+    { cat: 'Funnel & customer journey', vid: 'ask_customer_journey.mp4', sub: 'mail → response → appointment → sale', qs: [
         { q: 'Can you trace the customer journey, from mailing to response to appointment to sale?',
           a: 'The full funnel in one view: mailed, responded, booked, showed, bought. You can see where the funnel narrows and take the right gap to the right team.' },
         { q: 'How long does the journey from mailbox to sale take?',
@@ -322,77 +322,32 @@ const ASK = [
 ];
 
 const catList = document.getElementById('catList');
-const msgs = document.getElementById('swMsgs');
-let cat = 0, qi = 0, timers = [], typeTimer = null;
+const vid = document.getElementById('askVid');
+let cat = 0;
 
-function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
-function stopAll() { timers.forEach(clearTimeout); timers = []; clearInterval(typeTimer); }
-
-function addMsg(who, html) {
-    // keep window to one exchange + incoming: fade out anything beyond 3 nodes
-    while (msgs.children.length >= 4) msgs.removeChild(msgs.firstChild);
-    const m = document.createElement('div');
-    m.className = 'msg';
-    const isBot = who === 'genie';
-    m.innerHTML =
-        '<div class="av ' + (isBot ? 'av-genie' : 'av-ae') + '">' + (isBot ? '🪔' : 'AE') + '</div>' +
-        '<div class="mbody"><div class="mname">' + (isBot ? 'Genie <span class="app">APP</span>' : 'Account Executive') +
-        '<span class="ts">' + new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit'}) + '</span></div>' +
-        '<div class="mtext">' + html + '</div></div>';
-    msgs.appendChild(m);
-    requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('in')));
-    return m;
-}
-
-function typeInto(el, html, done) {
-    const plain = html.replace(/<[^>]+>/g, '');
-    let i = 0;
-    clearInterval(typeTimer);
-    typeTimer = setInterval(() => {
-        i += 3;
-        if (i >= plain.length) { clearInterval(typeTimer); el.innerHTML = html; done && done(); }
-        else el.innerHTML = plain.slice(0, i) + '<span class="cursor"></span>';
-    }, 16);
-}
-
-function playNext() {
-    const g = ASK[cat];
-    const item = g.qs[qi];
+function showCat(idx) {
+    cat = idx;
     [...catList.children].forEach((c, j) => c.classList.toggle('on', j === cat));
-    addMsg('ae', item.q);
-    later(() => {
-        const dots = addMsg('genie', '<span class="typing"><i></i><i></i><i></i></span>');
-        later(() => {
-            typeInto(dots.querySelector('.mtext'), item.a, () => {
-                later(() => {
-                    qi++;
-                    if (qi >= g.qs.length) { qi = 0; cat = (cat + 1) % ASK.length; }
-                    playNext();
-                }, 5200);
-            });
-        }, 1300);
-    }, 900);
+    vid.src = ASK[cat].vid;
+    vid.play().catch(() => {});
 }
 
-function jumpTo(idx) {
-    stopAll();
-    cat = idx; qi = 0;
-    msgs.innerHTML = '';
-    playNext();
-}
+// when one recording ends, move on to the next topic
+vid.addEventListener('ended', () => showCat((cat + 1) % ASK.length));
 
 ASK.forEach((g, i) => {
     const b = document.createElement('button');
     b.className = 'cat';
     b.innerHTML = g.cat + '<small>' + g.sub + '</small>';
-    b.onclick = () => jumpTo(i);
+    b.onclick = () => showCat(i);
     catList.appendChild(b);
 });
 
-// start replay only when section scrolls into view
+// start only when section scrolls into view; pause when it leaves
 let started = false;
 new IntersectionObserver((es) => {
-    if (es[0].isIntersecting && !started) { started = true; playNext(); }
+    if (es[0].isIntersecting) { started ? vid.play().catch(() => {}) : showCat(0); started = true; }
+    else if (started) vid.pause();
 }, { threshold: 0.25 }).observe(document.getElementById('ask'));
 </script>
 </body>
