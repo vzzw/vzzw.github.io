@@ -45,9 +45,11 @@ nav .brand span { color: var(--gold); }
 nav .links { display: flex; align-items: center; gap: 26px; }
 nav .links a { color: var(--ink-soft); text-decoration: none; font-size: var(--t-small); font-weight: 500; }
 nav .links a:hover { color: var(--gold); }
-nav .present { background: var(--gold-bright); color: var(--ink) !important; padding: 10px 22px; border-radius: 999px; font-weight: 700; box-shadow: 0 4px 14px rgba(240,180,41,0.45); animation: presentPulse 2.6s ease-in-out infinite; }
-nav .present:hover { background: var(--ink); color: var(--gold-bright) !important; transform: translateY(-1px); animation: none; }
-@keyframes presentPulse { 0%, 100% { box-shadow: 0 4px 14px rgba(240,180,41,0.45); } 50% { box-shadow: 0 4px 24px rgba(240,180,41,0.85); } }
+nav .present { background: var(--ink); color: #ffffff !important; padding: 11px 24px; border-radius: 999px; font-weight: 700; font-size: 16px; border: 2px solid var(--gold-bright); box-shadow: 0 4px 16px rgba(240,180,41,0.5); animation: presentPulse 2.4s ease-in-out infinite; transition: transform 0.15s, background 0.2s, color 0.2s; }
+nav .present b { color: var(--gold-bright); }
+nav .present:hover { background: var(--gold-bright); color: var(--ink) !important; transform: translateY(-1px) scale(1.04); animation: none; }
+nav .present:hover b { color: var(--ink); }
+@keyframes presentPulse { 0%, 100% { box-shadow: 0 4px 16px rgba(240,180,41,0.5); } 50% { box-shadow: 0 4px 30px rgba(240,180,41,0.95); } }
 
 /* ============ hero ============ */
 .hero { padding: clamp(70px, 11vh, 130px) 6vw 80px; max-width: 1200px; margin: 0 auto; position: relative; }
@@ -179,7 +181,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         <a href="#ask">What you can ask</a>
         <a href="#scope">Scope</a>
         <a href="#demos">See it work</a>
-        <a class="present" href="phantombolt/">&#9889; Watch the presentation &rarr;</a>
+        <a class="present" href="phantombolt/"><b>&#9889;</b> Watch the presentation &rarr;</a>
     </div>
 </nav>
 
@@ -436,6 +438,7 @@ applyZoom();
     const SCALE = 0.0022;       /* noise frequency */
     let W, H, cols, rows, field;
     let mx = -9999, my = -9999, mEase = { x: -9999, y: -9999 };
+    let bump = 0, bumpTarget = 0;   /* eased bump amplitude, 0..1 */
     let z = 0, raf = null, visible = true;
 
     function resize() {
@@ -447,14 +450,14 @@ applyZoom();
     }
 
     function computeField() {
-        const R = 260, BUMP = 0.85;     /* hover: soft peak radius + strength */
+        const R = 260, BUMP = 0.85 * bump; /* hover: soft peak, amplitude eased in/out */
         for (let j = 0; j < rows; j++) {
             for (let i = 0; i < cols; i++) {
                 const x = i * CELL, y = j * CELL;
                 let v = noise3(x * SCALE, y * SCALE, z);
                 const dx = x - mEase.x, dy = y - mEase.y;
                 const d2 = dx * dx + dy * dy;
-                if (d2 < R * R) v += BUMP * Math.exp(-d2 / (2 * (R / 2.2) ** 2));
+                if (BUMP > 0.01 && d2 < R * R) v += BUMP * Math.exp(-d2 / (2 * (R / 2.2) ** 2));
                 field[j * cols + i] = v;
             }
         }
@@ -502,20 +505,28 @@ applyZoom();
 
     function tick() {
         raf = null;
-        mEase.x += (mx - mEase.x) * 0.12;              /* cursor easing */
-        mEase.y += (my - mEase.y) * 0.12;
+        mEase.x += (mx - mEase.x) * 0.14;              /* cursor easing */
+        mEase.y += (my - mEase.y) * 0.14;
+        bump += (bumpTarget - bump) * 0.07;            /* smooth fade in/out */
         draw();
-        /* keep animating only while the bump is still settling */
-        const settling = Math.abs(mx - mEase.x) > 0.5 || Math.abs(my - mEase.y) > 0.5;
+        /* keep animating while position or amplitude is still settling */
+        const settling = Math.abs(mx - mEase.x) > 0.5 || Math.abs(my - mEase.y) > 0.5 || Math.abs(bumpTarget - bump) > 0.01;
         if (visible && settling) raf = requestAnimationFrame(tick);
     }
 
-    hero.addEventListener('mousemove', (e) => {
+    addEventListener('mousemove', (e) => {
         const r = cv.getBoundingClientRect();
-        mx = e.clientX - r.left; my = e.clientY - r.top;
+        const inside = e.clientY >= r.top && e.clientY <= r.bottom;
+        if (inside) {
+            mx = e.clientX - r.left; my = e.clientY - r.top;
+            if (bumpTarget === 0) { mEase.x = mx; mEase.y = my; } /* fade in at cursor, no fly-in sweep */
+            bumpTarget = 1;
+        } else {
+            bumpTarget = 0;
+        }
         if (!raf) raf = requestAnimationFrame(tick);
     });
-    hero.addEventListener('mouseleave', () => { mx = -9999; my = -9999; mEase.x = -9999; mEase.y = -9999; draw(); });
+    document.addEventListener('mouseleave', () => { bumpTarget = 0; if (!raf) raf = requestAnimationFrame(tick); });
 
     new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(hero);
 
