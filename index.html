@@ -61,6 +61,7 @@ h1 em { font-style: italic; font-weight: 700; color: var(--gold); }
 /* ============ sections ============ */
 section { padding: 76px 6vw; }
 .inner { max-width: 1200px; margin: 0 auto; }
+#ask .inner, #demos .inner, #scorecard .inner { max-width: 1360px; }
 h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); line-height: 1.15; margin-bottom: 14px; }
 .lede { color: var(--ink-soft); max-width: 64ch; margin-bottom: 40px; }
 .band { background: var(--sand); }
@@ -73,7 +74,7 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .what p { color: var(--ink-soft); font-size: var(--t-small); line-height: 1.6; }
 
 /* ============ ask: category browser + answer replay ============ */
-.ask-wrap { display: grid; grid-template-columns: 290px 1fr; gap: 28px; align-items: start; }
+.ask-wrap { display: grid; grid-template-columns: 250px 1fr; gap: 28px; align-items: start; }
 @media (max-width: 880px) { .ask-wrap { grid-template-columns: 1fr; } }
 .cat-list { display: flex; flex-direction: column; gap: 10px; }
 .cat { text-align: left; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 16px 20px; font-family: 'Work Sans', sans-serif; font-size: 16px; font-weight: 600; color: var(--ink); cursor: pointer; transition: all 0.2s; }
@@ -85,8 +86,8 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .zoom-ctl button { width: 30px; height: 30px; border: none; border-radius: 50%; background: var(--sand); color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
 .zoom-ctl button:hover { background: var(--gold-bright); }
 .zoom-ctl span { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); min-width: 44px; text-align: center; }
-.slackwin { border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(42,31,61,0.22), 0 4px 16px rgba(42,31,61,0.10); }
-.slackwin video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.slackwin { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 24px 64px rgba(42,31,61,0.22), 0 4px 16px rgba(42,31,61,0.10); }
+.slackwin video { display: block; width: 100%; height: auto; }
 .sw-head { display: flex; align-items: baseline; gap: 12px; padding: 13px 22px; border-bottom: 1px solid #eee7dd; }
 .sw-head b { font-size: 16.5px; color: #1d1c1d; }
 .sw-head span { font-size: 13px; color: #616061; }
@@ -224,7 +225,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
     <div class="inner">
         <h2>The scorecard, on demand</h2>
         <p class="lede">Ask for a scorecard and the supervisor builds the whole thing: performance, benchmarks, and trend for any location, assembled in one pass instead of a week of analyst time.</p>
-        <div class="slackwin" style="max-width:960px; margin:0 auto;">
+        <div class="slackwin" style="max-width:1120px; margin:0 auto;">
             <video src="scorecard.mp4" id="scoreVid" muted playsinline loop preload="metadata"></video>
         </div>
         <p class="ask-note" style="text-align:center;">Recording sped up for viewing. The real run takes a few minutes, which still beats the week it used to take.</p>
@@ -338,9 +339,6 @@ const ASK = [
     { cat: 'Client call prep', vid: 'ask_client_prep.mp4', sub: 'walk in with the numbers', qs: [
         { q: 'I have a client call in twenty minutes. Catch me up on this account.',
           a: 'Performance, trend, and the talking points for the call, pulled in one thread instead of three dashboards.' } ] },
-    { cat: 'One location, YTD', vid: 'ask_location_ytd.mp4', sub: '"how is Independence, MO doing?"', qs: [
-        { q: 'The client is asking what YTD performance looks like for their Independence, MO location.',
-          a: 'Year-to-date response, appointments, and sales for one location, answered the way the client asked it.' } ] },
 ];
 
 const catList = document.getElementById('catList');
