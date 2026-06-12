@@ -307,6 +307,8 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
    SLIDE 3 — THE PROBLEM (two panels)
    =========================================== */
 .prob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 64px; flex: 1; position: relative; z-index: 2; }
+[data-name="problem"] .prob-panel { padding: 32px 40px; }
+[data-name="problem"] h2 { font-size: 64px; }
 .prob-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 48px; display: flex; flex-direction: column; }
 .prob-panel h3 { font-family: var(--font-display); font-size: 36px; font-weight: 700; margin-bottom: 14px; }
 .prob-panel .pdesc { font-size: 25px; color: var(--muted); line-height: 1.5; margin-bottom: 36px; }
@@ -574,22 +576,21 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 <section class="slide" data-name="problem">
     <div class="slide-inner">
         <div class="kicker reveal">The current state</div>
-        <h2 class="reveal d1">Four CRMs. Four different answers<br>to the same question.</h2>
-        <div class="prob-grid">
+        <h2 class="reveal d1">Fragmented data. Slow access.<br>Delayed decisions.</h2>
+        <div class="prob-grid" style="margin-top:36px; flex:none;">
             <div class="prob-panel reveal d2">
-                <h3>One network, four sources of truth</h3>
-                <p class="pdesc">Thousands of hearing care locations report through different CRMs, at different grains, under different names. Ask "what's our test rate" and the answer depends on which system you opened.</p>
+                <h3>Intelligence is scattered</h3>
+                <p class="pdesc">Campaign data lives across four CRM platforms, Tableau workbooks, and ad-hoc SQL. There is no single place to ask a question. What you get depends on who pulls it, from where, with which rules applied.</p>
                 <div class="crm-row">
-                    <div class="crm-box"><div class="cname">CounselEAR</div><div class="cnum">0.125%</div></div>
-                    <div class="crm-box"><div class="cname">Sycle</div><div class="cnum">0.141%</div></div>
-                    <div class="crm-box"><div class="cname">Blueprint</div><div class="cnum">0.121%</div></div>
-                    <div class="crm-box"><div class="cname">Beltone</div><div class="cnum">0.160%</div></div>
+                    <div class="crm-box"><div class="cname">CounselEAR</div></div>
+                    <div class="crm-box"><div class="cname">Sycle</div></div>
+                    <div class="crm-box"><div class="cname">Blueprint</div></div>
+                    <div class="crm-box"><div class="cname">Beltone</div></div>
                 </div>
-                <div class="neq">&ne;</div>
             </div>
             <div class="prob-panel reveal d3">
-                <h3>And everyone reports their own way</h3>
-                <p class="pdesc">Each team pulls from its own workbook, its own filters, its own definitions. Getting one trusted number means a request to the data team, and a wait.</p>
+                <h3>And access takes time</h3>
+                <p class="pdesc">If you can't write SQL against these systems, you wait for someone who can. Every question becomes a request, every request becomes a queue, and the decision waits with it.</p>
                 <div class="lat-line">
                     <div class="lat-steps">
                         <div class="lat-step" data-step="0"><span class="lat-dot"></span>AE has a question</div>
@@ -597,10 +598,11 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                         <div class="lat-step" data-step="2"><span class="lat-dot"></span>Analyst writes SQL across systems</div>
                         <div class="lat-step" data-step="3"><span class="lat-dot"></span>Report comes back, maybe stale</div>
                     </div>
-                    <div class="day-counter"><span>elapsed</span><span class="day-num" data-target="3">0</span><span>days</span></div>
+                    <div class="day-counter"><span>decision delayed</span><span class="day-num" data-target="3">0</span><span>days</span></div>
                 </div>
             </div>
         </div>
+        <div class="arch-note reveal d4" style="margin-top:26px; flex:none;">Phantom Bolt makes it one conversation: a single intelligence, trained on the business rules up front, that anyone can ask.</div>
     </div>
     <div class="pagenum">03</div>
 </section>
