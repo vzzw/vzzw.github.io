@@ -125,27 +125,38 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
    SLIDE — SUPERVISOR ROUTING (animated diagram)
    JS cycles .route-N classes on the slide; CSS lights each path.
    =========================================== */
-.route-stage { position: relative; flex: none; height: 640px; margin-top: 24px; z-index: 2; }
-[data-name="arch"] h2 { font-size: 62px; }
-[data-name="arch"] .slide-inner { padding-top: 64px; padding-bottom: 50px; }
-[data-name="arch"] .arch-note { margin-top: 20px; font-size: 23px; }
-.route-q { position: absolute; left: 0; width: 470px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 24px; font-size: 21px; line-height: 1.4; color: #c9d4d9; transition: all 0.4s var(--ease); opacity: 0.45; }
-.route-q .qfrom { font-family: var(--font-mono); font-size: 16px; color: var(--muted); display: block; margin-bottom: 6px; }
-.route-q.lit { opacity: 1; border-color: var(--lava); transform: translateX(8px); box-shadow: 0 0 30px rgba(240,180,41,0.15); }
-.route-sup { position: absolute; left: 610px; top: 200px; width: 380px; background: var(--panel); border: 1px solid rgba(240,180,41,0.55); border-radius: 16px; padding: 26px 30px; box-shadow: 0 0 34px rgba(240,180,41,0.12); transition: box-shadow 0.4s; }
-.route-sup h5 { font-family: var(--font-display); font-size: 27px; font-weight: 700; }
-.route-sup p { font-size: 18px; color: var(--muted); margin-top: 6px; line-height: 1.4; }
-.route-sup .intent { margin-top: 16px; font-family: var(--font-mono); font-size: 18px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 8px; padding: 9px 14px; min-height: 42px; transition: opacity 0.3s; }
-.route-sup.lit { box-shadow: 0 0 50px rgba(240,180,41,0.35); }
-.route-agent { position: absolute; left: 1140px; width: 480px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 16px 22px; transition: all 0.4s var(--ease); opacity: 0.45; }
-.route-agent .aname { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
-.route-agent .arole { font-size: 16px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
-.route-agent.lit { opacity: 1; border-color: var(--green); box-shadow: 0 0 26px rgba(0,169,114,0.2); transform: translateX(8px); }
-.route-svg { position: absolute; inset: 0; pointer-events: none; }
-.route-svg path { fill: none; stroke: var(--line); stroke-width: 2.5; opacity: 0.5; }
-.route-svg path.wire-lit { stroke: var(--lava); stroke-width: 3.5; opacity: 1; stroke-dasharray: 26 14; animation: wireflow 0.7s linear infinite; filter: drop-shadow(0 0 6px rgba(240,180,41,0.5)); }
-.route-svg path.wire-lit.to-agent { stroke: var(--green); filter: drop-shadow(0 0 6px rgba(0,169,114,0.5)); }
-@keyframes wireflow { to { stroke-dashoffset: -40; } }
+.flow-stage { margin-top: 28px; }
+.flow-msg { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 26px; font-size: 24px; line-height: 1.4; color: #c9d4d9; width: 760px; transition: all 0.4s var(--ease); }
+.flow-msg .qfrom { font-family: var(--font-mono); font-size: 16px; color: var(--muted); display: block; margin-bottom: 5px; }
+.flow-msg.lit { border-color: var(--lava); box-shadow: 0 0 30px rgba(240,180,41,0.15); }
+.flow-row { display: flex; align-items: stretch; margin-top: 38px; }
+.fnode { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 16px 16px; opacity: 0.38; transition: all 0.4s var(--ease); }
+.fnode h5 { font-family: var(--font-mono); font-size: 19px; color: var(--green); }
+.fnode p { font-size: 14.5px; color: var(--muted); margin-top: 6px; line-height: 1.35; }
+.fnode.lit { opacity: 1; border-color: var(--green); box-shadow: 0 0 26px rgba(0,169,114,0.2); }
+.fnode.fsup { border-color: rgba(240,180,41,0.5); }
+.fnode.fsup h5 { color: var(--yellow); }
+.fnode.fsup.lit { border-color: var(--lava); box-shadow: 0 0 36px rgba(240,180,41,0.3); }
+.fpill { display: block; font-family: var(--font-mono); font-size: 15px; color: var(--muted); border: 1px solid var(--line); border-radius: 7px; padding: 5px 9px; margin-top: 7px; transition: all 0.3s; }
+.fpill.lit { color: var(--green); border-color: var(--green); background: rgba(0,169,114,0.1); }
+.farrow { width: 46px; flex: none; position: relative; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 24px; opacity: 0.5; transition: all 0.3s; }
+.farrow.lit { color: var(--lava); opacity: 1; text-shadow: 0 0 10px rgba(240,180,41,0.6); }
+.farrow .albl { position: absolute; top: -28px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-family: var(--font-mono); font-size: 14px; color: var(--muted); }
+.farrow.lit .albl { color: var(--yellow); }
+.flow-return { margin-top: 30px; display: flex; align-items: center; gap: 16px; opacity: 0.35; transition: all 0.45s var(--ease); font-family: var(--font-mono); font-size: 17px; color: var(--muted); }
+.flow-return .rline { flex: 1; border-top: 2px dashed var(--line); }
+.flow-return.lit { opacity: 1; color: var(--yellow); }
+.flow-return.lit .rline { border-color: var(--lava); }
+.flow-intent { margin-top: 16px; font-family: var(--font-mono); font-size: 18px; color: var(--yellow); background: rgba(244,132,95,0.1); border: 1px solid rgba(244,132,95,0.4); border-radius: 8px; padding: 9px 14px; display: inline-block; min-height: 42px; min-width: 560px; transition: opacity 0.3s; }
+
+/* SLIDE — TRAINING COMPARISON */
+.vs-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.vs-item { font-size: 20px; line-height: 1.4; color: #c9d4d9; padding: 11px 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; border-left: 4px solid var(--muted); }
+.vs-item.bad { border-left-color: #e0654f; }
+.vs-item.good { border-left-color: var(--green); }
+.vs-verdict { margin-top: 20px; font-family: var(--font-mono); font-size: 18px; border-radius: 8px; padding: 10px 16px; display: inline-block; }
+.vs-verdict.bad-v { color: #e0654f; background: rgba(224,101,79,0.1); border: 1px solid rgba(224,101,79,0.4); }
+.vs-verdict.good-v { color: var(--green); background: rgba(0,169,114,0.1); border: 1px solid rgba(0,169,114,0.4); }
 
 /* ===========================================
    SLIDE — GIF WALL (scattered everyday-usage tiles)
@@ -559,11 +570,46 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
     <div class="pagenum">02</div>
 </section>
 
-<!-- ============ SLIDE 2 · THE TICKET ============ -->
+<!-- ============ SLIDE 2 · THE PROBLEM (fragmented intelligence) ============ -->
+<section class="slide" data-name="problem">
+    <div class="slide-inner">
+        <div class="kicker reveal">The current state</div>
+        <h2 class="reveal d1">Four CRMs. Four different answers<br>to the same question.</h2>
+        <div class="prob-grid">
+            <div class="prob-panel reveal d2">
+                <h3>One network, four sources of truth</h3>
+                <p class="pdesc">Thousands of hearing care locations report through different CRMs, at different grains, under different names. Ask "what's our test rate" and the answer depends on which system you opened.</p>
+                <div class="crm-row">
+                    <div class="crm-box"><div class="cname">CounselEAR</div><div class="cnum">0.125%</div></div>
+                    <div class="crm-box"><div class="cname">Sycle</div><div class="cnum">0.141%</div></div>
+                    <div class="crm-box"><div class="cname">Blueprint</div><div class="cnum">0.121%</div></div>
+                    <div class="crm-box"><div class="cname">Beltone</div><div class="cnum">0.160%</div></div>
+                </div>
+                <div class="neq">&ne;</div>
+            </div>
+            <div class="prob-panel reveal d3">
+                <h3>And everyone reports their own way</h3>
+                <p class="pdesc">Each team pulls from its own workbook, its own filters, its own definitions. Getting one trusted number means a request to the data team, and a wait.</p>
+                <div class="lat-line">
+                    <div class="lat-steps">
+                        <div class="lat-step" data-step="0"><span class="lat-dot"></span>AE has a question</div>
+                        <div class="lat-step" data-step="1"><span class="lat-dot"></span>Request lands in analyst queue</div>
+                        <div class="lat-step" data-step="2"><span class="lat-dot"></span>Analyst writes SQL across systems</div>
+                        <div class="lat-step" data-step="3"><span class="lat-dot"></span>Report comes back, maybe stale</div>
+                    </div>
+                    <div class="day-counter"><span>elapsed</span><span class="day-num" data-target="3">0</span><span>days</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">03</div>
+</section>
+
+<!-- ============ SLIDE 3 · THE TICKET (concrete example) ============ -->
 <section class="slide glow" data-name="ticket">
     <div class="slide-inner">
-        <div class="kicker reveal">A real request, last month</div>
-        <h2 class="reveal d1">It starts with a ticket.</h2>
+        <div class="kicker reveal">What that wait looks like</div>
+        <h2 class="reveal d1">The investigations sales teams ask for, every week.</h2>
         <div class="ticket-card reveal d2">
             <div class="ticket-head">
                 <span class="ticket-key">DATA-REQ</span>
@@ -576,7 +622,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                 <span class="hl h2x">3 working days minimum</span>, roughly <span class="hl h3x">3 to 8 analyst hours</span>.
                 With the usual back and forth, often a week or more before it's truly closed.
             </div>
-            <div class="ticket-foot reveal d4">And it's never just one. <b>Every account team has a version of this ticket.</b></div>
+            <div class="ticket-foot reveal d4">Some asks are simple, some run deep, but the repetitive ones bury the queue. <b>This doesn't replace the analyst. It puts the repetitive pulls at the account team's fingertips, so analysts keep the real investigations.</b></div>
         </div>
     </div>
     <div class="pagenum">02</div>
@@ -621,40 +667,6 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 </section>
 
 <!-- ============ SLIDE 3 · THE PROBLEM ============ -->
-<section class="slide" data-name="problem">
-    <div class="slide-inner">
-        <div class="kicker reveal">The real problem</div>
-        <h2 class="reveal d1">Four CRMs. Four different answers<br>to the same question.</h2>
-        <div class="prob-grid">
-            <div class="prob-panel reveal d2">
-                <h3>One network, four sources of truth</h3>
-                <p class="pdesc">Thousands of hearing care locations report through different CRMs, at different grains, under different names. Ask "what's our test rate" and the answer depends on which system you opened.</p>
-                <div class="crm-row">
-                    <div class="crm-box"><div class="cname">CounselEAR</div><div class="cnum">0.125%</div></div>
-                    <div class="crm-box"><div class="cname">Sycle</div><div class="cnum">0.141%</div></div>
-                    <div class="crm-box"><div class="cname">Blueprint</div><div class="cnum">0.121%</div></div>
-                    <div class="crm-box"><div class="cname">Beltone</div><div class="cnum">0.160%</div></div>
-                </div>
-                <div class="neq">&ne;</div>
-            </div>
-            <div class="prob-panel reveal d3">
-                <h3>And every answer waits in line</h3>
-                <p class="pdesc">The ticket you just saw wasn't an exception. It's the standard route for every question.</p>
-                <div class="lat-line">
-                    <div class="lat-steps">
-                        <div class="lat-step" data-step="0"><span class="lat-dot"></span>AE has a question</div>
-                        <div class="lat-step" data-step="1"><span class="lat-dot"></span>Ticket lands in analyst queue</div>
-                        <div class="lat-step" data-step="2"><span class="lat-dot"></span>Analyst writes SQL across systems</div>
-                        <div class="lat-step" data-step="3"><span class="lat-dot"></span>Report comes back, maybe stale</div>
-                    </div>
-                    <div class="day-counter"><span>elapsed</span><span class="day-num" data-target="3">0</span><span>days</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="pagenum">03</div>
-</section>
-
 <!-- ============ SLIDE 4 · WHAT YOU CAN ASK IT TODAY ============ -->
 <section class="slide" data-name="coverage">
     <div class="slide-inner">
@@ -787,44 +799,29 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 <section class="slide" data-name="loop">
     <div class="slide-inner">
         <div class="kicker reveal">How it's built · 1 of 2</div>
-        <h2 class="reveal d1">The space is code, not clicks.</h2>
-        <div class="loop-wrap">
-            <div class="loop-diagram reveal d2">
-                <!-- rectangular loop path runs through node centers, behind opaque node cards.
-                     Centers: (220,120) (880,120) (880,540) (220,540). Perimeter = 2160. -->
-                <svg class="loop-svg" viewBox="0 0 1120 660">
-                    <path class="track" d="M 220 120 H 880 V 540 H 220 Z"/>
-                    <polygon class="arrowhead" points="550,110 572,120 550,130"/>
-                    <polygon class="arrowhead" points="870,330 880,352 890,330"/>
-                    <polygon class="arrowhead" points="550,530 528,540 550,550"/>
-                    <polygon class="arrowhead" points="210,330 220,308 230,330"/>
-                    <path class="pulse" d="M 220 120 H 880 V 540 H 220 Z"/>
-                </svg>
-                <div class="loop-node" style="left:40px; top:40px;">
-                    <div class="loop-num">1</div>
-                    <h5>Two notebooks</h5>
-                    <p>SQL training cells with metadata, measures, filters, and usage guidance per query</p>
+        <h2 class="reveal d1">Training Genie: the usual way vs ours.</h2>
+        <div class="prob-grid" style="margin-top:30px;">
+            <div class="prob-panel reveal d2">
+                <h3 style="color:#e0654f;">The usual way: clicks</h3>
+                <div class="vs-list">
+                    <div class="vs-item bad">Open the Genie space UI</div>
+                    <div class="vs-item bad">Add a query title, paste the question, by hand</div>
+                    <div class="vs-item bad">Fill in metadata for every single column</div>
+                    <div class="vs-item bad">Repeat, for all 119 queries</div>
+                    <div class="vs-item bad">Something breaks? Hunt through the UI to find which one</div>
                 </div>
-                <div class="loop-node" style="left:700px; top:40px;">
-                    <div class="loop-num">2</div>
-                    <h5>space_parser</h5>
-                    <p>Parses the notebooks and deploys the full Genie space config in one run</p>
-                </div>
-                <div class="loop-node" style="left:700px; top:460px;">
-                    <div class="loop-num">3</div>
-                    <h5>Test via MCP</h5>
-                    <p>Genie MCP server wired into the code assistant, driven by a skill file</p>
-                </div>
-                <div class="loop-node" style="left:40px; top:460px;">
-                    <div class="loop-num">4</div>
-                    <h5>Findings go back in</h5>
-                    <p>Wrong answers become new training cells and guardrails. Redeploy.</p>
-                </div>
+                <div class="vs-verdict bad-v">bottleneck: speed and maintenance</div>
             </div>
-            <div class="loop-side">
-                <div class="loop-point reveal d3">Nothing is hand-tuned in a UI. <b>Every instruction, measure, and guardrail lives in version-controlled notebooks.</b></div>
-                <div class="loop-point reveal d4">Testing is automated: the assistant asks the space hundreds of questions through MCP and grades the SQL that comes back.</div>
-                <div class="loop-point accent reveal d5">Same loop, different vertical: point the notebooks at another industry's gold tables and the pipeline builds that space too. <b>This is how it scales across Darwill.</b></div>
+            <div class="prob-panel reveal d3">
+                <h3 style="color:var(--green);">Our way: code</h3>
+                <div class="vs-list">
+                    <div class="vs-item good">One notebook holds everything: SQL, joins, measures, filters, column metadata</div>
+                    <div class="vs-item good">The system prompt lives in its own markdown file</div>
+                    <div class="vs-item good">space_parser deploys the entire space through the API in one run</div>
+                    <div class="vs-item good">Tested through the Genie MCP server inside the code assistant</div>
+                    <div class="vs-item good">Wrong answer? Update the notebook, redeploy</div>
+                </div>
+                <div class="vs-verdict good-v">full space rebuilt in minutes, version controlled, repeatable for any vertical</div>
             </div>
         </div>
     </div>
@@ -835,36 +832,52 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 <section class="slide" data-name="arch">
     <div class="slide-inner">
         <div class="kicker reveal">How it's built · 2 of 2</div>
-        <h2 class="reveal d1">The supervisor reads intent, then routes.</h2>
-        <div class="route-stage reveal d2">
-            <!-- wires: question → supervisor → agents. JS lights them per route. -->
-            <svg class="route-svg" viewBox="0 0 1700 640" preserveAspectRatio="none" width="100%" height="100%">
-                <path id="wq0" d="M 470 85  C 560 85,  540 280, 610 280"/>
-                <path id="wq1" d="M 470 295 C 540 295, 540 310, 610 310"/>
-                <path id="wq2" d="M 470 505 C 560 505, 540 340, 610 340"/>
-                <path id="wa0" d="M 990 280 C 1080 280, 1060 62,  1140 62"/>
-                <path id="wa1" d="M 990 300 C 1080 300, 1060 192, 1140 192"/>
-                <path id="wa2" d="M 990 320 C 1080 320, 1060 322, 1140 322"/>
-                <path id="wa3" d="M 990 340 C 1080 340, 1060 452, 1140 452"/>
-                <path id="wa4" d="M 990 360 C 1080 360, 1060 578, 1140 578"/>
-            </svg>
-            <div class="route-q" id="rq0" style="top:30px;"><span class="qfrom">#client-team · AE</span>"How is that location in Tulsa doing compared to last year?"</div>
-            <div class="route-q" id="rq1" style="top:240px;"><span class="qfrom">DM · Account Manager</span>"Scorecard for Quality Hearing Aid Center"</div>
-            <div class="route-q" id="rq2" style="top:450px;"><span class="qfrom">#leadership · Exec</span>"Which Florida owners are losing money on prospect mail?"</div>
-            <div class="route-sup" id="rsup">
-                <h5>Multi-Agent Supervisor</h5>
-                <p>Reads the message, decides intent, dispatches agents, streams the combined answer back.</p>
-                <div class="intent" id="rintent">reading intent&hellip;</div>
+        <h2 class="reveal d1">One message, end to end.</h2>
+        <div class="flow-stage reveal d2">
+            <div class="flow-msg" id="fmsg"><span class="qfrom" id="fmsgFrom">DM · Account Manager</span><span id="fmsgText">"Scorecard for 81273"</span></div>
+            <div class="flow-intent" id="fintent">reading intent&hellip;</div>
+            <div class="flow-row">
+                <div class="fnode" id="fn0"><h5>User</h5><p>Asks in the Slack channel they already work in</p></div>
+                <div class="farrow" id="fa0"><span class="albl">Slack API</span>&rarr;</div>
+                <div class="fnode fsup" id="fn1"><h5>Supervisor</h5><p>Reads intent and orchestrates every step</p></div>
+                <div class="farrow" id="fa1">&rarr;</div>
+                <div class="fnode" id="fn2"><h5>wingman_search</h5><p>Resolves the location, decides which Genie space owns it</p></div>
+                <div class="farrow" id="fa2">&rarr;</div>
+                <div class="fnode" id="fn3"><h5>question_distiller</h5><p>Expands the ask into the exact question set</p></div>
+                <div class="farrow" id="fa3">&rarr;</div>
+                <div class="fnode" id="fn4"><h5>Genie space</h5><p>Writes and runs governed SQL</p><span class="fpill" id="fp-beltone">beltone_genie</span><span class="fpill" id="fp-cbs">cbs_genie &middot; CounselEAR / Sycle / Blueprint</span></div>
+                <div class="farrow" id="fa4">&rarr;</div>
+                <div class="fnode" id="fn5"><h5>Governed data</h5><p>Every answer reads the same layer</p><span class="fpill" id="fp-uc">UC metric views</span><span class="fpill" id="fp-gold">gold layer tables</span></div>
             </div>
-            <div class="route-agent" id="ra0" style="top:20px;"><div class="aname">wingman_search</div><div class="arole">Python UC function · resolves "that location in Tulsa" to the exact dispenser</div></div>
-            <div class="route-agent" id="ra1" style="top:150px;"><div class="aname">question_distiller</div><div class="arole">UC function · expands one ask into the full scorecard question set</div></div>
-            <div class="route-agent" id="ra2" style="top:280px;"><div class="aname">beltone_genie</div><div class="arole">Genie space · Beltone network analytics</div></div>
-            <div class="route-agent" id="ra3" style="top:410px;"><div class="aname">cbs_genie</div><div class="arole">Genie space · CounselEAR, Sycle, Blueprint</div></div>
-            <div class="route-agent" id="ra4" style="top:540px;"><div class="aname">python_exec</div><div class="arole">sandboxed compute on returned data</div></div>
+            <div class="flow-return" id="fret"><span>answer streams back</span><div class="rline"></div><span>supervisor formats it &rarr; Slack thread &rarr; user</span></div>
         </div>
         <div class="arch-note reveal d4">Nobody picks an agent. Nobody spells a location right. The supervisor works out the rest.</div>
     </div>
     <div class="pagenum">11</div>
+</section>
+
+<!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
+<section class="slide" data-name="scorecard">
+    <div class="slide-inner">
+        <div class="kicker reveal">The flow, for real</div>
+        <h2 class="reveal d1">"Generate a scorecard for 16858"</h2>
+        <div class="demo-grid">
+            <div class="demo-left reveal d2">
+                <div class="demo-about">One Slack message. Here is what the pipeline does with it.</div>
+                <div class="demo-qs">
+                    <div class="demo-q"><b>wingman_search</b> resolves 16858 &rarr; Jonesboro &middot; Beltone</div>
+                    <div class="demo-q"><b>question_distiller</b> expands it into the full scorecard question set</div>
+                    <div class="demo-q"><b>Genie</b> runs every question against the governed layer</div>
+                    <div class="demo-q"><b>Supervisor</b> assembles one scorecard: performance, benchmarks, pool capacity, journey, distance and age bands</div>
+                </div>
+                <div class="demo-stat"><div class="stat-big">~90s</div><div class="stat-cap">from message to full scorecard. The manual version took an analyst most of a week.</div></div>
+            </div>
+            <div class="reveal d3">
+                <img src="scorecard_frame.png" alt="Scorecard answer in Slack" style="width:100%; border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+            </div>
+        </div>
+    </div>
+    <div class="pagenum">12</div>
 </section>
 
 <!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
@@ -1184,34 +1197,33 @@ function animateCount(el, target, decimals, duration) {
    Active only while the routing slide is visible.
    =========================================== */
 const ROUTES = [
-    { q: 0, intent: 'location lookup → resolve entity, then analytics', agents: [0, 2], wires: ['wq0', 'wa0', 'wa2'] },
-    { q: 1, intent: 'scorecard request → distill question set', agents: [1, 3], wires: ['wq1', 'wa1', 'wa3'] },
-    { q: 2, intent: 'network analytics → Beltone, compute follow-up', agents: [2, 4], wires: ['wq2', 'wa2', 'wa4'] },
+    { from: 'DM · Account Manager', text: '"Scorecard for 81273"',
+      intent: 'scorecard request → 81273 = Sycle account → distill full question set', genie: 'fp-cbs' },
+    { from: '#client-team · AE', text: '"How is that location in Tulsa doing compared to last year?"',
+      intent: 'location lookup → resolves to Beltone dispenser → YoY analytics', genie: 'fp-beltone' },
 ];
-let routeTimer = null, routeIdx = 0;
+let routeTimer = null, routeIdx = 0, routeTouts = [];
 function routeTick(slide) {
     const r = ROUTES[routeIdx % ROUTES.length];
     routeIdx++;
-    slide.querySelectorAll('.route-q, .route-agent').forEach(el => el.classList.remove('lit'));
-    slide.querySelectorAll('.route-svg path').forEach(p => p.classList.remove('wire-lit', 'to-agent'));
-    const sup = slide.querySelector('#rsup');
-    const intent = slide.querySelector('#rintent');
-    sup.classList.remove('lit');
+    routeTouts.forEach(clearTimeout); routeTouts = [];
+    slide.querySelectorAll('.fnode, .farrow, .fpill, .flow-msg, .flow-return').forEach(el => el.classList.remove('lit'));
+    const intent = slide.querySelector('#fintent');
     intent.textContent = 'reading intent…';
-    slide.querySelector('#rq' + r.q).classList.add('lit');
-    const qw = slide.querySelector('#' + r.wires[0]);
-    setTimeout(() => qw && qw.classList.add('wire-lit'), 250);
-    setTimeout(() => { sup.classList.add('lit'); intent.textContent = r.intent; }, 900);
-    setTimeout(() => {
-        r.wires.slice(1).forEach(id => { const w = slide.querySelector('#' + id); if (w) w.classList.add('wire-lit', 'to-agent'); });
-        r.agents.forEach(i => slide.querySelector('#ra' + i).classList.add('lit'));
-    }, 1500);
+    slide.querySelector('#fmsgFrom').textContent = r.from;
+    slide.querySelector('#fmsgText').textContent = r.text;
+    const seq = ['#fmsg', '#fn0', '#fa0', '#fn1', '#fa1', '#fn2', '#fa2', '#fn3', '#fa3', '#fn4', '#' + r.genie, '#fa4', '#fn5', '#fp-uc', '#fp-gold', '#fret'];
+    seq.forEach((sel, i) => routeTouts.push(setTimeout(() => {
+        const el = slide.querySelector(sel);
+        if (el) el.classList.add('lit');
+    }, 200 + i * 300)));
+    routeTouts.push(setTimeout(() => { intent.textContent = r.intent; }, 1100));
 }
 function startRouting(slide) {
     stopRouting();
     routeIdx = 0;
     routeTick(slide);
-    routeTimer = setInterval(() => routeTick(slide), 4200);
+    routeTimer = setInterval(() => routeTick(slide), 7600);
 }
 function stopRouting() { if (routeTimer) { clearInterval(routeTimer); routeTimer = null; } }
 
