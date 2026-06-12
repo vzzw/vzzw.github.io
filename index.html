@@ -184,7 +184,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
     </svg>
     <div class="kicker">team phantom bolt · databricks geniethon 2026</div>
     <h1>Campaign questions, <em>answered in the time it takes to ask.</em></h1>
-    <p>Account teams used to file a ticket and wait three days for a campaign answer. We trained Databricks Genie on the questions they actually ask, wired it into Slack, and validated every number against the dashboards the business already trusts.</p>
+    <p>Account teams used to file a ticket and wait three days for a campaign answer. We trained Databricks Genie on the questions they actually ask, wired it into Slack, and built it on metric views so everyone in the organization gets the same answer to the same question.</p>
     <div class="hero-cta">
         <a class="btn btn-gold" href="#ask">See what you can ask</a>
         <a class="btn btn-ghost" href="#scope">See the scope</a>
@@ -257,14 +257,14 @@ footer a { color: var(--gold-bright); text-decoration: none; }
                 <div class="bstep"><span class="bn"></span><div><h4>Campaign performance</h4><p>Response, appointments, shows, sales, cost and ROI at location, owner, company, or network level, across all four CRMs.</p></div></div>
                 <div class="bstep"><span class="bn"></span><div><h4>Mailing pressure and waste</h4><p>How often each address gets mailed, where extra touches stop paying, and what gets spent on people who never respond.</p></div></div>
                 <div class="bstep"><span class="bn"></span><div><h4>Markets and competition</h4><p>Response by distance from the clinic, competitor density, and untapped prospect pools by tier.</p></div></div>
-                <div class="bstep"><span class="bn"></span><div><h4>Trends and forecasts</h4><p>Year over year comparisons, monthly trends, and projections through the end of the year, with maturity flags on young data.</p></div></div>
+                <div class="bstep"><span class="bn"></span><div><h4>Trends over time</h4><p>Year over year comparisons and monthly performance trends, with maturity flags on young data.</p></div></div>
             </div>
             <div class="effort">
                 <h3>Out of scope, on purpose</h3>
                 <div class="erow"><span>Patient names and identifying details</span><b>excluded</b></div>
                 <div class="erow"><span>Changing or writing any data</span><b>read only</b></div>
                 <div class="erow"><span>Anything outside campaign data</span><b>not trained</b></div>
-                <p class="takeaway">Every answer is validated against the Tableau dashboards the business already trusts, and metrics that haven't matured carry a flag so nobody acts on half-baked numbers.</p>
+                <p class="takeaway">Every metric is defined once in a metric view, so everyone in the organization is talking to the same data and getting the same answer. Metrics that haven't matured carry a flag so nobody acts on half-baked numbers.</p>
             </div>
         </div>
     </div>
@@ -298,33 +298,27 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <script>
 /* ============ question browser + typed answer replay ============ */
 const ASK = [
-    { cat: 'Performance & trends', sub: 'scorecards, YoY, forecasts', qs: [
+    { cat: 'Performance & trends', sub: 'YoY, monthly performance', qs: [
         { q: 'How does this year compare to last year, same period?',
-          a: 'Year to date the network is ahead of last year on response, with appointment cost trending down. The answer comes back as a month-by-month table per CRM, with <b>maturity flags</b> on months still inside the matchback window.' },
-        { q: 'What is the monthly performance trend with a forecast?',
-          a: 'Genie returns the monthly trend and projects the rest of the year. In demo runs, the projection flagged a soft Q4 early enough to adjust drop schedules.' },
-        { q: 'How is one location performing across all CRMs?',
-          a: 'One scorecard: response rate, cost per appointment, rank against the network, and whether its data is mature enough to judge. The same question used to mean stitching four systems by hand.' } ] },
-    { cat: 'Pool & opportunity', sub: 'untapped prospects, projected revenue', qs: [
-        { q: 'What percentage of the prospect pool is untapped at this location?',
-          a: 'In one demo market: <b>8,137 untapped tier 1–3 households, 40.9% of the pool</b>. Genie lists them by tier so the next campaign funds the best prospects first.' },
-        { q: 'What revenue could we expect if we mailed the full pool?',
-          a: 'Genie projects expected appointments and revenue from the untapped pool using the location’s own historical response and close rates, not a generic benchmark.' } ] },
-    { cat: 'Frequency & waste', sub: 'over-mailing, non-responder spend', qs: [
-        { q: 'How much do we spend on people who never respond?',
-          a: 'The demo answer that changed a budget conversation: one location had sent <b>120,241 additional mailings to 19,054 addresses that had never once responded — $68,336, or 79.7% of its prospect spend</b>.' },
-        { q: 'Am I over-mailing the same addresses?',
-          a: 'Genie buckets every address by touch count and shows response by bucket, so you can see exactly where extra touches stop paying for themselves.' } ] },
-    { cat: 'Geography & competition', sub: 'distance bands, competitor density', qs: [
+          a: 'A month-by-month comparison against the same period last year: response, appointments, cost. Months still inside the matchback window carry a <b>maturity flag</b> so nobody judges a campaign before its results are in.' },
+        { q: 'What does the monthly performance trend look like?',
+          a: 'The monthly trend in one view, so you can see whether things are climbing, sliding, or seasonal, and ask the follow-up in the same thread.' } ] },
+    { cat: 'Pool & opportunity', sub: 'untapped prospects', qs: [
+        { q: 'How much of the prospect pool at this location is still untapped?',
+          a: 'Genie sizes the households the location has never mailed, broken out by tier, so the next campaign funds the best prospects first instead of re-mailing the same list.' } ] },
+    { cat: 'Frequency & waste', sub: 'high volume, low response', qs: [
+        { q: 'Which locations are mailing a ton of prospects but sitting below the network average on response? I want to find the biggest waste.',
+          a: 'Genie ranks locations by volume against response, surfacing the <b>high-volume, low-response</b> offenders first. That list is where the budget conversation starts.' },
+        { q: 'For Springfield, how many times are we hitting the same address? Break it out: mailed 1, 2, 3, 4+ times. And how much money went to people who never responded?',
+          a: 'Every address bucketed by touch count, with response per bucket, plus the dollar total spent on addresses that never once responded. You can see exactly where extra touches stop paying for themselves.' } ] },
+    { cat: 'Geography & competition', sub: 'competitor density', qs: [
         { q: 'What does the competitive landscape around a clinic look like?',
-          a: 'For one demo location: <b>27 competitors within 5 miles, a Costco hearing center 3 miles out, Miracle-Ear at 2.4</b>. Saturated market — which reframes a "bad location" as a different playbook, not a failing one.' },
-        { q: 'Should I mail further out, or stay close to the clinic?',
-          a: 'Response by distance band, per location. Some markets pay for the wider radius; others waste it. The answer is specific, not a rule of thumb.' } ] },
-    { cat: 'Owners & funnel', sub: 'rankings, conversion gaps, journey timing', qs: [
-        { q: 'Which owners book appointments but never convert them to sales?',
-          a: 'Genie separates the funnel: mail → appointment → show → sale. Owners weak at the close stage get a clinic conversation, not a mail conversation. That distinction protects the campaign budget.' },
+          a: 'Competitors mapped around the clinic by distance, including big-box hearing centers. A saturated market reframes a "bad location" as a different playbook, not a failing one.' } ] },
+    { cat: 'Funnel & customer journey', sub: 'mail → response → appointment → sale', qs: [
+        { q: 'Can you trace the customer journey, from mailing to response to appointment to sale?',
+          a: 'The full funnel in one view: mailed, responded, booked, showed, bought. You can see where the funnel narrows and take the right gap to the right team.' },
         { q: 'How long does the journey from mailbox to sale take?',
-          a: 'In the multi-CRM demo: <b>69.9% of responders act on the first mailing, and the average mailbox-to-sale journey is 33 days</b>. Both numbers feed directly into re-mail cadence planning.' } ] },
+          a: 'Genie shows which touch people actually respond to and how long each step of the journey takes. Both feed straight into re-mail cadence planning.' } ] },
 ];
 
 const catList = document.getElementById('catList');
