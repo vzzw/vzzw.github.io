@@ -226,7 +226,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         <h2>The scorecard, on demand</h2>
         <p class="lede">Ask for a scorecard and the supervisor builds the whole thing: performance, benchmarks, and trend for any location, assembled in one pass instead of a week of analyst time.</p>
         <div class="slackwin" style="max-width:1120px; margin:0 auto;">
-            <video src="scorecard.mp4" id="scoreVid" muted playsinline loop preload="metadata"></video>
+            <video src="scorecard.mp4?v=2" id="scoreVid" muted playsinline loop preload="metadata"></video>
         </div>
         <p class="ask-note" style="text-align:center;">Recording sped up for viewing. The real run takes a few minutes, which still beats the week it used to take.</p>
     </div>
@@ -315,28 +315,28 @@ footer a { color: var(--gold-bright); text-decoration: none; }
 <script>
 /* ============ question browser + typed answer replay ============ */
 const ASK = [
-    { cat: 'Performance & trends', vid: 'ask_performance_yoy.mp4', sub: 'YoY, monthly performance', qs: [
+    { cat: 'Performance & trends', vid: 'ask_performance_yoy.mp4?v=2', sub: 'YoY, monthly performance', qs: [
         { q: 'How does this year compare to last year, same period?',
           a: 'A month-by-month comparison against the same period last year: response, appointments, cost. Months still inside the matchback window carry a <b>maturity flag</b> so nobody judges a campaign before its results are in.' },
         { q: 'What does the monthly performance trend look like?',
           a: 'The monthly trend in one view, so you can see whether things are climbing, sliding, or seasonal, and ask the follow-up in the same thread.' } ] },
-    { cat: 'Pool & opportunity', vid: 'ask_untapped_prospect_pool.mp4', sub: 'untapped prospects', qs: [
+    { cat: 'Pool & opportunity', vid: 'ask_untapped_prospect_pool.mp4?v=2', sub: 'untapped prospects', qs: [
         { q: 'How much of the prospect pool at this location is still untapped?',
           a: 'Genie sizes the households the location has never mailed, broken out by tier, so the next campaign funds the best prospects first instead of re-mailing the same list.' } ] },
-    { cat: 'Frequency & waste', vid: 'ask_frequency_waste.mp4', sub: 'high volume, low response', qs: [
+    { cat: 'Frequency & waste', vid: 'ask_frequency_waste.mp4?v=2', sub: 'high volume, low response', qs: [
         { q: 'Which locations are mailing a ton of prospects but sitting below the network average on response? I want to find the biggest waste.',
           a: 'Genie ranks locations by volume against response, surfacing the <b>high-volume, low-response</b> offenders first. That list is where the budget conversation starts.' },
         { q: 'For Springfield, how many times are we hitting the same address? Break it out: mailed 1, 2, 3, 4+ times. And how much money went to people who never responded?',
           a: 'Every address bucketed by touch count, with response per bucket, plus the dollar total spent on addresses that never once responded. You can see exactly where extra touches stop paying for themselves.' } ] },
-    { cat: 'Geography & competition', vid: 'ask_competitor.mp4', sub: 'competitor density', qs: [
+    { cat: 'Geography & competition', vid: 'ask_competitor.mp4?v=2', sub: 'competitor density', qs: [
         { q: 'What does the competitive landscape around a clinic look like?',
           a: 'Competitors mapped around the clinic by distance, including big-box hearing centers. A saturated market reframes a "bad location" as a different playbook, not a failing one.' } ] },
-    { cat: 'Funnel & customer journey', vid: 'ask_customer_journey.mp4', sub: 'mail → response → appointment → sale', qs: [
+    { cat: 'Funnel & customer journey', vid: 'ask_customer_journey.mp4?v=2', sub: 'mail → response → appointment → sale', qs: [
         { q: 'Can you trace the customer journey, from mailing to response to appointment to sale?',
           a: 'The full funnel in one view: mailed, responded, booked, showed, bought. You can see where the funnel narrows and take the right gap to the right team.' },
         { q: 'How long does the journey from mailbox to sale take?',
           a: 'Genie shows which touch people actually respond to and how long each step of the journey takes. Both feed straight into re-mail cadence planning.' } ] },
-    { cat: 'Client call prep', vid: 'ask_client_prep.mp4', sub: 'walk in with the numbers', qs: [
+    { cat: 'Client call prep', vid: 'ask_client_prep.mp4?v=2', sub: 'walk in with the numbers', qs: [
         { q: 'I have a client call in twenty minutes. Catch me up on this account.',
           a: 'Performance, trend, and the talking points for the call, pulled in one thread instead of three dashboards.' } ] },
 ];
