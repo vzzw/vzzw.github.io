@@ -536,9 +536,25 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 <!-- ============ SLIDE 1B · TEAM INTRO (stepped: arrow reveals each member, then the slam) ============ -->
 <section class="slide glow" data-name="team">
     <div class="slide-inner">
-        <div class="kicker reveal">Team Phantom Bolt</div>
-        <h2 class="reveal d1">Hi, I'm Kyi.</h2>
-        <p class="sub reveal d2">Data analyst at Darwill. I sit close enough to the account teams to hear every "can you pull this real quick" before it turns into a ticket. This project is how I stopped answering that with "give me three days."</p>
+        <div class="kicker reveal team-dim">The team</div>
+        <h2 class="reveal d1 team-dim">Meet the team.</h2>
+        <div class="team-grid team-dim">
+            <div class="member captain step"><div class="mname">Kyi Moe Tun</div><div class="mrole">Team Captain · Data Analyst</div></div>
+            <div class="member step"><div class="mname">Sai Bhupathiraju</div><div class="mrole">Data Engineer</div></div>
+            <div class="member step"><div class="mname">Joe Berry</div><div class="mrole">BI Strategist</div></div>
+            <div class="member step"><div class="mname">Nadia Noui-Mehidi</div><div class="mrole">Data Scientist II</div></div>
+            <div class="member step"><div class="mname">Chelsea Perez</div><div class="mrole">Data Scientist</div></div>
+            <div class="member step"><div class="mname">Swathi Sundaravarathan</div><div class="mrole">Data Engineer II</div></div>
+        </div>
+        <div class="team-slam step" data-slam>
+            <div class="slam-bolts">
+                <svg style="left:12%; top:14%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="right:10%; top:20%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="left:20%; bottom:12%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+                <svg style="right:16%; bottom:16%;" viewBox="0 0 70 110"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z"/></svg>
+            </div>
+            <div class="slam-text">WE ARE <span class="accent">PHANTOM BOLT</span></div>
+        </div>
     </div>
     <div class="pagenum">02</div>
 </section>
