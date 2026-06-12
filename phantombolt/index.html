@@ -140,6 +140,8 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
 .an.asup { border-color: rgba(240,180,41,0.5); }
 .an.asup h5 { color: var(--yellow); }
 .an.asup.lit { border-color: var(--lava); box-shadow: 0 0 36px rgba(240,180,41,0.35); }
+.an.asup.rej { border-color: #e0654f; box-shadow: 0 0 36px rgba(224,101,79,0.4); }
+.an.asup.rej h5 { color: #e0654f; }
 .an .fpill { display: inline-block; margin-right: 8px; }
 .arch2 svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .arch2 svg.wires path { fill: none; stroke: var(--line); stroke-width: 3; opacity: 0.22; }
@@ -147,6 +149,8 @@ html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background:
 .arch2 svg.wires path.flow.ret { stroke: var(--green); filter: drop-shadow(0 0 6px rgba(0,169,114,0.55)); }
 .wlbl { position: absolute; font-family: var(--font-mono); font-size: 14px; color: var(--muted); transition: color 0.3s; }
 .wlbl.lit { color: var(--yellow); }
+#lblconfirm { opacity: 0; transition: opacity 0.3s; }
+#lblconfirm.lit { opacity: 1; }
 
 /* SLIDE — TRAINING COMPARISON */
 .vs-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
@@ -339,7 +343,7 @@ img, video, canvas, svg { max-width: 100%; max-height: 100%; }
 .cap-card .cq::before { content: '“'; color: var(--lava); font-size: 24px; }
 .cap-card .cq::after { content: '”'; color: var(--lava); font-size: 24px; }
 .scope-out { color: var(--muted); }
-.cap-foot { margin-top: 30px; margin-bottom: 26px; padding: 20px 30px; border-radius: 14px; background: var(--lava-soft); border: 1px solid rgba(240,180,41,0.35); font-family: var(--font-mono); font-size: 22px; color: var(--text); text-align: center; position: relative; z-index: 2; white-space: nowrap; }
+.cap-foot { margin-top: 30px; margin-bottom: 26px; padding: 20px 30px; border-radius: 14px; background: var(--lava-soft); border: 1px solid rgba(240,180,41,0.35); font-family: var(--font-mono); font-size: 19px; color: var(--text); text-align: center; position: relative; z-index: 2; line-height: 1.6; }
 .cap-foot b { color: var(--lava); }
 
 /* ===========================================
@@ -675,15 +679,15 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <h2 class="reveal d1">What you can ask it today</h2>
         <div class="cap-grid">
             <div class="cap-card reveal d2"><h4>Scorecards &amp; rankings</h4><div class="ccover">Location, owner, and company scorecards with network benchmarks and rank.</div><div class="cq">How does a location perform across all CRMs?</div></div>
-            <div class="cap-card reveal d3"><h4>Trends &amp; forecasting</h4><div class="ccover">Year over year, monthly trends, P&amp;L forecast through December.</div><div class="cq">What is the monthly performance trend with AI forecast?</div></div>
-            <div class="cap-card reveal d4"><h4>Full funnel</h4><div class="ccover">Mail to appointment to show to sale to ROI, per CRM, with matchback windows.</div><div class="cq">How does prospect mail compare to patient mail?</div></div>
-            <div class="cap-card reveal d5"><h4>Templates &amp; formats</h4><div class="ccover">Template performance by state and month, format by strategy.</div><div class="cq">Which prospect campaign templates perform best YTD?</div></div>
-            <div class="cap-card reveal d6"><h4>Mailing pressure</h4><div class="ccover">Frequency buckets, touch number, spacing, non-responder waste.</div><div class="cq">How much do we spend on people who never respond?</div></div>
-            <div class="cap-card reveal d7"><h4>Geography &amp; competition</h4><div class="ccover">Distance bands, competitive density, Costco and Miracle-Ear proximity.</div><div class="cq">Does distance from the clinic affect prospect response rate?</div></div>
-            <div class="cap-card reveal d8"><h4>Pool &amp; targeting</h4><div class="ccover">Tier utilization, untapped counts, demographics, propensity models.</div><div class="cq">What percentage of the prospect pool is untapped at each location?</div></div>
-            <div class="cap-card reveal d9"><h4>Operations</h4><div class="ccover">Current month drops, next 30 days, trigger-active locations.</div><div class="cq">What is the concurrence rate for the next 30 days?</div></div>
+            <div class="cap-card reveal d3"><h4>Competitor profile</h4><div class="ccover">Competitors mapped around a clinic by distance, including Costco and Miracle-Ear.</div><div class="cq">What is the competitive profile for Independence, MO?</div></div>
+            <div class="cap-card reveal d4"><h4>Funnel &amp; customer journey</h4><div class="ccover">Mail to response to appointment to sale, per CRM, with timing on every step.</div><div class="cq">Can you trace the journey from mailbox to sale?</div></div>
+            <div class="cap-card reveal d5"><h4>Mailing pressure</h4><div class="ccover">Frequency buckets, touch number, spacing, non-responder waste.</div><div class="cq">How much do we spend on people who never respond?</div></div>
+            <div class="cap-card reveal d6"><h4>Pool &amp; targeting</h4><div class="ccover">Tier utilization, untapped counts, propensity models.</div><div class="cq">What percentage of the prospect pool is untapped at each location?</div></div>
+            <div class="cap-card reveal d7"><h4>Templates &amp; formats</h4><div class="ccover">Template performance by state and month, format by strategy.</div><div class="cq">Which prospect campaign templates perform best YTD?</div></div>
+            <div class="cap-card reveal d8"><h4>Responder demographics</h4><div class="ccover">Who actually responds: age bands and distance from the clinic.</div><div class="cq">What does the age profile of responders look like?</div></div>
+            <div class="cap-card reveal d9"><h4>Trends &amp; forecasting</h4><div class="ccover">Year over year, monthly trends, P&amp;L forecast through December.</div><div class="cq">What is the monthly performance trend with AI forecast?</div></div>
         </div>
-        <div class="cap-foot reveal d10"><b>In scope:</b> 118 trained queries · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · maturity rules on every metric&nbsp;&nbsp;<span class="scope-out"><b>Out of scope, on purpose:</b> patient PII, ad-hoc writes, anything outside campaign data</span></div>
+        <div class="cap-foot reveal d10"><b>In scope:</b> 118 trained queries · 2 Genie spaces · 4 CRMs · location, owner, company, network grain · maturity rules on every metric &nbsp;·&nbsp; <span class="scope-out"><b>Out of scope, on purpose:</b> patient PII, ad-hoc writes, anything outside campaign data</span></div>
     </div>
     <div class="pagenum">06</div>
 </section>
@@ -780,15 +784,16 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                 <path id="a6b" d="M 790 548 C 790 580, 800 590, 830 612"/>
                 <path id="a6c" d="M 1345 548 C 1345 580, 1335 590, 1310 612"/>
                 <path id="a7" d="M 1500 660 C 1680 590, 1680 140, 1260 38"/>
+                <path id="a9" d="M 700 290 C 560 160, 660 40, 875 40"/>
             </svg>
             <span class="wlbl" id="lblslack" style="left:945px; top:90px;">Slack API</span>
             <span class="wlbl" id="lblret" style="left:1600px; top:330px; writing-mode:vertical-rl;">answer streams back</span>
+            <span class="wlbl" id="lblconfirm" style="left:580px; top:140px;">"which one did you mean?"</span>
             <div class="aq-col">
-                <div class="aq-card" id="aq0"><span class="qfrom">DM · Account Manager</span>"Generate a scorecard for 16858"</div>
-                <div class="aq-card" id="aq1"><span class="qfrom">#client-team · AE</span>"Which locations have the biggest untapped prospect pools?"</div>
-                <div class="aq-card" id="aq2"><span class="qfrom">#client-team · AE</span>"How does this year compare to last year for Quality Hearing Aid Center?"</div>
-                <div class="aq-card" id="aq3"><span class="qfrom">DM · Analyst</span>"What is the competitive profile for Independence, MO?"</div>
-                <div class="aq-card" id="aq4"><span class="qfrom">#leadership · Exec</span>"How are east coast states performing on prospect mail?"</div>
+                <div class="aq-card" id="aq0"><span class="qfrom">DM · Account Manager</span>"Generate a scorecard for 81273"</div>
+                <div class="aq-card" id="aq1"><span class="qfrom">#client-team · AE</span>"Show me the top 10 locations by mailing volume"</div>
+                <div class="aq-card" id="aq2"><span class="qfrom">DM · Analyst</span>"What's the competitive profile for Independence, MO?"</div>
+                <div class="aq-card" id="aq3"><span class="qfrom">#leadership · Exec</span>"Show me Sage Dental performance YTD"</div>
                 <div class="aq-intent" id="aintent">reading intent&hellip;</div>
             </div>
             <div class="an" id="nu" style="left:880px; top:6px; width:370px;"><h5>User asks in Slack</h5><p>Plain English, in the channel they already work in</p></div>
@@ -815,7 +820,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                     <div class="vs-item bad">Open the Genie space UI</div>
                     <div class="vs-item bad">Add a query title, paste the question, by hand</div>
                     <div class="vs-item bad">Fill in metadata for every single column</div>
-                    <div class="vs-item bad">Repeat, for all 119 queries</div>
+                    <div class="vs-item bad">Repeat, for all 118 queries</div>
                     <div class="vs-item bad">Something breaks? Hunt through the UI to find which one</div>
                 </div>
                 <div class="vs-verdict bad-v">bottleneck: speed and maintenance</div>
@@ -1177,16 +1182,14 @@ function animateCount(el, target, decimals, duration) {
    Active only while the routing slide is visible.
    =========================================== */
 const ARCH_ROUTES = [
-    { q: 'aq0', intent: 'scorecard → wingman resolves 16858 → Jonesboro · Beltone → distill → beltone_genie',
-      seq: ['nu','a1','ns','a2','nw','a3','nd','a4b','nb','a6b','nuc','a7'] },
-    { q: 'aq1', intent: 'network-wide ranking → no entity to resolve → cbs_genie direct',
-      seq: ['nu','a1','ns','a5c','nc','a6c','nuc','a7'] },
-    { q: 'aq2', intent: 'YoY for a named company → wingman resolves it → Sycle → cbs_genie',
-      seq: ['nu','a1','ns','a2','nw','a8c','nc','a6c','nuc','a7'] },
-    { q: 'aq3', intent: 'competitive profile → wingman resolves Independence, MO → Beltone → beltone_genie',
-      seq: ['nu','a1','ns','a2','nw','a8b','nb','a6b','nuc','a7'] },
-    { q: 'aq4', intent: 'state-level Beltone analytics → beltone_genie direct',
-      seq: ['nu','a1','ns','a5b','nb','a6b','nuc','a7'] },
+    { q: 'aq0', intent: 'a scorecard ask: wingman pins 81273 to its CRM, the distiller writes out the full question set, cbs_genie runs it',
+      seq: ['nu','a1','ns','a2','nw','a3','nd','a4c','nc','a6c','nuc','a7'] },
+    { q: 'aq1', intent: 'no name to look up, and the answer lives in both networks: both Genie spaces run it in parallel, supervisor merges',
+      seq: ['nu','a1','ns',['a5b','a5c'],['nb','nc'],['a6b','a6c'],'nuc','a7'] },
+    { q: 'aq2', intent: 'wingman finds more than one Independence location, so the supervisor asks the user which one before sending it to beltone_genie',
+      seq: ['nu','a1','ns','a2','nw','a9','nu','a8b','nb','a6b','nuc','a7'] },
+    { q: 'aq3', intent: 'Sage Dental is not one of our clients. The supervisor says so and stops, instead of making something up',
+      seq: ['nu','a1','ns','REJ'] },
 ];
 const ARROW_MS = 620, NODE_MS = 300;
 let routeTimer = null, routeIdx = 0, routeTouts = [], wiresInit = false;
@@ -1204,6 +1207,7 @@ function routeTick(slide) {
     routeIdx++;
     routeTouts.forEach(clearTimeout); routeTouts = [];
     slide.querySelectorAll('.an, .aq-card, .wlbl').forEach(el => el.classList.remove('lit'));
+    slide.querySelector('#ns').classList.remove('rej');
     slide.querySelectorAll('.wires path').forEach(p => {
         p.style.transition = 'none';
         p.classList.remove('flow', 'ret');
@@ -1214,24 +1218,35 @@ function routeTick(slide) {
     intent.textContent = 'reading intent…';
     slide.querySelector('#' + r.q).classList.add('lit');
     let t = 350;
-    r.seq.forEach(id => {
-        const isArrow = /^a\d/.test(id);
-        if (isArrow) {
+    r.seq.forEach(step => {
+        const ids = Array.isArray(step) ? step : [step];
+        const isArrow = /^a\d/.test(ids[0]);
+        if (ids[0] === 'REJ') {
             routeTouts.push(setTimeout(() => {
-                const w = slide.querySelector('#' + id);
-                if (!w) return;
-                w.classList.add('flow');
-                if (id === 'a7') { w.classList.add('ret'); slide.querySelector('#lblret').classList.add('lit'); }
-                if (id === 'a1') slide.querySelector('#lblslack').classList.add('lit');
-                w.style.transition = 'stroke-dashoffset ' + (ARROW_MS / 1000) + 's linear';
-                w.style.strokeDashoffset = '0';
+                slide.querySelector('#ns').classList.add('rej');
+            }, t));
+            t += NODE_MS;
+        } else if (isArrow) {
+            routeTouts.push(setTimeout(() => {
+                ids.forEach(id => {
+                    const w = slide.querySelector('#' + id);
+                    if (!w) return;
+                    w.classList.add('flow');
+                    if (id === 'a7') { w.classList.add('ret'); slide.querySelector('#lblret').classList.add('lit'); }
+                    if (id === 'a9') { w.classList.add('ret'); slide.querySelector('#lblconfirm').classList.add('lit'); }
+                    if (id === 'a1') slide.querySelector('#lblslack').classList.add('lit');
+                    w.style.transition = 'stroke-dashoffset ' + (ARROW_MS / 1000) + 's linear';
+                    w.style.strokeDashoffset = '0';
+                });
             }, t));
             t += ARROW_MS;
         } else {
             routeTouts.push(setTimeout(() => {
-                const n = slide.querySelector('#' + id);
-                if (n) n.classList.add('lit');
-                if (id === 'ns') intent.textContent = r.intent;
+                ids.forEach(id => {
+                    const n = slide.querySelector('#' + id);
+                    if (n) n.classList.add('lit');
+                    if (id === 'ns') intent.textContent = r.intent;
+                });
             }, t));
             t += NODE_MS;
         }
