@@ -546,7 +546,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="title-wrap">
             <div class="title-team reveal">Team Phantom Bolt · Geniethon 2026</div>
             <h1 class="title-main reveal d1">Hearing Care<br>Campaign<br>Intelligence</h1>
-            <p class="title-sub reveal d2">The answers were always in our data.<br>We made them one message away.</p>
+            <p class="title-sub reveal d2">The answers are already in our data.<br>We made them one message away.</p>
         </div>
     </div>
     <div class="pagenum">01</div>
@@ -737,30 +737,6 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
     <div class="pagenum">07</div>
 </section>
 
-<!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
-<section class="slide" data-name="scorecard">
-    <div class="slide-inner">
-        <div class="kicker reveal">The flow, for real</div>
-        <h2 class="reveal d1">"Generate a scorecard for 16858"</h2>
-        <div class="demo-grid">
-            <div class="demo-left reveal d2">
-                <div class="demo-about">One Slack message. Here is what the pipeline does with it.</div>
-                <div class="demo-qs">
-                    <div class="demo-q"><b>wingman_search</b> resolves 16858 &rarr; Jonesboro &middot; Beltone</div>
-                    <div class="demo-q"><b>question_distiller</b> expands it into the full scorecard question set</div>
-                    <div class="demo-q"><b>Genie</b> runs every question against the governed layer</div>
-                    <div class="demo-q"><b>Supervisor</b> assembles one scorecard: performance, benchmarks, pool capacity, journey, distance and age bands</div>
-                </div>
-                <div class="demo-stat"><div class="stat-big">~90s</div><div class="stat-cap">from message to full scorecard. The manual version took an analyst most of a week.</div></div>
-            </div>
-            <div class="reveal d3">
-                <video src="scorecard.mp4" autoplay muted loop playsinline style="width:100%; border:1px solid var(--line); border-radius:14px; box-shadow:0 24px 64px rgba(0,0,0,0.5);"></video>
-            </div>
-        </div>
-    </div>
-    <div class="pagenum">08</div>
-</section>
-
 <!-- ============ SLIDE 8 · ACT 2 — SLACK SCORECARD ============ -->
 <section class="slide" data-name="act2">
     <div class="slide-inner">
@@ -784,11 +760,11 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
                 </div>
             </div>
             <div class="demo-right reveal d3">
-                <div class="video-frame" data-video="act_2_slack.mp4">
-                    <video src="act_2_slack.mp4" controls preload="metadata"></video>
+                <div class="video-frame" data-video="scorecard.mp4">
+                    <video src="scorecard.mp4" autoplay muted loop playsinline></video>
                     <div class="video-missing"><svg class="vm-bolt-svg" viewBox="0 0 70 110" width="44" height="68"><path d="M42 4 L14 60 L33 60 L22 106 L58 46 L37 46 L52 4 Z" fill="none" stroke="#f0b429" stroke-width="5" stroke-linejoin="round"/></svg>live demo at the booth</div>
                 </div>
-                <div class="video-hint">act_2_slack.mp4 · scorecard generation, live in Slack</div>
+                <div class="video-hint">scorecard generation, live in Slack</div>
             </div>
         </div>
         <div class="outcome-strip reveal d5">
@@ -796,8 +772,37 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
             <span class="otext">Adoption is the whole game: a tool nobody opens answers nothing. Insight in Slack means <b>the people who own the client relationship</b> use it daily, without ever learning Databricks.</span>
         </div>
     </div>
+    <div class="pagenum">08</div>
+</section>
+
+<!-- ============ SLIDE 11B · SCORECARD EXAMPLE (side by side) ============ -->
+<section class="slide" data-name="scorecard">
+    <div class="slide-inner">
+        <div class="kicker reveal">The flow, for real</div>
+        <h2 class="reveal d1">"Generate a scorecard for 81273" &mdash; what comes back</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:26px; margin-top:30px; align-items:start;">
+            <div class="reveal d2">
+                <img src="scorecard_1.png" alt="Overall KPIs and mail mix" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <div class="tile-cap" style="margin-top:12px;">Overall KPIs<small>vs network average, prospect vs patient mix</small></div>
+            </div>
+            <div class="reveal d3">
+                <img src="scorecard_2.png" alt="Market context, pool capacity, journey, distance" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <div class="tile-cap" style="margin-top:12px;">Market &amp; pool<small>competitors, tier capacity, responder journey, distance bands</small></div>
+            </div>
+            <div class="reveal d4">
+                <img src="scorecard_3.png" alt="Age bands and repeat mailing" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <div class="tile-cap" style="margin-top:12px;">Audience &amp; pressure<small>age bands, repeat mailing, budget by touch</small></div>
+            </div>
+        </div>
+        <div class="outcome-strip reveal d5" style="margin-top:28px;">
+            <span class="olab">~90s</span>
+            <span class="otext">From one Slack message to all of this: <b>wingman_search</b> resolves 81273 to Temple, TX, <b>question_distiller</b> expands the question set, Genie runs it, the supervisor assembles the card. The manual version took an analyst most of a week.</span>
+        </div>
+    </div>
     <div class="pagenum">09</div>
 </section>
+
+
 
 
 
@@ -887,27 +892,15 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="kicker reveal">In the wild</div>
         <h2 class="reveal d1">A normal day in the channel.</h2>
         <div class="wall">
-            <div class="wall-tile reveal d2" data-tile="t1" style="left:20px; top:0px; width:470px; --rot:-2deg;">
+            <div class="wall-tile reveal d2" data-tile="t1" style="left:30px; top:10px; width:760px; --rot:-1.6deg;">
                 <video src="ask_performance_yoy.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Performance &amp; trends<small>YoY, monthly performance</small></div>
             </div>
-            <div class="wall-tile reveal d3" data-tile="t2" style="left:530px; top:46px; width:450px; --rot:1.6deg;">
-                <video src="ask_untapped_prospect_pool.mp4" autoplay muted loop playsinline></video>
-                <div class="tile-cap">Pool &amp; opportunity<small>untapped prospects</small></div>
-            </div>
-            <div class="wall-tile reveal d4" data-tile="t3" style="left:1020px; top:6px; width:470px; --rot:-1.2deg;">
-                <video src="ask_frequency_waste.mp4" autoplay muted loop playsinline></video>
-                <div class="tile-cap">Frequency &amp; waste<small>high volume, low response</small></div>
-            </div>
-            <div class="wall-tile reveal d5" data-tile="t4" style="left:70px; top:330px; width:450px; --rot:1.8deg;">
+            <div class="wall-tile reveal d3" data-tile="t2" style="left:540px; top:210px; width:730px; --rot:1.4deg;">
                 <video src="ask_competitor.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Geography &amp; competition<small>competitor density</small></div>
             </div>
-            <div class="wall-tile reveal d6" data-tile="t5" style="left:570px; top:360px; width:470px; --rot:-1.6deg;">
-                <video src="ask_customer_journey.mp4" autoplay muted loop playsinline></video>
-                <div class="tile-cap">Funnel &amp; customer journey<small>mail &rarr; response &rarr; appointment &rarr; sale</small></div>
-            </div>
-            <div class="wall-tile reveal d7" data-tile="t6" style="left:1430px; top:330px; width:300px; --rot:1.4deg;">
+            <div class="wall-tile reveal d4" data-tile="t3" style="left:1330px; top:20px; width:380px; --rot:1.8deg;">
                 <video src="ask_client_prep.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Client call prep<small>walk in with the numbers</small></div>
             </div>
@@ -920,7 +913,7 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
 <section class="slide" data-name="receipts">
     <div class="slide-inner">
         <div class="kicker reveal">Genie best practices</div>
-        <h2 class="reveal d1">Built the way Databricks says to build it.</h2>
+        <h2 class="reveal d1">Built following Genie best practices.</h2>
         <div class="chain reveal d2">
             <span class="chain-node">Gold layer</span><span class="chain-arrow">&rarr;</span>
             <span class="chain-node hot">4 UC metric views<span class="bonus">bonus</span></span><span class="chain-arrow">&rarr;</span>
