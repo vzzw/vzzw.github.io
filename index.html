@@ -168,6 +168,13 @@ summary::after { content: '+'; color: var(--gold); font-family: 'Fraunces', seri
 details[open] summary::after { transform: rotate(45deg); }
 details p { color: var(--ink-soft); margin-top: 12px; font-size: var(--t-small); }
 
+
+/* ============ scroll reveal ============ */
+@media (prefers-reduced-motion: no-preference) {
+    .rv { opacity: 0; transform: translateY(28px); transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1); transition-delay: var(--rvd, 0s); }
+    .rv.in { opacity: 1; transform: translateY(0); }
+}
+
 footer { padding: 54px 6vw; background: var(--ink); color: #b9aed3; font-size: var(--t-small); }
 footer .inner { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 footer a { color: var(--gold-bright); text-decoration: none; }
@@ -532,6 +539,25 @@ applyZoom();
 
     addEventListener('resize', resize);
     resize();
+})();
+</script>
+<script>
+/* ============ scroll reveal: stagger section children as they enter ============ */
+(function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const SEL = 'h2, .lede, .what, .demo, .bstep, .effort, .arch, .cat-list, .slackwin, .ask-note, details';
+    document.querySelectorAll('section').forEach((sec) => {
+        let i = 0;
+        sec.querySelectorAll(SEL).forEach((el) => {
+            el.classList.add('rv');
+            el.style.setProperty('--rvd', Math.min(i * 0.08, 0.5) + 's');
+            i++;
+        });
+    });
+    const io = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.rv').forEach((el) => io.observe(el));
 })();
 </script>
 <script data-goatcounter="https://phantombolt.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
