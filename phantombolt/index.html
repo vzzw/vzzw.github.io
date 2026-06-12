@@ -780,17 +780,17 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
     <div class="slide-inner">
         <div class="kicker reveal">The flow, for real</div>
         <h2 class="reveal d1">"Generate a scorecard for 81273" &mdash; what comes back</h2>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:26px; margin-top:30px; align-items:start;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; margin:26px -60px 0; align-items:start;">
             <div class="reveal d2">
-                <img src="scorecard_1.png" alt="Overall KPIs and mail mix" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <img src="scorecard_1_hq.png" alt="Overall KPIs and mail mix" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
                 <div class="tile-cap" style="margin-top:12px;">Overall KPIs<small>vs network average, prospect vs patient mix</small></div>
             </div>
             <div class="reveal d3">
-                <img src="scorecard_2.png" alt="Market context, pool capacity, journey, distance" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <img src="scorecard_2_hq.png" alt="Market context, pool capacity, journey, distance" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
                 <div class="tile-cap" style="margin-top:12px;">Market &amp; pool<small>competitors, tier capacity, responder journey, distance bands</small></div>
             </div>
             <div class="reveal d4">
-                <img src="scorecard_3.png" alt="Age bands and repeat mailing" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
+                <img src="scorecard_3_hq.png" alt="Age bands and repeat mailing" style="width:100%; border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 48px rgba(0,0,0,0.45);">
                 <div class="tile-cap" style="margin-top:12px;">Audience &amp; pressure<small>age bands, repeat mailing, budget by touch</small></div>
             </div>
         </div>
@@ -892,15 +892,15 @@ body.editing [contenteditable="true"] { outline: 1px dashed rgba(240,180,41,0.6)
         <div class="kicker reveal">In the wild</div>
         <h2 class="reveal d1">A normal day in the channel.</h2>
         <div class="wall">
-            <div class="wall-tile reveal d2" data-tile="t1" style="left:30px; top:10px; width:760px; --rot:-1.6deg;">
+            <div class="wall-tile reveal d2" data-tile="t1" style="left:0px; top:0px; width:1080px; --rot:-1.0deg;">
                 <video src="ask_performance_yoy.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Performance &amp; trends<small>YoY, monthly performance</small></div>
             </div>
-            <div class="wall-tile reveal d3" data-tile="t2" style="left:540px; top:210px; width:730px; --rot:1.4deg;">
+            <div class="wall-tile reveal d3" data-tile="t2" style="left:1120px; top:0px; width:455px; --rot:1.2deg;">
                 <video src="ask_competitor.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Geography &amp; competition<small>competitor density</small></div>
             </div>
-            <div class="wall-tile reveal d4" data-tile="t3" style="left:1330px; top:20px; width:380px; --rot:1.8deg;">
+            <div class="wall-tile reveal d4" data-tile="t3" style="left:1120px; top:372px; width:445px; --rot:-1.0deg;">
                 <video src="ask_client_prep.mp4" autoplay muted loop playsinline></video>
                 <div class="tile-cap">Client call prep<small>walk in with the numbers</small></div>
             </div>
@@ -1433,7 +1433,7 @@ function stopLamp() { if (lampTimer) { clearInterval(lampTimer); lampTimer = nul
    Double-click resets the tile. Layout persists in localStorage.
    =========================================== */
 (function initWall() {
-    const KEY = 'wallLayout.v2';
+    const KEY = 'wallLayout.v3';
     const tiles = Array.from(document.querySelectorAll('.wall-tile'));
     if (!tiles.length) return;
     let saved = {};
