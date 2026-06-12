@@ -81,13 +81,12 @@ h2 { font-family: 'Fraunces', serif; font-weight: 700; font-size: var(--t-h2); l
 .cat:hover { border-color: var(--gold); }
 .cat.on { border-color: var(--gold); background: #fdf3da; box-shadow: 0 6px 18px rgba(201,136,14,0.13); }
 /* slack window mock — auto-playing replay */
-.slackwin { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 18px 50px rgba(42,31,61,0.14); font-family: 'Work Sans', sans-serif; }
-.sw-top { display: flex; align-items: center; gap: 8px; background: #f6f3f0; border-bottom: 1px solid #e8e2da; padding: 11px 16px; }
-.sw-dot { width: 12px; height: 12px; border-radius: 50%; }
-.sw-dot:nth-child(1) { background: #ff5f57; } .sw-dot:nth-child(2) { background: #febc2e; } .sw-dot:nth-child(3) { background: #28c840; }
-.sw-title { margin-left: 10px; font-size: 13px; color: #8a8378; font-family: 'JetBrains Mono', monospace; }
-.sw-vid { background: #000; }
-.sw-vid video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #000; }
+.zoom-ctl { position: fixed; right: 22px; bottom: 22px; z-index: 100; display: flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; box-shadow: 0 8px 28px rgba(42,31,61,0.16); }
+.zoom-ctl button { width: 30px; height: 30px; border: none; border-radius: 50%; background: var(--sand); color: var(--ink); font-size: 18px; line-height: 1; cursor: pointer; font-family: 'JetBrains Mono', monospace; }
+.zoom-ctl button:hover { background: var(--gold-bright); }
+.zoom-ctl span { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-soft); min-width: 44px; text-align: center; }
+.slackwin { border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(42,31,61,0.22), 0 4px 16px rgba(42,31,61,0.10); }
+.slackwin video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 .sw-head { display: flex; align-items: baseline; gap: 12px; padding: 13px 22px; border-bottom: 1px solid #eee7dd; }
 .sw-head b { font-size: 16.5px; color: #1d1c1d; }
 .sw-head span { font-size: 13px; color: #616061; }
@@ -213,8 +212,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
             <div class="cat-list" id="catList"></div>
             <div>
                 <div class="slackwin">
-                    <div class="sw-top"><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-title">Slack — Darwill</span></div>
-                    <div class="sw-vid"><video id="askVid" muted playsinline preload="auto"></video></div>
+                    <video id="askVid" muted playsinline preload="auto"></video>
                 </div>
                 <p class="ask-note">Recorded demo runs, unedited. Live answers carry the full table and the SQL behind it.</p>
             </div>
@@ -227,8 +225,7 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         <h2>The scorecard, on demand</h2>
         <p class="lede">Ask for a scorecard and the supervisor builds the whole thing: performance, benchmarks, and trend for any location, assembled in one pass instead of a week of analyst time.</p>
         <div class="slackwin" style="max-width:960px; margin:0 auto;">
-            <div class="sw-top"><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-title">Slack — Darwill</span></div>
-            <div class="sw-vid"><video src="scorecard.mp4" id="scoreVid" muted playsinline loop preload="metadata"></video></div>
+            <video src="scorecard.mp4" id="scoreVid" muted playsinline loop preload="metadata"></video>
         </div>
         <p class="ask-note" style="text-align:center;">One request, full scorecard. Same metric views, same definitions as every other answer.</p>
     </div>
@@ -299,6 +296,12 @@ footer a { color: var(--gold-bright); text-decoration: none; }
         </div>
     </div>
 </section>
+
+<div class="zoom-ctl" aria-label="Page zoom">
+    <button id="zoomOut" title="Zoom out">−</button>
+    <span id="zoomLvl">100%</span>
+    <button id="zoomIn" title="Zoom in">+</button>
+</div>
 
 <footer>
     <div class="inner">
@@ -373,6 +376,19 @@ const scoreVid = document.getElementById('scoreVid');
 new IntersectionObserver((es) => {
     es[0].isIntersecting ? scoreVid.play().catch(() => {}) : scoreVid.pause();
 }, { threshold: 0.25 }).observe(scoreVid);
+
+// page zoom control (persists in localStorage)
+const ZOOMS = [0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.4];
+let zi = ZOOMS.indexOf(parseFloat(localStorage.getItem('pbZoom')) || 1);
+if (zi < 0) zi = 3;
+function applyZoom() {
+    document.body.style.zoom = ZOOMS[zi];
+    document.getElementById('zoomLvl').textContent = Math.round(ZOOMS[zi] * 100) + '%';
+    localStorage.setItem('pbZoom', ZOOMS[zi]);
+}
+document.getElementById('zoomIn').onclick = () => { zi = Math.min(zi + 1, ZOOMS.length - 1); applyZoom(); };
+document.getElementById('zoomOut').onclick = () => { zi = Math.max(zi - 1, 0); applyZoom(); };
+applyZoom();
 </script>
 </body>
 </html>
