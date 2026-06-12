@@ -222,6 +222,18 @@ footer a { color: var(--gold-bright); text-decoration: none; }
     </div>
 </section>
 
+<section class="band" id="scorecard">
+    <div class="inner">
+        <h2>The scorecard, on demand</h2>
+        <p class="lede">Ask for a scorecard and the supervisor builds the whole thing: performance, benchmarks, and trend for any location, assembled in one pass instead of a week of analyst time.</p>
+        <div class="slackwin" style="max-width:960px; margin:0 auto;">
+            <div class="sw-top"><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-dot"></span><span class="sw-title">Slack — Darwill</span></div>
+            <div class="sw-vid"><video src="scorecard.mp4" id="scoreVid" muted playsinline loop preload="metadata"></video></div>
+        </div>
+        <p class="ask-note" style="text-align:center;">One request, full scorecard. Same metric views, same definitions as every other answer.</p>
+    </div>
+</section>
+
 <section class="band" id="demos">
     <div class="inner">
         <h2>Watch it work</h2>
@@ -319,6 +331,12 @@ const ASK = [
           a: 'The full funnel in one view: mailed, responded, booked, showed, bought. You can see where the funnel narrows and take the right gap to the right team.' },
         { q: 'How long does the journey from mailbox to sale take?',
           a: 'Genie shows which touch people actually respond to and how long each step of the journey takes. Both feed straight into re-mail cadence planning.' } ] },
+    { cat: 'Client call prep', vid: 'ask_client_prep.mp4', sub: 'walk in with the numbers', qs: [
+        { q: 'I have a client call in twenty minutes. Catch me up on this account.',
+          a: 'Performance, trend, and the talking points for the call, pulled in one thread instead of three dashboards.' } ] },
+    { cat: 'One location, YTD', vid: 'ask_location_ytd.mp4', sub: '"how is Independence, MO doing?"', qs: [
+        { q: 'The client is asking what YTD performance looks like for their Independence, MO location.',
+          a: 'Year-to-date response, appointments, and sales for one location, answered the way the client asked it.' } ] },
 ];
 
 const catList = document.getElementById('catList');
@@ -349,6 +367,12 @@ new IntersectionObserver((es) => {
     if (es[0].isIntersecting) { started ? vid.play().catch(() => {}) : showCat(0); started = true; }
     else if (started) vid.pause();
 }, { threshold: 0.25 }).observe(document.getElementById('ask'));
+
+// scorecard video: play in view, pause out of view
+const scoreVid = document.getElementById('scoreVid');
+new IntersectionObserver((es) => {
+    es[0].isIntersecting ? scoreVid.play().catch(() => {}) : scoreVid.pause();
+}, { threshold: 0.25 }).observe(scoreVid);
 </script>
 </body>
 </html>
