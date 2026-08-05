@@ -258,6 +258,34 @@ section{padding:52px 0;border-bottom:1px solid var(--rule)}
 .note p{font-size:17px;line-height:1.4;color:var(--ink-2);margin-top:8px}
 .note p b{color:var(--ink);font-weight:600}
 
+/* take it with you */
+.take{display:grid;grid-template-columns:1fr 620px;gap:70px;align-items:start;margin-top:30px}
+.steps{list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 20px 46px;font-size:18px;
+          line-height:1.45;color:var(--ink-2)}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:28px;height:28px;
+                  border:1.5px solid var(--ink);border-radius:50%;font-family:var(--mono);
+                  font-size:13px;font-weight:600;color:var(--ink);
+                  display:flex;align-items:center;justify-content:center}
+.steps li b{color:var(--ink);font-weight:600}
+.steps li code{font-family:var(--mono);font-size:15px;background:var(--rust-sf);
+               padding:1px 6px;color:var(--ink)}
+.dl{border:1.5px solid var(--ink);background:rgba(255,255,255,.5);padding:24px 26px}
+.dl .fn{font-family:var(--mono);font-size:15px;color:var(--ink);display:flex;
+        justify-content:space-between;align-items:baseline;gap:14px;
+        padding-bottom:13px;border-bottom:1px solid var(--rule)}
+.dl .fn span{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.dl p{font-size:16.5px;line-height:1.45;color:var(--ink-2);margin:14px 0 20px}
+.dl p b{color:var(--ink);font-weight:600}
+.btn{display:inline-flex;align-items:center;gap:12px;text-decoration:none;
+     background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:13.5px;
+     font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:15px 24px;
+     border:1.5px solid var(--ink);transition:background .2s ease,color .2s ease}
+.btn:hover{background:var(--rust);border-color:var(--rust)}
+.btn i{font-style:normal;font-size:16px;transition:transform .2s ease}
+.btn:hover i{transform:translateY(3px)}
+@media (prefers-reduced-motion:reduce){.btn,.btn i{transition:none}}
+
 /* bottom split */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:34px;align-items:start}
 .trees{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:24px}
@@ -939,7 +967,7 @@ tr.hard td.v{color:var(--rust);font-weight:600}
 </section>
 
 <!-- ══ FOLDERS ══ -->
-<section style="border-bottom:0" class="reveal">
+<section class="reveal">
   <div class="hd">
     <div>
       <div class="kicker">The setup itself</div>
@@ -1002,8 +1030,38 @@ tr.hard td.v{color:var(--rust);font-weight:600}
   </div>
 </section>
 
+<section style="border-bottom:0" class="reveal">
+  <div class="hd">
+    <div>
+      <div class="kicker">Set it up yourself</div>
+      <h2>You do not have to build any of it.</h2>
+    </div>
+    <p class="dek">The file below is written for <b>Claude, not for you</b>. Drop it in and it reads your machine, asks what you work on, and builds the whole thing while you watch.</p>
+  </div>
+
+  <div class="take">
+    <ol class="steps">
+      <li>Download the file.</li>
+      <li>Put it in the folder you work in &mdash; the same one you open Claude Code from.</li>
+      <li>Start Claude Code there and say <code>read README.md and set me up</code></li>
+      <li>Answer its questions. It checks your machine first and tells you what it can and cannot do before it changes anything.</li>
+    </ol>
+
+    <div class="dl">
+      <div class="fn">README.md<span>22 KB &middot; plain text</span></div>
+      <p>Works on <b>macOS and Windows</b> &mdash; it has separate instructions for each and will tell you which one it is following. <b>Nothing runs without your say-so.</b></p>
+      <a class="btn" href="README.md" download="README.md">Download the file <i>&darr;</i></a>
+    </div>
+  </div>
+
+  <div class="note dash">
+    <div class="t">what you end up with</div>
+    <p>Your own copy, not mine. <b>The rules are a starting point you are meant to edit</b> &mdash; the parts that are specific to my work are left out on purpose. <span class="ink">You will want to add your own within the first week.</span></p>
+  </div>
+</section>
+
 <div class="foot">
-  <span>How it goes today → why it repeats → where it should go → Databricks → the whole session → where the files go</span>
+  <span>How it goes today → why it repeats → where it should go → Databricks → the whole session → where the files go → set it up yourself</span>
   <span></span>
 </div>
 
