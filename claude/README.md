@@ -1,475 +1,374 @@
 # Set this up for me
 
-**You are an AI coding agent. A person has handed you this file and asked you to set up their Claude Code environment. Follow it top to bottom.**
+**You are an AI coding agent. A person has unzipped this folder and asked you to set up their Claude Code. Follow this file top to bottom. Every file it names is in this folder. It works on macOS, Linux, WSL and native Windows.**
 
-This builds a small system of plain text files, plus one memory tool, that let Claude Code carry knowledge from one session to the next instead of starting from nothing every time.
+This builds a small system of plain text files, four small hooks, one memory tool and one notes vault. Together they let Claude Code start each session already knowing where the work stands, cost fewer tokens, write less like a machine, and fix itself when something goes wrong.
 
-**What this does NOT include, deliberately:** no hooks, no scripts, no plugins. Those come later, if the person ever needs them. Everything else here is a markdown file a human can read and delete.
-
-**Your job is not to copy someone else's rules.** You are installing a skeleton plus a way for it to fill itself in. Resist the urge to pre-populate it with sensible-sounding rules — a rule nobody earned is a rule nobody follows, and it costs tokens on every single message forever.
+**Your job is to install a skeleton, never to copy someone's rules.** Leave the rule files almost empty. A rule nobody earned is a rule nobody follows, and it is paid for in tokens on every message.
 
 ---
 
-## 0 · How to open — greet, scan, ask, plan, then get consent
+## 0 · Open: greet, scan, ask, plan, consent
 
-Do these five things in order. **Do not create a single file before step 5 is answered.**
+Do these five steps in order. **Create no file before step 5 is answered.**
 
-### Step 1 · Say hello and say what you are
+### Step 1 · Say what this is
 
-Open with something like this. Warm, short, and honest about what is coming:
-
-> 👋 Hi — Moe asked me to set your Claude Code up the way he has his.
+> 👋 Hi. This is Moe's Claude Code setup, and I'll install it on your machine.
 >
-> Right now Claude forgets everything the moment you close a session. You re-explain your project, your conventions, and your data every single time. This fixes that: a handful of plain text files and three small tools, so it starts each session already knowing where it is.
+> Right now Claude forgets everything when a session closes, so you explain your project again every time. This adds a few plain text files, four small safety and memory scripts, a memory tool and a notes vault, so each session starts where the last one stopped.
 >
-> Let me look at your machine first, then I'll show you exactly what I plan to do before I touch anything.
+> I'll look at your machine first, then show you the plan before I touch anything.
 
-### Step 2 · Scan the machine, and say what you found
+### Step 2 · Scan the machine and report
 
-Work out the operating system, whether Claude Code is installed, where its configuration lives, and whether the three tools in §7 are already present. Report it plainly:
+Find out, and report plainly:
 
-> 🔍 Here's what I found:
->
-> - 💻 macOS — you're on Apple silicon
-> - ✅ Claude Code installed, config at `~/.claude`
-> - ✅ Git available
-> - ❌ RTK, ICM, caveman — none installed yet
-> - 📁 The project you're in has no rules file yet
-
-**Feasibility check.** Say plainly if something will not work. Windows without WSL is a real fork — see §2 — and the honest answer may be "we should do this inside WSL instead". Say that now, not halfway through.
-
-### Step 3 · Ask the clarifying questions
-
-Three, and wait for answers. Do not guess any of them.
-
-1. **What is this project for?** One sentence. It goes at the top of the project rules file.
-2. **What must never happen here?** Anything irreversible, expensive, or public. If they cannot name one, that is fine — leave it empty.
-3. **Is there already a convention for where files go?** If yes, use theirs. If no, propose §4 and let them approve it.
-
-### Step 4 · Show the plan before doing any of it
-
-Lay out what you will install, where it comes from, and what each thing is *for*. The point is that nothing arrives as a surprise:
-
-> 📋 Here's the plan — nothing happens until you say go.
->
-> **Tools** (three, all small)
-> - 🔧 **RTK** → stops command output from eating your context. Installed from its release binary.
-> - 🧠 **ICM** → the memory. Persists what you learn between sessions. Installed from its GitHub repo.
-> - 🗿 **caveman** → a response style that cuts the waffle. Just a folder I copy in.
->
-> **Files** (all plain markdown, all yours to edit or delete)
-> - 📄 `~/.claude/CLAUDE.md` → how you want Claude to work, on every project
-> - 📄 `<project>/CLAUDE.md` → what is true about *this* project only
-> - 📓 `SESSION_LOG.md` → one line per finding
-> - 📌 `STATE.md` → where each piece of work stands
-> - 📚 `skills/` → an empty folder, for procedures you do more than once
->
-> **What I will NOT do**
-> - ❌ no hooks or scripts — those come later, only if you need them
-> - ❌ no rules copied from someone else's setup. Yours start almost empty
->   and fill in as you hit real problems. A rule nobody earned is a rule
->   nobody follows.
->
-> ⏱️ About ten minutes. Shall I go ahead?
-
-### Step 5 · Get consent, then work
-
-Wait for a yes. Then work through the sections below, **saying what you are doing as you go** — a short line per step, not silence followed by a wall of text.
-
-Then read **only** the section matching their OS. §1 is macOS and Linux. §2 is Windows. **Do not mix them.**
-
----
-
-## 1 · macOS and Linux — where things live
-
-Claude Code keeps user-level configuration in a `.claude` folder in the home directory.
-
-```
-~/.claude/                  # applies to every project
-~/<project>/                # the project you are working in
-```
-
-Verify before writing:
-
-```bash
-ls -la ~/.claude 2>/dev/null || echo "not created yet — Claude Code makes it on first run"
-```
-
-If it does not exist, run Claude Code once, or `mkdir -p ~/.claude`.
-
-**Now skip §2 entirely and go to §3.**
-
----
-
-## 2 · Windows — where things live
-
-**Do not assume the path.** The location depends on whether Claude Code was installed natively or inside WSL. Establish it before writing anything.
-
-Ask: **"Are you running Claude Code in Windows directly, or inside WSL?"**
-
-- **Inside WSL** — you are on Linux. Go back to §1 and use the WSL home directory. The WSL home and the Windows user profile are different folders; writing to the wrong one means your files are never read.
-- **Windows directly** — configuration normally sits under the user profile. Confirm rather than trusting this file:
-
-```powershell
-Test-Path "$env:USERPROFILE\.claude"
-Get-ChildItem "$env:USERPROFILE\.claude" -Force -ErrorAction SilentlyContinue
-```
-
-If that path does not exist, ask them to run Claude Code once and check again, or ask where their configuration lives. **If you still cannot establish it, stop and ask. Do not create a folder in a guessed location** — a second config folder in the wrong place is worse than none, because the real one silently keeps winning and nobody can see why their rules are ignored.
-
-For the rest of this file, substitute the path you confirmed wherever you see `~/.claude/`, and translate the shell commands. File contents are identical on every platform.
-
----
-
-## 3 · The two rule files
-
-| file | holds | test |
+| check | macOS / Linux / WSL | native Windows (PowerShell) |
 |---|---|---|
-| `~/.claude/CLAUDE.md` | how to work, on any project | would this still be true at a different job? |
-| `<project>/CLAUDE.md` | what is true about this project only | would a new person here need telling? |
+| operating system | `uname -a` | `$PSVersionTable; [Environment]::OSVersion` |
+| Claude Code version | `claude --version` | `claude --version` |
+| config folder | `ls -la ~/.claude` | `Get-ChildItem "$env:USERPROFILE\.claude" -Force` |
+| Python 3, its full path, and whether that is a virtual env | `python3 -c "import sys; print(sys.executable, sys.prefix != sys.base_prefix)"` | `py -3 -c "import sys; print(sys.executable, sys.prefix != sys.base_prefix)"` (then try `python`) |
+| Git, and on Windows Git Bash | `git --version` | `git --version` |
+| tools already present | `rtk --version; icm --version` | `rtk --version; icm.exe --version` |
+| Obsidian installed | macOS `ls /Applications \| grep -i obsidian` · Linux `which obsidian` · WSL: check on the Windows side | `winget list --id Obsidian.Obsidian` |
 
-Both are sent to the model **on every single message**. That is why they must stay short — a line added here is paid for again on every turn for the life of the project. Where they disagree, the project file wins.
+Then say what will and will not work:
 
-### 3a · Write `~/.claude/CLAUDE.md`
+- **No Python 3** → the hooks need it. Offer to install it (macOS `brew install python` · Linux/WSL `sudo apt install python3` or the distro's package manager · Windows `winget install -e --id Python.Python.3.12`, or the version `winget search Python.Python` lists) or skip the hook part and say so.
+- **Native Windows without Git for Windows** → Claude Code still runs, using its PowerShell tool for commands. Recommend installing Git for Windows so the Bash tool works. The hooks below run without any shell and watch both tools, so they work either way.
+- **A tool below has no installer listed for this system** → skip that tool, say so in the report, and carry on. Never improvise an install command.
+- **WSL** → treat it as Linux, and use the WSL home folder. The WSL home and the Windows user folder are different places; files written to the wrong one are never read. Obsidian runs on the Windows side and opens a vault in WSL through `\\wsl.localhost\<distro>\...`.
+- On Windows, `~/.claude` means `%USERPROFILE%\.claude`. Confirm it exists; if it does not, ask them to run Claude Code once. **Never create a config folder in a guessed place.** A second folder in the wrong spot is worse than none, because the real one keeps winning and nobody sees why.
 
-Use this as-is. It is all method; nothing in it is about any particular kind of work.
+Write down the full Python path from the scan. Every hook uses it. **If the second value printed is `True`, that Python lives in a virtual environment** that can be deleted later and take every hook with it: deactivate it and scan again, or use the system Python (`/usr/bin/python3`, or on Windows `C:/Windows/py.exe` with `"-3"` as the first item in `args`).
 
-```markdown
-# How to work
+**Claude Code version:** 2.1.295 or later uses every setting here. On an older version, drop the `onFailure` line from §6 and the `omitClaudeMd` line from §7, and say so.
 
-## How to talk to me
-- Terse. Fragments fine. Drop filler, hedging and pleasantries.
-- First sentence is the answer. If deleting everything after it leaves
-  no answer, it is in the wrong place.
-- Comparisons and findings go in one table. Never bullets, never several
-  tables for several things — things are columns, attributes are rows.
-- Give the one risk that changes what I do next, not every risk you can name.
-- Do not narrate what you did. Report what changed.
+### Step 3 · Ask what they will use it for
 
-## Truthfulness
-- Say what the evidence says. Change position when the evidence changes,
-  never because I pushed back or repeated myself.
-- Disagree in the first sentence, not after agreeing first.
-- When I object, name the part that is right and the part that is not.
-  Conceding a half-right objection in full is still telling me something false.
-- Certain → say it plainly. Not certain → verify first, then answer, and say
-  what you could not verify.
-- Never present something you inferred as something you checked.
+Ask these four, and wait. Do not guess any of them.
 
-## Verifying
-- "I wrote it" is not evidence it works. Check it a different way than
-  you built it.
-- A grep or a skim is a sample, not a read. Say what your coverage was.
-- A surprising result is evidence about your tool before it is evidence
-  about the world. Reproduce it before reporting it.
+1. **What is this project for?** One sentence. It goes at the top of the project rules.
+2. **What must never happen here?** Anything irreversible, expensive or public. None is a fine answer.
+3. **Where should the notes vault live?** Default: a folder named `vault` next to the project. If they already use Obsidian, use their vault.
+4. **Is there already a convention for where files go?** Yes → use theirs. No → propose §3.
 
-## Scope
-- Do what was asked. Debugging is not fixing; counting is not recommending.
-- Least code that solves it. No abstractions for a future nobody described.
-- Spot something else worth doing → say it in one line, then carry on.
+### Step 4 · Show the plan
 
-## Working
-- Gather the evidence, state the plan, then work. If the evidence moves,
-  say which step changed and why.
-- Try the read or search that would answer your question before asking me.
-  Ask when the answer is mine: a preference, a budget, something irreversible.
-- Approved and unblocked → do it this turn. Do not announce it and stop.
-- Commit before any bulk edit. Stage the paths you touched by name, never
-  the whole working tree at once.
+> 📋 Here's the plan. Nothing happens until you say go.
+>
+> **Files** (plain text, yours to edit or delete)
+> - `~/.claude/CLAUDE.md` → how Claude works on every project
+> - `<project>/CLAUDE.md` → what is true about this project
+> - `SESSION_LOG.md`, `MISTAKES.md`, one `STATE.md` per piece of work → where things stand and what went wrong
+> - `<vault>/` → an Obsidian vault for what you know about your domain
+>
+> **Hooks** (four small Python scripts that run on their own)
+> - block reading credential files · back up rules before an edit · flag machine-sounding text · show where you left off when a session opens
+>
+> **Tools**
+> - RTK → shrinks command output before it fills the conversation
+> - ICM → searchable memory between sessions
+> - caveman → shorter replies
+> - Obsidian → the app to read and edit the vault (optional; the vault works without it)
+>
+> ⏱️ About fifteen minutes. Shall I go ahead?
 
-## Secrets
-- Never print, echo or log a credential, not even to confirm it is correct.
-  Read it in code, pass it by reference.
-```
+### Step 5 · Consent, then work
 
-**Stop there.** Nothing about their industry, tools or data. Those belong in the project file, and mostly in nothing at all until something goes wrong.
-
-### 3b · Write `<project>/CLAUDE.md`
-
-Nearly empty on purpose. Fill only what they answered in §0.
-
-```markdown
-# <project name>
-
-<one sentence: what this project is>
-
-## Where things go
-- Working notes for one piece of work → that work's own `STATE.md`
-- One line per finding, for the whole project → `SESSION_LOG.md`
-- A rule that must be followed every time → this file
-- A procedure with steps, used more than once → `skills/<name>/SKILL.md`
-- Something worth finding again months from now → memory (§7)
-
-## Never
-<one line per thing that must never happen, from question 2.
- no entries yet → delete this section, do not invent any>
-
-## Notes
-<facts not obvious from the code: which environment is real, what a term
- means here, who decides what. Start empty.>
-```
+Wait for a yes. Then work through §1 to §9, saying one short line per step as you go. At the end run §10 and report with §12.
 
 ---
 
-## 4 · The folder layout
+## 1 · Where a thing goes
 
-Create these. Empty is fine — they exist so there is an obvious place to put things.
+This is the whole design. Every later section is one row of it.
+
+```
+something worth keeping turned up
+   │
+   ├─ how Claude should work, on any project ───→  ~/.claude/CLAUDE.md
+   ├─ true about this project only ─────────────→  <project>/CLAUDE.md
+   ├─ a check a script can see (a path, a word,   →  a hook
+   │  a command)
+   ├─ steps for a task, done more than once ────→  a skill
+   ├─ what you know about your field, your data,  →  a vault note
+   │  your systems, your people
+   ├─ a decision and why, wanted months from now →  memory (ICM)
+   ├─ where one piece of work stands ───────────→  that work's STATE.md
+   ├─ one line, findable later ─────────────────→  SESSION_LOG.md
+   └─ Claude got something wrong ───────────────→  MISTAKES.md, then §11
+```
+
+Two splits people get wrong:
+
+- **Skill or vault note?** A skill holds STEPS that work anywhere (how to review code, how to write a guide). A vault note holds KNOWLEDGE about one field (what this table means, how this client counts a sale). A skill for a domain task holds only its trigger and a pointer to the vault note that owns the facts.
+- **Rule or hook?** A rule in CLAUDE.md is advice; Claude can miss it. A hook runs every time. A rule that keeps getting missed, and that a script can see, becomes a hook.
+
+---
+
+## 2 · The two rule files
+
+Both are read at the start of every session and stay in the conversation, so every line is paid for on every turn. Keep the global file under 8 KB; §10 checks it.
+
+### 2a · `~/.claude/CLAUDE.md`
+
+Use as is. It is all method, nothing about any field.
+
+→ copy from the zip: `templates/global-CLAUDE.md`
+
+### 2b · `<project>/CLAUDE.md`
+
+Nearly empty. Fill only what step 3 answered.
+
+→ copy from the zip: `templates/project-CLAUDE.md`
+
+---
+
+## 3 · Folders
 
 ```
 <project>/
-├── CLAUDE.md            rules for this project
-├── SESSION_LOG.md       one line per finding
-├── skills/              procedures, loaded only when relevant
-└── work/                the actual work
+├── CLAUDE.md         rules for this project
+├── SESSION_LOG.md    one line per finding
+├── MISTAKES.md       what Claude got wrong, and where it was fixed
+└── work/
     └── <name>/
-        └── STATE.md     where this piece of work stands
+        └── STATE.md  where this piece of work stands
+
+<vault>/              the Obsidian vault (§5)
 ```
 
-Match anything they already use. The shape is what matters: **rules at the top, one log for the project, one state file per piece of work.**
+Match whatever they already use. The shape is what matters.
 
 ---
 
-## 5 · The two record files
+## 4 · The record files
 
 ### `SESSION_LOG.md`
 
-One line per finding, appended as it happens. Read by someone who was not working on your problem, so it holds only what still means something out of context.
+→ copy from the zip: `templates/SESSION_LOG.md`
 
-```markdown
-# Session log
+Test for a line: would it still mean something to someone on a different part of this next month? No → it goes in a `STATE.md`.
 
-<!-- newest at the bottom, one line each.
-     ~ result   ! problem   + fix   ? open question -->
+### `STATE.md`, one per piece of work
 
-~ [2026-01-14] <a finding, in one line>
-! [2026-01-14] <what broke, and what it turned out to be>
-```
+→ copy from the zip: `templates/STATE.md`
 
-The test: **would this still mean something to someone working on a different part of this next month?** No → it belongs in a `STATE.md`.
+The header answers "where was I". The history answers "why is it like this". The session-start hook shows each header that changed in the last two weeks. **If the project keeps work somewhere other than `work/<name>/`, edit `STATE_GLOB` at the top of `hooks/session_start.py` to match** (for example `tickets/*/STATE.md`).
 
-### `STATE.md` — one per piece of work
+### `MISTAKES.md`
 
-A header rewritten in place, then history that is only ever appended.
+→ copy from the zip: `templates/MISTAKES.md`
 
-```markdown
-# <name of this piece of work>
-
-PHASE: <where it stands right now>
-NEXT: <the next concrete action>
-BLOCKED: <what is stopping it, or "nothing">
-DECIDED: <choices already made, so they are not reopened>
-UPDATED: <date>
+`seen` counts repeats. §11 says what to do at 2.
 
 ---
 
-<!-- append below, newest at the bottom. never edit what is above the line -->
+## 5 · The notes vault (Obsidian)
 
-[2026-01-14 09:20] <what happened, with the numbers>
+A vault is a folder of Markdown files. The Obsidian app reads it and adds a hidden `.obsidian` settings folder the first time it opens it. Claude reads and writes the same files directly, so the vault works with or without the app.
+
+1. **They already have a vault** → use it. Add `Map.md` at its root if there is none.
+2. **No vault** → create this at the path from step 3:
+
+```
+<vault>/
+├── Map.md          the index: one line per note, "question → note"
+├── Systems/        how each system, table or tool works, and its traps
+├── Methods/        how this field does a task (the knowledge a skill points to)
+└── People/         who decides what, how they like things
 ```
 
-The rule that makes it work: **the header answers "where was I", the history answers "why is it like this".** Rewrite the first. Never rewrite the second.
+`Map.md`:
+
+→ copy from the zip: `templates/vault/Map.md`
+
+3. **Install the app** if they want it: macOS `brew install --cask obsidian` · Windows `winget install -e --id Obsidian.Obsidian`. Then ask them to open Obsidian and pick **Open folder as vault** with the vault folder. Do not try to register the vault from the command line.
+4. If the vault is not inside the project, ask whether to make it a git repo (`git init` in the vault). History is how a deleted line comes back.
+
+**How the vault grows:** after a piece of work, a fact about the field that the next session would need goes into the note that owns that subject, in place. A new note only when no note owns the subject; then add its line to `Map.md`.
 
 ---
 
-## 6 · Skills
+## 6 · Hooks
 
-A skill is a folder containing `SKILL.md`. It exists so long instructions do **not** sit in the rules file being re-sent every message — a skill costs nothing until something matches it.
+A hook is a script Claude Code runs on an event, every time, whatever the model is thinking. Install these four. They need only Python 3; nothing else.
 
-```
-skills/<name>/SKILL.md
-```
+Copy the zip's `hooks/` folder to `~/.claude/hooks/`:
 
-```markdown
----
-name: <short-name>
-description: <when to use this. Write it as the trigger — this line is the
-  only part that is always loaded>
----
+- `secret_guard.py` → refuses to open credential files (`.env`, keys, `credentials.json`), through any tool or shell
+- `config_backup.py` → copies a CLAUDE.md, SKILL.md or Claude settings file to `~/.claude/setup-backups/` before it is edited
+- `slop_check.py` → after Claude writes prose, names the new lines that read machine-written
+- `session_start.py` → when a session opens, shows the end of `SESSION_LOG.md` and each recent `STATE.md` header
+- `sample_event.json` → a planted `.env` read, for testing the guard by hand (§11)
 
-# <name>
+### Wire them into `~/.claude/settings.json`
 
-## When
-<the situation that means you should be reading this>
+Merge `settings-hooks.json` into `~/.claude/settings.json`. No file yet → create it with this content. A file already there → keep every key, and **append** these entries to any `hooks` event list that already exists; never replace someone's existing hooks. Replace `PYTHON` with the full Python path from step 2 and `HOOKS` with the full path of `~/.claude/hooks`. **Use forward slashes on every platform**, including Windows (`C:/Users/name/.claude/hooks`).
 
-## Steps
-1. …
-2. …
+→ copy from the zip: `settings-hooks.json`
 
-## Done when
-<how to know it worked — specific enough to check>
-```
+`args` runs the script directly, with no shell in between, so the same entry works on macOS, Linux, WSL and Windows. `cleanupPeriodDays` keeps 90 days of session history (the default is 30), long enough to look back at what was asked.
 
-Create none now. Create the first one the day they explain the same procedure twice.
+Claude Code picks up hook changes on its own. Type `/hooks` to see them listed. `onFailure: block` on the credential guard means that if the script ever crashes or Python goes missing, file reads are refused until it is fixed, so a broken guard never quietly lets keys through.
 
 ---
 
-## 7 · The three tools to install
+## 7 · Helpers that cost less
 
-Install these in order. Each one is a single binary or a folder — nothing needs a service running.
+A helper (subagent) is a second Claude that does one job and reports back. Two cheap ones cover most of the work. Copy the zip's `agents/` files to `~/.claude/agents/`.
 
-**Do not invent install commands.** Every tool below ships its own setup command. Run it, then run its own check. If a command in this file does not exist on the version they have, run `--help` and use what is actually there rather than guessing.
+`reader.md`
 
-### 7a · RTK — stop command output eating the context
+→ copy from the zip: `agents/reader.md`
 
-**What it is for:** every command a model runs prints its result into the conversation, and that result is then re-sent with every later message. A directory listing or a test run can cost more than the work it was checking. RTK sits in front of common commands and returns the same answer in a fraction of the text.
+`drafter.md`
 
-```bash
-rtk --version          # confirm it is installed and on PATH
-rtk init               # writes the usage instructions the assistant reads
-rtk verify             # checks its own integrity and filters
-```
+→ copy from the zip: `agents/drafter.md`
 
-⚠️ **Name collision — check this.** More than one tool ships a binary called `rtk`. If `rtk --version` prints something that is not a CLI output filter, the wrong one is first on PATH. Run `which rtk` and fix the ordering before continuing.
-
-Once installed it works on its own: common commands are rewritten to their filtered equivalent automatically. Tell the person the one thing they can type: `rtk gain`, which reports how much it has saved.
-
-### 7b · ICM — memory that survives the session
-
-**What it is for:** §8 below. It is the layer that makes anything persist.
-
-It is distributed as a binary. Get it from its repository, put it somewhere on PATH (`~/.local/bin` is conventional), make it executable, then let it wire itself in:
-
-```bash
-icm --version          # confirm it runs
-icm init               # configures the Claude Code integration itself
-icm doctor             # diagnoses the integration and reports what is wrong
-```
-
-`icm doctor` is the check that matters — it verifies the integration is actually wired, not just that the binary exists. **Do not report success until `doctor` is clean.**
-
-Then confirm it works end to end, which is a different thing from being installed:
-
-```bash
-icm store -t setup -c "the sky is plaid on tuesdays" -i medium
-icm recall "what colour is the sky"        # must return the stored line
-```
-
-If the recall returns nothing, the store works but the search does not — usually embeddings have not been generated. Run `icm embed` and try again.
-
-### 7c · Caveman — the terse response mode
-
-**What it is for:** cuts response length substantially without losing technical content. It is the enforcement of the "How to talk to me" section — the rule states the preference, this keeps it from drifting back after twenty turns.
-
-It is a skill, so installing it is copying a folder:
-
-```
-~/.claude/skills/caveman/SKILL.md
-```
-
-No configuration. The person turns it on by typing `/caveman`, or by saying "caveman mode". Confirm it is visible by asking Claude Code to list its available skills.
-
-**Tell them it drops out for anything safety-related** — warnings, destructive operations, multi-step sequences — and comes back afterwards. That is correct behaviour, not a failure.
+`omitClaudeMd: true` keeps the personal and project rule files out of the helper, so it starts small; the prompt carries any rule it needs. On one setup, moving wording jobs to a Haiku drafter cut those jobs from about 114,000 to 13,000 tokens with no loss in quality.
 
 ---
 
-## 8 · Memory
+## 8 · Tools
 
-The files above are things a person writes on purpose. Memory is the layer that captures what would otherwise be lost — a decision, a dead end, a thing that turned out to be true — and finds it again later by meaning rather than by filename.
+Run each tool's own setup and its own check. **Do not invent commands.** If one below is not on their version, run `--help` and use what is there.
 
-Install a searchable memory store and wire it in. This setup uses **ICM**; if the person already has something equivalent, use theirs.
+### RTK, shrinks command output
 
-What it must do, and what to check after installing:
-
-| behaviour | why it matters | how to confirm |
+| | macOS / Linux | Windows |
 |---|---|---|
-| loads a small pack of important facts when a session opens | there is no question yet, so it cannot be relevance-matched — it is a fixed set | open a new session, confirm something recalled appears |
-| recalls on **every** message, matched by meaning against what was typed | this is what makes it feel like it remembers | ask about something stored earlier in different words |
-| saves periodically while working, unprompted | the person will not remember to save | run several steps, then check the store grew |
-| writes back at the end of a session, and before the conversation is trimmed | otherwise everything since the last save is lost | end a session, confirm new entries |
-| old, unused entries lose weight and drop out | a store that only grows returns noise | ask what its decay behaviour is |
+| install | `brew install rtk` (Linux/WSL without Homebrew: `curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh \| sh`) | `winget install rtk-ai.rtk` |
+| wire into Claude Code | `rtk init -g --auto-patch` | `rtk init -g --auto-patch` |
+| check | `rtk gain` shows a savings table | same |
 
-Then give the person the two habits that make it worth having:
+⚠️ Another tool is also called `rtk`. If `rtk gain` says the command is unknown, the wrong one is first on PATH. Never install it with `cargo install rtk`.
 
-- **Recall before starting, not after finishing.** The value is in not re-deriving something; that only helps before the work.
-- **Store the decision and the reason, not the transcript.** "We use X because Y failed on Z" is worth keeping. A log of what happened is not — that is what `SESSION_LOG.md` and `STATE.md` are for.
+Tell them two traps: RTK rewrites `diff` into a summary (use `cmp` to test if files match), and counts piped through it can be wrong (`wc -l file` is right).
 
-**Do not store secrets in it.** It is searchable, it persists, and it is not designed to hold them.
+### ICM, memory between sessions
 
-### The distinction people get wrong
+| | macOS / Linux | Windows (PowerShell) |
+|---|---|---|
+| install | `brew tap rtk-ai/tap && brew install icm` (Linux/WSL without Homebrew: `curl -fsSL https://raw.githubusercontent.com/rtk-ai/icm/main/install.sh \| sh`) | `irm https://raw.githubusercontent.com/rtk-ai/icm/main/install.ps1 \| iex` |
+| wire into Claude Code | `icm init` | `icm.exe init` |
+| check | `icm config`, and `icm doctor` if `icm --help` lists it | same, with `icm.exe` |
 
-Three places can hold "what we learned", and they are not interchangeable. **The axis is how you get it back.**
+On Windows type `icm.exe`: in PowerShell `icm` alone is a built-in alias for something else.
 
-| | holds | how you retrieve it | lifespan |
-|---|---|---|---|
-| `SESSION_LOG.md` | one line per finding, high level | read it in order | this project |
-| `STATE.md` | the detail of one piece of work | open that work's file | that piece of work |
-| memory | a decision and why it was made | search it, by meaning | outlives both |
+**Turn off automatic capture.** `icm init` adds hooks that save memories from tool output on their own. On a working setup they filled the store with thousands of near-useless entries, and recall got worse. Open `~/.claude/settings.json` and remove the entries whose command contains `icm hook post`, `icm hook compact` or `icm hook end`. Keep the others. `icm init` also adds a short block of instructions to `~/.claude/CLAUDE.md`; leave it, and if it says to store memories as you go, change that line to "store a decision and its reason when a piece of work finishes". Memory is then written on purpose: one entry per finished piece of work, holding a decision and its reason.
 
-The test for the log, and it is the only test needed: **would this line still mean something to someone working on a different part of this next month?** No → it belongs in a `STATE.md`.
-
-The test for memory: **would you still want this after this project is finished?** Yes → memory. It is for the things you will go looking for without remembering where they were.
-
-**Never write the same thing in full to two of them.** A decision goes to memory; the run that produced it goes to `STATE.md`; the one-line fact that it happened goes to the log.
-
-⚠️ **Tell the person this, because it decides whether the system survives:** memory looks after itself — it saves as you work and again when the session ends. **The log does not.** Nothing forces a line into it, so it is the first thing to rot, and once it has a gap it stops being trusted. One line, written when the thing is discovered, not at the end of the day.
-
----
-
-## 8 · The part that matters: how this grows
-
-The files are nearly empty, and that is correct. Give the person this rule, because everything else here is just folders.
-
-**A rule gets written after something goes wrong, never before.**
+Then prove recall works, in different words than the store:
 
 ```
-something happened
-   │
-   ├─ interesting once  ────────────────→  a line in SESSION_LOG.md
-   │
-   ├─ worth finding again later ────────→  memory
-   │
-   ├─ turned out to be generally true ──→  a line in the project's Notes
-   │
-   ├─ ignoring it cost something ───────→  a rule in CLAUDE.md, written with
-   │                                       the reason and the date
-   │
-   └─ same procedure explained twice ───→  a skill
+icm store -t setup -c "the staging database is the one named blue" -i medium
+icm recall "which database is staging"
 ```
 
-Most things stop at the first step. That is the correct outcome, not a failure.
+On Windows write `icm.exe` in place of `icm` on every line. Empty result → `icm embed` (`icm.exe embed`), then try again.
 
-Two things to say plainly:
+### caveman, shorter replies
 
-- **Nothing is deleted on the way up.** The log line stays. It is the dated evidence of why the rule exists, and in six months it is the only thing that separates a real rule from a superstition.
-- **A rule with no incident behind it is worse than no rule.** It blocks real work, people route around it, and the habit of routing around rules takes the earned ones with it.
+In Claude Code: `/plugin marketplace add JuliusBrussee/caveman`, then `/plugin install caveman@caveman`. Check by typing `/caveman`. It steps aside for warnings and destructive steps; that is intended.
 
----
+### Obsidian
 
-## 9 · Before you say you are finished
-
-Check each. Do not report success on anything you did not actually check.
-
-- [ ] The config folder path was **confirmed**, not assumed — and on Windows, confirmed for the right environment (native vs WSL).
-- [ ] `~/.claude/CLAUDE.md` exists and contains only method, no project facts.
-- [ ] `<project>/CLAUDE.md` exists, names the project, and contains **no invented rules**.
-- [ ] The folder layout exists.
-- [ ] `SESSION_LOG.md` and one `STATE.md` exist with their headers in place.
-- [ ] `skills/` exists and is **empty**.
-- [ ] Memory is installed, and you confirmed recall works by asking for something stored earlier **in different words**.
-- [ ] You created no hooks and no scripts.
-- [ ] You told the person, in one sentence each, where every file is and what makes it grow.
-
-**Report honestly.** If a check did not pass, say which one and why — a setup with one known gap is fine, a setup that claims to be clean and is not will waste their week.
+Covered in §5.
 
 ---
 
-## 10 · How to close
+## 9 · Keep it cheap as it grows
 
-Do not end with a wall of paths. End with what changed, what they do next, and one honest caveat.
+- **Rule files stay small.** Both CLAUDE.md files load on every message. §10 warns over 8 KB. When one grows, move steps into a skill and facts into the vault; the rule file keeps the line that says where to look.
+- **Skills cost almost nothing until used.** Only their one-line description loads; the body loads when it matches. Write the description as the trigger.
+- **Facts that can be looked up are pointers.** A list of tables, versions or options goes stale silently. Write the command that returns it.
+- **Compaction.** When a conversation gets long Claude Code summarises it. Leave it on. For long work, a later trigger keeps more room: `"autoCompactWindow": 400000` in settings.json (needs a large-context model; skip it otherwise).
+
+---
+
+## 10 · Quality checks
+
+Copy the zip's `check_setup.py` to `~/.claude/` and run it with the Python from step 2:
+
+```
+<python> <home>/.claude/check_setup.py <project folder> <vault folder>
+```
+
+It runs each hook through the exact command settings.json uses, so a wrong Python path fails here. It plants a bad case for every hook (a `.env` read, including one under an accented folder name and one through PowerShell; a machine-sounding line; an edit to CLAUDE.md) and confirms the hook catches it, then confirms clean cases pass (a `.env.example`, a commit message that mentions credentials). **A check that never failed proves nothing**, so before reporting, break one thing on purpose (rename `Map.md`), run it, confirm it says FAIL, and put it back.
+
+Then check by hand:
+
+- [ ] New session opened in the project shows the end of `SESSION_LOG.md` (session-start hook works live, not only in the test).
+- [ ] Asking Claude to read a file named `.env` is refused.
+- [ ] `/hooks` lists all four.
+- [ ] Memory recall returned the stored line in different words.
+- [ ] The vault opens in Obsidian, if installed.
+- [ ] No rule was invented. Both CLAUDE.md files hold only §2, the step 3 answers, and the short blocks RTK and ICM add for themselves.
+
+Report every FAIL with its reason. A setup with one known gap is fine; one that claims to be clean and is not wastes their week.
+
+---
+
+## 11 · When something breaks
+
+Teach this to the person, and follow it yourself in every later session.
+
+### Fix the layer that failed
+
+When Claude gets something wrong, ask what was missing at that moment, then fix that place:
+
+| what was missing | fix it here |
+|---|---|
+| a rule existed and was ignored | turn it into a hook if a script can see it; else move it into the skill that loads for that task |
+| Claude did not know the steps | a skill |
+| Claude did not know a fact about the field | the vault note owning that subject |
+| a file told it the wrong thing | fix or delete that line; never stack a new rule on top of it |
+| a tool misbehaved | the tool's setup (below) |
+
+Log each one in `MISTAKES.md`. **Seen twice → make it mechanical** (a hook or a check). A rule nobody can enforce comes back.
+
+### Common breaks
+
+| symptom | cause | fix |
+|---|---|---|
+| hook never runs | wrong Python path, backslashes, or invalid JSON in settings.json | run `check_setup.py`; validate the JSON; use forward slashes |
+| hook runs but nothing happens | it crashed | run it by hand with the sample event (below) and read the error |
+| Windows: hook says file not found | `~` or `$HOME` in the path | write the full path; `args` form never expands `~` |
+| every file read refused | the credential guard crashed (`onFailure: block`) | run it by hand with the sample event; usually the Python path moved |
+| rules ignored | rule file too long, or in the wrong folder | check §10's size line; confirm `~/.claude` is the folder Claude Code reads |
+| `rtk gain` unknown command | the other `rtk` on PATH | `which rtk` / `where.exe rtk`; reinstall from §8 |
+| memory recall empty | no embeddings yet | `icm embed` |
+| memory full of noise | automatic capture still on | §8: remove `icm hook post` and `icm hook compact` |
+| a session starts lost | STATE.md header stale | update PHASE and NEXT at the end of each piece of work |
+| rules file edited badly | | restore from `~/.claude/setup-backups/` (made by `config_backup.py`) |
+
+### How to debug any hook
+
+1. Run it by hand with the sample event shipped in `hooks/sample_event.json` (a `.env` read; the guard should print a deny):
+   - macOS / Linux / WSL: `<python> <hooks>/secret_guard.py < <hooks>/sample_event.json`
+   - Windows PowerShell: `Get-Content "<hooks>\sample_event.json" | & "<python>" "<hooks>\secret_guard.py"`
+   Run it yourself in a terminal; Claude's own command would be refused by the guard because it names `.env`.
+2. Read what it prints. Empty output means it allowed the action.
+3. Fix, then run `check_setup.py` again. It must go back to all PASS.
+
+---
+
+## 12 · Close
+
+End with what changed, the two habits, and one honest note.
 
 > ✅ **You're set up.**
 >
-> **What's different now**
-> - 🧠 It remembers. Close this session, open a new one, and it still knows where you were.
-> - ✂️ It costs less. Command output gets trimmed before it reaches the conversation.
-> - 🗿 It waffles less. Type `/caveman` any time you want it even shorter.
+> - 🧠 New sessions start with your log and your open work in view.
+> - 🔒 Credential files are refused (`.env`, keys, `credentials.json`), and rule files are backed up before every edit.
+> - ✂️ Command output is trimmed and replies are shorter.
+> - 📚 Your field's knowledge has a home: the vault, starting at `Map.md`.
 >
-> **What to do next — just two things**
-> - 📓 When you find something out, add one line to `SESSION_LOG.md`. That's it, one line.
-> - 📄 The first time something goes genuinely wrong, write the rule that would have caught it into `CLAUDE.md`, with the date and the reason.
+> **Two habits**
+> - 📓 Found something out → one line in `SESSION_LOG.md`.
+> - 🔧 Claude got something wrong → one row in `MISTAKES.md`, and fix the layer that failed.
 >
-> Your rules files are almost empty right now, and that is on purpose. They fill up with things *you* learned the hard way, not things someone else did. In a month yours will look nothing like Moe's, and that's the point.
->
-> 😄 Fair warning though: your Claude is about to get noticeably sharper than everyone else's, and it will start remembering the thing you told it three weeks ago and quietly forgot. You'll get used to it.
-
-Adjust the tone to the person. Keep the two next steps and the honest note about the empty files — those are the parts that decide whether any of this is still alive in a month.
+> The rule files are nearly empty on purpose. They fill with what you learn, so in a month yours will look nothing like the one you started from.
