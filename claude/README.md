@@ -2,7 +2,7 @@
 
 **You are an AI coding agent. A person has unzipped this folder and asked you to set up their Claude Code. Follow this file top to bottom. Every file it names is in this folder. It works on macOS, Linux, WSL and native Windows.**
 
-This builds a small system of plain text files, four small hooks, one memory tool and one notes vault. Together they let Claude Code start each session already knowing where the work stands, cost fewer tokens, write less like a machine, and fix itself when something goes wrong.
+This builds a small system of plain text files, seven small hooks, two helper agents, one memory tool and one notes vault. Together they let Claude Code start each session already knowing where the work stands, cost fewer tokens, write less like a machine, and fix itself when something goes wrong.
 
 **Your job is to install a skeleton, never to copy someone's rules.** Leave the rule files almost empty. A rule nobody earned is a rule nobody follows, and it is paid for in tokens on every message.
 
@@ -16,7 +16,7 @@ Do these five steps in order. **Create no file before step 5 is answered.**
 
 > 👋 Hi. This is Moe's Claude Code setup, and I'll install it on your machine.
 >
-> Right now Claude forgets everything when a session closes, so you explain your project again every time. This adds a few plain text files, four small safety and memory scripts, a memory tool and a notes vault, so each session starts where the last one stopped.
+> Right now Claude forgets everything when a session closes, so you explain your project again every time. This adds a few plain text files, seven small scripts that run on their own, two cheap helpers, a memory tool and a notes vault, so each session starts where the last one stopped.
 >
 > I'll look at your machine first, then show you the plan before I touch anything.
 
@@ -65,8 +65,8 @@ Ask these four, and wait. Do not guess any of them.
 > - `SESSION_LOG.md`, `MISTAKES.md`, one `STATE.md` per piece of work → where things stand and what went wrong
 > - `<vault>/` → an Obsidian vault for what you know about your domain
 >
-> **Hooks** (four small Python scripts that run on their own)
-> - block reading credential files · back up rules before an edit · flag machine-sounding text · show where you left off when a session opens
+> **Hooks** (seven small Python scripts that run on their own)
+> - block reading credential files · back up rules before an edit · flag machine-sounding text · show where you left off when a session opens · point to the vault note for what you asked · remind Claude to pick the right model for a helper · keep decisions when a long chat is summarised
 >
 > **Tools**
 > - RTK → shrinks command output before it fills the conversation
@@ -195,7 +195,7 @@ A vault is a folder of Markdown files. The Obsidian app reads it and adds a hidd
 
 ## 6 · Hooks
 
-A hook is a script Claude Code runs on an event, every time, whatever the model is thinking. Install these four. They need only Python 3; nothing else.
+A hook is a script Claude Code runs on an event, every time, whatever the model is thinking. Install these seven. They need only Python 3; nothing else.
 
 Copy the zip's `hooks/` folder to `~/.claude/hooks/`:
 
@@ -203,11 +203,14 @@ Copy the zip's `hooks/` folder to `~/.claude/hooks/`:
 - `config_backup.py` → copies a CLAUDE.md, SKILL.md or Claude settings file to `~/.claude/setup-backups/` before it is edited
 - `slop_check.py` → after Claude writes prose, names the new lines that read machine-written
 - `session_start.py` → when a session opens, shows the end of `SESSION_LOG.md` and each recent `STATE.md` header
+- `agent_guard.py` → refuses to start a helper until a model is picked for its job (§7)
+- `vault_router.py` → when you type, shows the vault notes whose `Map.md` line shares words with your question
+- `precompact.py` → before a long chat is summarised, tells the summary to keep decisions, the goal and open items
 - `sample_event.json` → a planted `.env` read, for testing the guard by hand (§11)
 
 ### Wire them into `~/.claude/settings.json`
 
-Merge `settings-hooks.json` into `~/.claude/settings.json`. No file yet → create it with this content. A file already there → keep every key, and **append** these entries to any `hooks` event list that already exists; never replace someone's existing hooks. Replace `PYTHON` with the full Python path from step 2 and `HOOKS` with the full path of `~/.claude/hooks`. **Use forward slashes on every platform**, including Windows (`C:/Users/name/.claude/hooks`).
+Merge `settings-hooks.json` into `~/.claude/settings.json`. No file yet → create it with this content. A file already there → keep every key, and **append** these entries to any `hooks` event list that already exists; never replace someone's existing hooks. Replace `PYTHON` with the full Python path from step 2, `HOOKS` with the full path of `~/.claude/hooks`, and `VAULT` with the full path of the vault. **Use forward slashes on every platform**, including Windows (`C:/Users/name/.claude/hooks`).
 
 → copy from the zip: `settings-hooks.json`
 
@@ -217,7 +220,39 @@ Claude Code picks up hook changes on its own. Type `/hooks` to see them listed. 
 
 ---
 
-## 7 · Helpers that cost less
+## 7 · Helpers, and the right model for each job
+
+### When to start a helper
+
+- **Yes:** reading many files to answer one question, a second opinion on work that has to be right, drafting wording, jobs that do not depend on each other and can run side by side.
+- **No:** a lookup you can do in one or two commands, or a job whose next step needs your own judgment at every turn. A helper starts from zero and you only see its summary, so small jobs cost more as helpers.
+- **The one that checks is never the one that made it.** Work someone will act on gets a second helper that reads the result cold.
+- A helper's finding is a lead. Verify it before acting on it.
+
+### Every helper prompt carries
+
+```
+GOAL: <what to find or make>
+ALREADY KNOWN: <what you ruled out, so it does not redo it>
+RETURN: <the shape you want back: a list, a table, file:line>
+```
+
+**The model** is set two ways: the `model:` line in a helper's file (the two below have one), or the Agent tool's `model` setting at launch. The built-in helpers (Explore, Plan, general-purpose) have none, so without it they run on the main session's model, usually the most expensive. The `agent_guard.py` hook refuses a launch that has neither, before anything is spent, and says which model fits; Claude picks one and launches again. To get a reminder instead of a refusal, set `BLOCK = False` at the top of the file (the reminder then arrives after that launch and applies to the next one).
+
+**How long it runs** is capped by `maxTurns:` in the helper's file. At the limit, Claude Code returns what the helper has so far, marked partial.
+
+### Pick the model and effort for the job
+
+| job | model | effort |
+|---|---|---|
+| wording, formatting, renaming, pulling fields out of text | haiku | low |
+| reading files and logs, gathering facts, routine code, checking work against a written list | sonnet | medium |
+| planning, design, debugging something not yet understood, judging work with no clear answer | opus | high |
+| a decision still stuck after two tries, a last review before something is published | the top model your plan offers | high |
+
+Start at the lowest row the job allows. Move one row up only when a check finds the cheaper model missed something; move back down when two runs in a row pass. The main session works the same way: `/model` and `/effort` change it for the job in front of you.
+
+### The two helpers in this kit
 
 A helper (subagent) is a second Claude that does one job and reports back. Two cheap ones cover most of the work. Copy the zip's `agents/` files to `~/.claude/agents/`.
 
@@ -285,7 +320,7 @@ Covered in §5.
 - **Rule files stay small.** Both CLAUDE.md files load on every message. §10 warns over 8 KB. When one grows, move steps into a skill and facts into the vault; the rule file keeps the line that says where to look.
 - **Skills cost almost nothing until used.** Only their one-line description loads; the body loads when it matches. Write the description as the trigger.
 - **Facts that can be looked up are pointers.** A list of tables, versions or options goes stale silently. Write the command that returns it.
-- **Compaction.** When a conversation gets long Claude Code summarises it. Leave it on. For long work, a later trigger keeps more room: `"autoCompactWindow": 400000` in settings.json (needs a large-context model; skip it otherwise).
+- **Compaction.** When a conversation gets long Claude Code summarises it (compaction). Leave it on. The `precompact.py` hook tells the summary to keep your decisions, the goal, open items and file paths and to drop raw tool output, and `session_start.py` runs again right after, putting the log and STATE headers back in view. Claude Code also compacts a long chat you walked away from (idle compaction), so the next message is cheaper; turn that off with `"idleCompaction": false` only if a summary ever lost something you needed.
 
 ---
 
@@ -303,7 +338,7 @@ Then check by hand:
 
 - [ ] New session opened in the project shows the end of `SESSION_LOG.md` (session-start hook works live, not only in the test).
 - [ ] Asking Claude to read a file named `.env` is refused.
-- [ ] `/hooks` lists all four.
+- [ ] `/hooks` lists all seven.
 - [ ] Memory recall returned the stored line in different words.
 - [ ] The vault opens in Obsidian, if installed.
 - [ ] No rule was invented. Both CLAUDE.md files hold only §2, the step 3 answers, and the short blocks RTK and ICM add for themselves.
@@ -344,6 +379,9 @@ Log each one in `MISTAKES.md`. **Seen twice → make it mechanical** (a hook or 
 | memory full of noise | automatic capture still on | §8: remove `icm hook post` and `icm hook compact` |
 | a session starts lost | STATE.md header stale | update PHASE and NEXT at the end of each piece of work |
 | rules file edited badly | | restore from `~/.claude/setup-backups/` (made by `config_backup.py`) |
+| vault note never shown | the `Map.md` line does not start with `- `, has no `->`, or its question shares fewer than two words with how you ask | rewrite the question part the way you would ask it |
+| helper launch refused | no model picked (§7) | Claude sets the Agent tool's model and launches again; for a helper you use often, add a `model:` line to its file |
+| a summary lost a decision | compaction | write decisions to STATE.md as they land; the summary is a backup |
 
 ### How to debug any hook
 
